@@ -17,7 +17,7 @@ var build = {
   env: require('./prod.env'),
   //index: path.resolve(__dirname, '../dist/index.html'),
   assetsRoot: path.resolve(__dirname, '../dist'),
-  assetsSubDirectory: 'static',
+  assetsSubDirectory: 'e2',
   assetsPublicPath: './',
   productionSourceMap: false,
   productionGzip: false,
