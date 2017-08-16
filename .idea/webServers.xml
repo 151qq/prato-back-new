@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="3eb267e0-44a3-480c-9128-7e1578554d21" name="112.126.90.50" url="http://112.126.90.50">
+        <fileTransfer host="112.126.90.50" port="22" rootFolder="/usr/socialmarking/web/www.social.com/webapps/ROOT/resources" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
