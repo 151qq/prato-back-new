@@ -58,10 +58,10 @@
         curNav: 1,
         swiperData: {
           imgs: [
-            {picUrl:'/static/images/ip_big1.jpg'},
-            {picUrl:'/static/images/ip_big2.jpg'},
-            {picUrl:'/static/images/ip_big4.jpg'},
-            {picUrl:'/static/images/ip_big3.jpg'},
+            {picUrl:'static/images/ip_big1.jpg'},
+            {picUrl:'static/images/ip_big2.jpg'},
+            {picUrl:'static/images/ip_big4.jpg'},
+            {picUrl:'static/images/ip_big3.jpg'},
           ]
         },
       }
