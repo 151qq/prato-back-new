@@ -7,9 +7,9 @@
     </div>
 </template>
 <script>
-    import './../../../static/css/swiper.min.css';
+    import '../../../dist/static/css/swiper.min.css';
     import './swiper.scss';
-    import './../../../static/js/swiper.min';
+    import '../../../dist/static/js/swiper.min';
     export default{
         props:{
             swiperData:{

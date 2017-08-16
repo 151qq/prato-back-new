@@ -7,7 +7,7 @@
     <div class="list-group">
       <div class="list-group-item">
         <div class="template-container imgBox">
-          <img src="./../../assets/images/fashion/fs-1.png" alt="">
+          <img src="./../../assets/images/fashion/fs-1.jpg" alt="">
         </div>
         <div class="chooseTpl">
           <a href="javascript:;" class="icon"></a>
@@ -16,7 +16,7 @@
       </div>
       <div class="list-group-item">
         <div class="template-container imgBox">
-          <img src="./../../assets/images/fashion/fs-1.png" alt="">
+          <img src="./../../assets/images/fashion/fs-1.jpg" alt="">
           <p>Sagmeiater & Walsh 2012版办公室</p>
         </div>
         <div class="chooseTpl">
