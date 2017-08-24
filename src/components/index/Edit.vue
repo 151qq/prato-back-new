@@ -17,9 +17,7 @@
 
         </div>
 
-        <div class="editTime"><input type="text" placeholder="请输入日期" @click="picker" v-model="html5PageTimer"></div>
-        <datepicker ref="picker" @setPicker="setPicker" @getTime="getTime"></datepicker>
-
+        <div class="editTime"><input type="text" id="laydater-editor" placeholder="请输入日期" :value="updateTime" ></div>
 
         <div class="flexItem">
           <div :class="['editBox','list-group','edit-group',isDragging?'dragging':''] ">
@@ -72,13 +70,11 @@
   import jquery from 'jquery';
   import formDiscounts from './../../components/index/FormDiscounts';
   import modal from './../../components/assembly/Modal';
-  import datepicker from './../../components/assembly/Datepicker';
 
 
   export default{
     name: 'app',
     components: {
-      datepicker,
       formDiscounts,
       modal
     },
@@ -88,7 +84,7 @@
         html5PageCode: '',
         isPicker: false,
         html5PageTitle: '',
-        html5PageTimer: '',
+        updateTime: '',
         list: [],
         list2: [],
         listData: [],
@@ -151,24 +147,16 @@
         group: {name: "b", pull: 'clone',},
         sort: false
       });
+      laydate.render({
+		  elem: '#laydater-editor'
+		  ,type: 'datetime'
+		  ,format: 'yyyy-MM-dd HH-mm-ss'
+	  });
     },
     methods: {
 
       picker(ev){
-        if (this.isPicker) {
-          this.$refs.picker.cloasPick(ev);
-        } else {
-          this.$refs.picker.picker(ev);
-        }
-        this.isPicker = !this.isPicker;
-      },
-      //隐藏时间
-      setPicker(){
-        this.isPicker = false;
-      },
-      //获取时间
-      getTime(data){
-        this.html5PageTimer = data?data:'';
+
       },
 
       switchDragging(){
@@ -527,6 +515,7 @@
             this.html5PageTitle=res.result.result.html5PageTitle;
             this.id = res.result.result.id;
             this.html5PageCode = res.result.result.html5PageCode;
+            this.updateTime = res.result.result.updateTime;
           var temp=[];
           for(var i=0,m=res.result.result.fileAreaList.length;i<m;i++){
               var row=res.result.result.fileAreaList[i];

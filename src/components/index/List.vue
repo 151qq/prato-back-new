@@ -2,7 +2,7 @@
   <div class="allBox">
     <div class="header">
       <p class="name">{{showTimer}}</p>
-      <span class="icon icon2" @click="picker"></span>
+      <span class="icon icon2" id="laydater-icon"></span>
       <span class="icon icon1" @click="selectTpl"></span>
     </div>
     <div class="listBox">
@@ -30,24 +30,20 @@
       <div class="nextlist" v-if="!isEnd" @click="nextList">{{nextCon}}</div>
       <div v-if="hasList" class="noData">当前没有文章</div>
     </div>
-    <datepicker ref="picker" @setPicker="setPicker" @getTime="getTime"></datepicker>
     <modal :show="isShow" :width="alertBody.ishtml?'':'600px'" :title="alertTitle" :alertBody="alertBody" @closAlert="closAlert" @confirm="confirm" @getTemplates="getTemplates"></modal>
   </div>
 </template>
 <script>
   import './scss/list.scss';
-  import datepicker from './../../components/assembly/Datepicker';
   import util from './../../assets/js/util';
   import interfaces from './../../assets/js/interfaces';
   import modal from './../../components/assembly/Modal';
   export default{
     components: {
-      datepicker,
       modal
     },
     data(){
       return {
-        isPicker: false,
         pageNumber: 1,
         pageSize: 8,
         list: [],
@@ -67,28 +63,22 @@
       }
     },
     mounted(){
-      this.loadList();
+      var _this=this;
+      _this.loadList();
+      laydate.render({
+		  elem: '#laydater-icon'
+		  ,range: true
+		  ,done: function(value, date, endDate){
+		  	_this.timer=value;
+		  	_this.loadList();
+		  	var elem=this.elem[0];
+		  	setTimeout(function(){
+		  		elem.innerHTML="";
+		  	},1);
+		  }
+	  });
     },
     methods: {
-      picker(ev){
-        if (this.isPicker) {
-          this.$refs.picker.cloasPick(ev);
-        } else {
-          this.$refs.picker.picker(ev);
-        }
-        this.isPicker = !this.isPicker;
-      },
-      //隐藏时间
-      setPicker(){
-        this.isPicker = false;
-      },
-      //获取时间
-      getTime(data){
-        this.timer = data?data:'';
-        this.list = [];
-        this.pageNumber = 1;
-        this.loadList();
-      },
       loadList(){
         util.request({
           method: 'get',
