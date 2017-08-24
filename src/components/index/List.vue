@@ -16,12 +16,12 @@
             </div>
             <div class="cListBox">
               <div class="lBox">
-                <h4><a :href="item.html5Path?item.html5Path:'javascript:;'">{{item.html5PageTitle}}</a></h4>
-                <p><a :href="item.html5Path?item.html5Path:'javascript:;'">{{item.updateTime}}</a></p>
+                <h5><a :href="item.html5Path?item.html5Path:'javascript:;'" >{{item.html5PageTitle}}</a></h5>
+                <p><a :href="item.html5Path?item.html5Path:'javascript:;'" style="color:#999;">{{item.updateTime}}</a></p>
               </div>
               <div class="rBox">
                 <div class="box" v-if="item.state-0!=1"><a href="javascript:;" @click="catTpl(item.html5PageCode,item.id,$event)"><img src="./images/ico-draft.png" alt=""></a></div>
-                <div class="box" style="margin-top: 5px;"><a href="javascript:;" @click="del(idx,$event)"><img src="./images/ico-delete.png" alt=""></a></div>
+                <div class="box" style="margin-top: 10px;"><a href="javascript:;" @click="del(idx,$event)"><img src="./images/ico-delete.png" alt=""></a></div>
               </div>
             </div>
           </li>
@@ -79,6 +79,13 @@
 	  });
     },
     methods: {
+		//获取时间		
+		getTime(data){		
+			this.timer = data?data:'';		
+			this.list = [];		
+			this.pageNumber = 1;		
+			this.loadList();		
+		},
       loadList(){
         util.request({
           method: 'get',

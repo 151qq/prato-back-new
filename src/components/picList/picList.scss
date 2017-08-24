@@ -1,4 +1,8 @@
 @import "./../../assets/scss/wap";
+.box.picBox{
+	max-height: 500px;
+	overflow: scroll;
+}
 .piclist{
   height:auto;
   overflow: hidden;

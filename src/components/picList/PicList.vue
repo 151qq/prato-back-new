@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box picBox">
         <div class="piclist">
             <div class="iBox" v-for="(item,idx) in alertBody.list">
                 <img :src="'http://'+item.link" @click="selPic(item.id,item.link,$event)">

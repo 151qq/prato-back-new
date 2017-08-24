@@ -24,10 +24,10 @@
           overflow: hidden;
           display: flex;
           flex-direction: row;
-          border-bottom: 1px dotted #333;
+          border-bottom: 1px dashed #ccc;
           .iBox{
-            width:100px;
-            height:100px;
+            width:80px;
+            height:80px;
             overflow: hidden;
             box-sizing: border-box;
             display: inline-block;
@@ -54,7 +54,7 @@
               overflow: hidden;
               flex:1;
               a{
-                color: #000;
+                color: #666;
               }
             }
             .rBox{
@@ -62,6 +62,7 @@
               overflow: hidden;
               display: inline-block;
               margin-left: 10px;
+              margin-right: 5px;
               font:14px/26px $f-yahei;
               color: #3c3c3c;
               padding: 10px 0;

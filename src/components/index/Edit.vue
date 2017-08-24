@@ -17,7 +17,7 @@
 
         </div>
 
-        <div class="editTime"><input type="text" id="laydater-editor" placeholder="请输入日期" :value="updateTime" ></div>
+        <div class="editTime"><input type="text" id="laydater-editor" placeholder="请输入日期" :value="html5PageTimer" ></div>
 
         <div class="flexItem">
           <div :class="['editBox','list-group','edit-group',isDragging?'dragging':''] ">
@@ -84,7 +84,7 @@
         html5PageCode: '',
         isPicker: false,
         html5PageTitle: '',
-        updateTime: '',
+        html5PageTimer: '',
         list: [],
         list2: [],
         listData: [],
@@ -154,10 +154,10 @@
 	  });
     },
     methods: {
-
-      picker(ev){
-
-      },
+		//获取时间		
+		getTime(data){		
+			this.html5PageTimer = data?data:'';		
+        },
 
       switchDragging(){
         this.isDragging = !this.isDragging;
@@ -515,11 +515,11 @@
             this.html5PageTitle=res.result.result.html5PageTitle;
             this.id = res.result.result.id;
             this.html5PageCode = res.result.result.html5PageCode;
-            this.updateTime = res.result.result.updateTime;
+            this.html5PageTimer = res.result.result.updateTime;
           var temp=[];
           for(var i=0,m=res.result.result.fileAreaList.length;i<m;i++){
               var row=res.result.result.fileAreaList[i];
-              temp.push(JSON.parse(row.areaTxt));
+              if(row.areaTxt!=null && row.areaTxt!="")temp.push(JSON.parse(row.areaTxt));
           }
           this.list2=temp;
         })
