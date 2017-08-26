@@ -1,7 +1,9 @@
 @import "indexCommon";
 .list-group{
   box-sizing: border-box;
-  padding-bottom: 400px;
+  >ul{
+  	padding-bottom: 400px;
+  }
   li{
     margin-top: 20px;
     .list-group-item{
