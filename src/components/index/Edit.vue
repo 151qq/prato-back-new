@@ -93,7 +93,7 @@
         delayedDragging: false,
         curIndexEdit: null,
         isShow: false,
-        alertTitle: '选择上传图片',
+        alertTitle: '',
         alertBody: {
           html: '',
           type: 'html'

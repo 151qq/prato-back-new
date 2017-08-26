@@ -7,25 +7,25 @@
     </div>
     <div class="contrl_container fr"><a href="javascript:;" class="changePwd" @click="showLogin">{{isUserBtnMess?'修改密码':''}}</a><a href="/login.html" class="outIn">{{isLogin?'退出':'登录'}}</a></div>
     <div class="alertBox"  v-if="isTask"  :style="{'height':screenHeight+'px'}">
-    <div class="task" :style="{'left':taskScreenX+'px','top':(taskScreenY+10)+'px',width:(screenWidth-taskScreenX)+'px',height:(screenHeight-taskScreenY-45)+'px'}" @click.stop="taskBoxFn">
+    <div class="task" :style="{'left':'0px','top':'42px',width:'100%',height:(screenHeight-38-42)+'px'}" @click.stop="taskBoxFn">
 
         <div class="taskBox">
           <div class="lTask">
-            <div class="taskBtns"></div>
             <div :class="['item',item.isCheck?'on':'']" v-for="(item,idx) in taskList" @click.stop="catTask(item,idx,$event)">
               <div class="lBox"><img :src="item.taskIcon" alt=""></div>
               <div class="rBox">
                 <div class="t">{{item.taskTitle}}</div>
-                <div class="timer">{{item.taskBeginTime}}</div>
+                <div class="tips">{{item.taskOwner}} <div class="timer">{{item.taskBeginTime}}</div></div>
+                <div class="des">{{item.taskDescribe}}</div>
               </div>
             </div>
           </div>
           <div class="rTask">
-            <div class="taskBtns">
-              <a href="javascript:;" class="editTaskBtn" @click.stop="closeTpl">关闭</a>
-              <a href="javascript:;" :class="['editTaskBtn',taskDetailUrl?'on':'']" @click.stop="openTpl">处理任务</a>
+            <div class="taskTitle">
+              <a href="javascript:;" :class="['editTaskBtn',taskDetailUrl?'on':'']" @click.stop="openTpl" style="display:none;"><img src="./../../assets/images/email.gif"/></a>
+              <a href="javascript:;" class="editTaskBtn closeBtn" @click.stop="closeTpl">×</a>
             </div>
-            <iframe :src="taskDetailUrl" style="width: 375px; border: 0; height: 100%;"></iframe>
+            <iframe :src="taskDetailUrl" :style="{width: '100%', border: '0px', height: '100%', position: 'relative'}"></iframe>
           </div>
         </div>
       </div>
@@ -61,7 +61,6 @@
       this.loadMess();
       this.screenWidth=document.body.clientWidth;
       this.screenHeight=document.body.clientHeight;
-
     },
     methods:{
       loadUserInfo(){
@@ -119,6 +118,7 @@
           this.taskList[idx].isCheck=true;
           this.$set(this.taskList,idx,this.taskList[idx]);
           this.oldIndex=idx;
+
         }
       },
       taskBoxFn(){

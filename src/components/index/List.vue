@@ -53,7 +53,7 @@
         curList: 0,
         curEv: null,
         isShow: false,
-        alertTitle: '选择上传图片',
+        alertTitle: '删除',
         alertBody: {
           html: '<div>您确定要删除吗？</div>',
           type: 'html'
