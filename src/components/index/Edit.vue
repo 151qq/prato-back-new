@@ -1,6 +1,6 @@
 <template>
   <div class="box editBoxBody">
-    <div class="box editBoxBody">
+    <div class="box editBoxBody editZone">
       <div class="box col-lg-6 col-md-6 col-sm-6 flexBox">
         <div class="header">
           <p class="name">文章编辑</p>

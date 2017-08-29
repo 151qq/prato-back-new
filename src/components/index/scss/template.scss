@@ -1,9 +1,9 @@
 @import "indexCommon";
+.editZone .list-group>ul{
+	padding-bottom: 400px;
+}
 .list-group{
   box-sizing: border-box;
-  >ul{
-  	padding-bottom: 400px;
-  }
   li{
     margin-top: 20px;
     .list-group-item{
