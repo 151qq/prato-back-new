@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './Index'
 import VueHtml5Editor from 'vue-html5-editor'
+
 Vue.use(VueHtml5Editor, {
   showModuleName: true,
   language: "zh-cn",
@@ -11,8 +12,18 @@ Vue.use(VueHtml5Editor, {
     height: 300,
     quality: 80,
   },
+  modules: [{
+    name: "bold",
+    icon: "fa fa-bold",
+    i18n: "加粗",
+    title: "加粗",
+    show: true,
+    handler: function (editor) {
+    	editor.execCommand("bold");
+    }
+  }],
   visibleModules: [
-    "text",
+  	"bold",
     "color",
     "font",
     "align",
