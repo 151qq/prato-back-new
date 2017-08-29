@@ -11,7 +11,7 @@
           <li v-for="(item,idx) in list">
             <div class="iBox">
               <a :href="item.html5Path?item.html5Path:'javascript:;'">
-                <img :src="item.html5PageindexImg" alt="">
+                <img :src="item.html5PageindexImg||'./../../../static/images/default.jpg'" alt="">
               </a>
             </div>
             <div class="cListBox">

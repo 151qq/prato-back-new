@@ -12,7 +12,7 @@
         <div class="taskBox">
           <div class="lTask">
             <div :class="['item',item.isCheck?'on':'']" v-for="(item,idx) in taskList" @click.stop="catTask(item,idx,$event)">
-              <div class="lBox"><img :src="item.taskIcon" alt=""></div>
+              <div class="lBox"><img :src="item.taskIcon||'./../../../static/images/default.jpg'" alt=""></div>
               <div class="rBox">
                 <div class="t">{{item.taskTitle}}</div>
                 <div class="tips">{{item.taskOwner}} <div class="timer">{{item.taskBeginTime}}</div></div>
@@ -22,10 +22,12 @@
           </div>
           <div class="rTask">
             <div class="taskTitle">
-              <a href="javascript:;" :class="['editTaskBtn',taskDetailUrl?'on':'']" @click.stop="openTpl" style="display:none;"><img src="./../../assets/images/email.gif"/></a>
-              <a href="javascript:;" class="editTaskBtn closeBtn" @click.stop="closeTpl">×</a>
+              <div class="wrap">
+	              <a href="javascript:;" :class="['editTaskBtn',taskDetailUrl?'on':'']" @click.stop="openTpl">处理任务</a>
+	              <a href="javascript:;" class="closeBtn" @click.stop="closeTpl">×</a>
+          	  </div>
             </div>
-            <iframe :src="taskDetailUrl" :style="{width: '100%', border: '0px', height: '100%', position: 'relative'}"></iframe>
+            <iframe :src="taskDetailUrl" :style="{width: '100%', border: '0px', height: (screenHeight-165)+'px', top: '50px', position: 'relative'}"></iframe>
           </div>
         </div>
       </div>
