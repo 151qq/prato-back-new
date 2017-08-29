@@ -17,7 +17,7 @@ var build = {
   env: require('./prod.env'),
   //index: path.resolve(__dirname, '../dist/index.html'),
   assetsRoot: path.resolve(__dirname, '../dist'),
-  assetsSubDirectory: 'e2',
+  assetsSubDirectory: 'static',
   assetsPublicPath: './',
   productionSourceMap: false,
   productionGzip: false,
@@ -37,7 +37,7 @@ module.exports = {
     env: require('./dev.env'),
     port: 8888,
     autoOpenBrowser: false,
-    assetsSubDirectory: 'e2',
+    assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
 
