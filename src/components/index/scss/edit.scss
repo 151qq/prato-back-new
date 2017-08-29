@@ -1,9 +1,13 @@
 @import "indexCommon";
+.editBoxBody{
+	.editTitle{
+		border-bottom: 1px solid #cccccc;
+	}
+}
 .editTitle{
   height:auto;
   overflow: hidden;
   margin-top:20px;
-  border-bottom: 1px solid #cccccc;
   textarea{
     width:100%;
     height:auto;
