@@ -30,7 +30,7 @@ var plugins = [
       to: config.build.assetsSubDirectory,
       ignore: ['.*']
     }
-  ])
+  ]),
   new webpack.optimize.OccurrenceOrderPlugin(),
   new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
 ]
