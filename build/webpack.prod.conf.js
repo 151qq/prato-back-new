@@ -24,6 +24,13 @@ var plugins = [
     }
   }),
   */
+  new CopyWebpackPlugin([
+    {
+      from: path.resolve(__dirname, '../static'),
+      to: config.build.assetsSubDirectory,
+      ignore: ['.*']
+    }
+  ])
   new webpack.optimize.OccurrenceOrderPlugin(),
   new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
 ]
