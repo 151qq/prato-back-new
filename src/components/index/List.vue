@@ -67,7 +67,6 @@
       _this.loadList();
       laydate.render({
 		  elem: '#laydater-icon'
-		  ,range: true
 		  ,done: function(value, date, endDate){
 		  	_this.timer=value;
 		  	_this.loadList();
