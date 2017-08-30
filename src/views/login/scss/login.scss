@@ -4,6 +4,9 @@
 	background: #383a4c;
 	height:100%;
 }
+.swiper-container .swiper-wrapper .swiper-slide img{
+	object-fit: cover;
+}
 .loginBox{
   width: 70%;
   height:100%;
@@ -21,7 +24,6 @@
     padding-top:0px;
     box-sizing: border-box;
 
-
   }
   .r{
     width:30%;
@@ -31,7 +33,7 @@
     float: right;
     overflow: hidden;
     box-sizing: border-box;
-    padding: 30px;
+    padding: 20px 20px 10px;
     .login-form{
       width: 100%;
       overflow: hidden;

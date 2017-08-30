@@ -9,22 +9,22 @@
           <div class="form-horizontal">
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">用户名</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">用户名</label>
+              <div class="col-sm-8">
                 <input type="text" class="form-control" v-model="userLoginAccount">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-3 control-label">密码</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">密码</label>
+              <div class="col-sm-8">
                 <input type="password" class="form-control" v-model="userPassword">
               </div>
             </div>
                 <input class="form-control" type="hidden" v-model="corpId"/>
                 <input class="form-control" type="hidden" v-model="wechatName"/>
             <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-9 text-center">
+              <label class="col-sm-4 control-label"></label>
+              <div class="col-sm-8 text-center">
                 <button type="button" id="loginButton" class="btn btn-info" @click="subBtn">登录</button>
               </div>
             </div>
@@ -38,15 +38,15 @@
           <div class="form-horizontal">
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">公司名称</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">公司名称</label>
+              <div class="col-sm-8">
                 <input type="text" class="form-control"  id="enterpriseCname" name="enterpriseCname" v-model="enterpriseCname">
               </div>
             </div>
             
             <div class="form-group">
-              <label class="col-sm-3 control-label">公司类型</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">公司类型</label>
+              <div class="col-sm-8">
                 <select id="type" name="enterpriseIndustry" class="form-control" v-model="enterpriseIndustry">
 				 	<option value="enterprise_industry_internetfinance">互联网金融</option>
                     <option value="enterprise_industry_house">新房销售</option>
@@ -62,22 +62,22 @@
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">申请人</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">申请人</label>
+              <div class="col-sm-8">
                 <input type="text" class="form-control" name="userCname" v-model="userCname"/>
               </div>
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">注册手机</label>
-              <div class="col-sm-9">
+              <label class="col-sm-4 control-label">注册手机</label>
+              <div class="col-sm-8">
                 <input type="text" class="form-control" name="userPhone" v-model="userPhone">
               </div>
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-9 text-center">
+              <label class="col-sm-4 control-label"></label>
+              <div class="col-sm-8 text-center">
                 <button type="button" id="loginButton" class="btn btn-info" @click="regBtn">申请体验</button>
               </div>
             </div>
