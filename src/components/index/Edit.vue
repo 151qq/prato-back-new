@@ -346,18 +346,15 @@
             });
           })
 
-
-          console.log(this.html5PageTitle);
-
           util.request({
             method: 'post',
             interface: 'draftArticle',
             data: {
               id: this.id,
-              html5PageTitle: this.html5PageTitle,
-              htnl5TemplateCode: this.tplCode,
-              html5PageindexImg: this.thumbnail,
-              html5PageCode: this.html5PageCode
+              html5PageTitle: _self.html5PageTitle,
+              htnl5TemplateCode: _self.tplCode,
+              html5PageindexImg: _self.thumbnail,
+              html5PageCode: _self.html5PageCode
 
             }
           }).then(res => {
@@ -366,10 +363,11 @@
             var id=res.result.result.id;
 
             var temp = 0;
-            var len = this.list2.length;
-            console.log(this.list2);
+            var len = _self.list2.length;
+            console.log(_self.list2);
             for (var i = 0; i < len; i++) {
               var row = this.list2[i];
+
               if (row.type == 'discount') {
                 var discountsCur = this.$refs.formDiscounts[0].discountsCur;
                 var discounts = this.$refs.formDiscounts[0].discounts[discountsCur];
@@ -455,7 +453,7 @@
             console.log(res);
           })
         });
-          window.location.reload();
+          //window.location.reload();
 
       },
       preview(){
