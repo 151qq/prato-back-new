@@ -19,6 +19,9 @@
       overflow: hidden;
       overflow-y: scroll;
       ul.list{
+      	li:hover{
+      	  background-color:#fff;
+      	}
         li{
           height:auto;
           overflow: hidden;
