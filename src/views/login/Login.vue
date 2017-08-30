@@ -1,4 +1,5 @@
 <template>
+<div class="wrap">
   <div class="loginBox">
       <div class="l">
         <swiper :swiperData="swiperData"></swiper>
@@ -85,6 +86,7 @@
         </div>
       </div>
   </div>
+</div>
 </template>
 <script>
   import Swiper from './../../components/swiper/Swiper.vue';

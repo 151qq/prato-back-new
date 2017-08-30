@@ -1,26 +1,30 @@
 @import "../../../assets/scss/wap";
 
-
+.wrap{
+	background: #383a4c;
+	height:100%;
+}
 .loginBox{
-  width: 100%;
+  width: 70%;
   height:100%;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 125px 40px 0;
+  padding: 125px 0 0;
   background: #383a4c;
-  margin: 0;
+  margin: auto;
   .l{
-    width: 63%;
+    width: 65%;
     overflow: hidden;
     display: inline-block;
     height:100%;
     float: left;
+    padding-top:0px;
     box-sizing: border-box;
 
 
   }
   .r{
-    width:32%;
+    width:30%;
     height:auto;
     background-color: #424458;
     display: inline-block;
