@@ -21,14 +21,15 @@
   }
   .r{
     width:32%;
-    height:100%;
+    height:auto;
+    background-color: #424458;
     display: inline-block;
     float: right;
     overflow: hidden;
     box-sizing: border-box;
-    padding-top: 30px;
+    padding: 30px;
     .login-form{
-      width: 260px;
+      width: 100%;
       overflow: hidden;
       height:auto;
       label{
