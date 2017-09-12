@@ -1,17 +1,13 @@
 <template>
   <div class="allBox">
-    <div class="header">
-      <p class="name">{{showTimer}}</p>
-      <span class="icon icon2" id="laydater-icon"></span>
-      <span class="icon icon1" @click="selectTpl"></span>
-    </div>
+
     <div class="listBox">
       <div class="ulBox">
         <ul class="list">
           <li v-for="(item,idx) in list">
             <div class="iBox">
               <a :href="item.html5Path?item.html5Path:'javascript:;'">
-                <img :src="item.html5PageindexImg||'./../../../static/images/default.jpg'" alt="">
+                <img :src="item.html5PageindexImg||'./../../../static/template/images/default.jpg'" alt="">
               </a>
             </div>
             <div class="cListBox">
@@ -20,8 +16,8 @@
                 <p><a :href="item.html5Path?item.html5Path:'javascript:;'" style="color:#999;">{{item.updateTime}}</a></p>
               </div>
               <div class="rBox">
-                <div class="box" v-if="item.state-0!=1"><a href="javascript:;" @click="catTpl(item.html5PageCode,item.id,$event)"><img src="./images/ico-draft.png" alt=""></a></div>
-                <div class="box" style="margin-top: 10px;"><a href="javascript:;" @click="del(idx,$event)"><img src="./images/ico-delete.png" alt=""></a></div>
+                <div class="box" v-if="item.state-0!=1"><a href="javascript:;" @click="catTpl(item.html5PageCode,item.id,$event)"><img src="../../assets/images/ico-draft.png" alt=""></a></div>
+                <div class="box" style="margin-top: 10px;"><a href="javascript:;" @click="del(idx,$event)"><img src="../../assets/images/ico-delete.png" alt=""></a></div>
               </div>
             </div>
           </li>
@@ -35,8 +31,8 @@
 </template>
 <script>
   import './scss/list.scss';
-  import util from './../../assets/js/util';
-  import interfaces from './../../assets/js/interfaces';
+  import util from '../../assets/common/util';
+  import interfaces from '../../assets/common/interfaces';
   import modal from './../../components/assembly/Modal';
   export default{
     components: {
@@ -101,6 +97,8 @@
           this.list = this.list.concat(res.result.result.data);
           this.hasList = this.list.length > 0 ? false : true;
           this.showTimer=res.result.result.updateTime;
+
+          this.$emit('getShowTimer',this.showTimer);
         })
       },
       nextList(){
@@ -142,7 +140,7 @@
       },
       selectTpl(){
         this.isShow = true;
-        this.alertTitle = '挑选模版';
+        this.alertTitle = '模版列表';
         this.alertBody = {
           html: '',
           type: 'tplList'

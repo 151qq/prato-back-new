@@ -18,8 +18,7 @@
                 default: ''
             }
         },
-        components: {
-        },
+        components: {},
         data(){
             return {}
         },
@@ -29,7 +28,7 @@
                 this.$emit('upImg', id, 'http://' + link);
             },
             tplNextPage(){
-            	this.$emit('tplNextPage');
+                this.$emit('tplNextPage');
             }
         },
         mounted (){

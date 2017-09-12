@@ -51,10 +51,25 @@
       </div>
     </div>
 </template>
+<style>
 
+    .modal {
+        display: none;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100000;
+        -webkit-overflow-scrolling: touch;
+        outline: 0;
+    }
+
+</style>
 <script>
     import './modal.scss';
-    import util from './../../assets/js/util';
+    import util from '../../assets/common/util';
     import {coerce, getScrollBarWidth} from './utils/utils.js';
     import $ from './utils/NodeList.js';
     import piclist from './../picList/PicList';

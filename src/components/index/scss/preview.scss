@@ -1,20 +1,21 @@
-.list-group.previewBox{
+.list-group.previewBox {
   overflow: hidden;
-  height:530px;
+  height: 530px;
   overflow-y: scroll;
   padding-bottom: 0;
-  li{
+  li {
     margin-top: 0;
-    div.iBox{
+    div.iBox {
       line-height: 34px;
     }
-    input,textarea{
+    input, textarea {
       border: 0;
       outline: none;
     }
   }
 }
-.editTitle{
+
+.editTitle {
   font-size: 14px;
   line-height: 30px;
   text-align: center;

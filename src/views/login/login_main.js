@@ -3,7 +3,7 @@ import App from './Login'
 import './scss/login.scss';
 
 new Vue({
-  el: '#app',
-  template: '<App/>',
-  components: { App }
+    el: '#app',
+    template: '<App/>',
+    components: {App}
 })
