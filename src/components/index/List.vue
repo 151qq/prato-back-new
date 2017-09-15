@@ -2,156 +2,150 @@
   <div class="allBox">
 
     <div class="listBox">
-      <div class="ulBox">
-        <ul class="list">
-          <li v-for="(item,idx) in list">
-            <div class="iBox">
-              <a :href="item.html5Path?item.html5Path:'javascript:;'">
-                <img :src="item.html5PageindexImg||'./../../../static/template/images/default.jpg'" alt="">
-              </a>
+      <section v-if="list.length">
+        <div class="lists-box" :class="index === curIndex ? 'active' : ''" v-for="(item, index) in list" @click="getInfo(item.id)">
+          <img class="img-box" :src="item.imgUrl">
+          <div class="p-box">
+            <span class="title">{{item.title}}</span>
+            <span class="des">{{item.address}}</span>
+            <div>
+              <img v-if="item.isSubmit" src="../../assets/images/yfb.png">
+              <img @click.stop="delItem(item.id, index)" src="../../assets/images/delete-icon.png">
             </div>
-            <div class="cListBox">
-              <div class="lBox">
-                <h5><a :href="item.html5Path?item.html5Path:'javascript:;'" >{{item.html5PageTitle}}</a></h5>
-                <p><a :href="item.html5Path?item.html5Path:'javascript:;'" style="color:#999;">{{item.updateTime}}</a></p>
-              </div>
-              <div class="rBox">
-                <div class="box" v-if="item.state-0!=1"><a href="javascript:;" @click="catTpl(item.html5PageCode,item.id,$event)"><img src="../../assets/images/ico-draft.png" alt=""></a></div>
-                <div class="box" style="margin-top: 10px;"><a href="javascript:;" @click="del(idx,$event)"><img src="../../assets/images/ico-delete.png" alt=""></a></div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="nextlist" v-if="!isEnd" @click="nextList">{{nextCon}}</div>
-      <div v-if="hasList" class="noData">当前没有文章</div>
+          </div>
+        </div>
+      </section>
     </div>
-    <modal :show="isShow" :width="alertBody.ishtml?'':'600px'" :title="alertTitle" :alertBody="alertBody" @closAlert="closAlert" @confirm="confirm" @getTemplates="getTemplates"></modal>
   </div>
 </template>
 <script>
-  import './scss/list.scss';
-  import util from '../../assets/common/util';
-  import interfaces from '../../assets/common/interfaces';
-  import modal from './../../components/assembly/Modal';
+  import util from '../../assets/common/util'
   export default{
-    components: {
-      modal
-    },
     data(){
       return {
-        pageNumber: 1,
-        pageSize: 8,
         list: [],
-        nextCon: '加载更多',
-        hasList: false,
-        isEnd: false,
-        curList: 0,
-        curEv: null,
-        isShow: false,
-        alertTitle: '删除',
-        alertBody: {
-          html: '<div>您确定要删除吗？</div>',
-          type: 'html'
-        },
-        timer: null,
-        showTimer:''
+        curIndex: 0,
+        isfirst: true
       }
     },
     mounted(){
-      var _this=this;
-      _this.loadList();
-      laydate.render({
-		  elem: '#laydater-icon'
-		  ,done: function(value, date, endDate){
-		  	_this.timer=value;
-		  	_this.loadList();
-		  	var elem=this.elem[0];
-		  	setTimeout(function(){
-		  		elem.innerHTML="";
-		  	},1);
-		  }
-	  });
+      this.loadList()
     },
     methods: {
-		//获取时间		
-		getTime(data){		
-			this.timer = data?data:'';		
-			this.list = [];		
-			this.pageNumber = 1;		
-			this.loadList();		
-		},
+  		//获取时间		
+  		getTime(data){		
+  			this.timer = data?data:'';		
+  			this.list = [];		
+  			this.pageNumber = 1;		
+  			this.loadList();		
+  		},
       loadList(){
         util.request({
           method: 'get',
-          interface: 'html5PageSearch',
+          interface: 'reportList',
           data: {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
-            data: this.timer ? this.timer : ''
+            type: this.$route.name
           }
         }).then(res => {
-          if (res.result.result.data.length < this.pageSize) {
-            this.isEnd = true;
+          this.list = res.result.datas
+          if (this.list.length && this.isfirst) {
+            this.$emit('getInfo', this.list[0].id)
+            this.isfirst = false
           }
-          this.list = this.list.concat(res.result.result.data);
-          this.hasList = this.list.length > 0 ? false : true;
-          this.showTimer=res.result.result.updateTime;
-
-          this.$emit('getShowTimer',this.showTimer);
         })
       },
-      nextList(){
-        if (!this.isEnd) {
-          this.pageNumber++;
-          this.loadList();
-        }
+      delItem (id, index) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteById(id, index)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })       
+        })
       },
-      //关闭弹出框
-      closAlert(key){
-        this[key] = false;
+      getInfo (id) {
+        this.$emit('getInfo', id)
       },
-      del(idx, ev){
-        this.curList = idx;
-        this.curEv = 'del';
-        this.isShow = true;
-        this.alertTitle = '提示';
-        this.alertBody = {
-          html: '<div class="box">您确定要删除吗？</div>',
-          type: 'html'
-        };
-      },
-      confirm(){
-        this.isShow = false;
-        switch (this.curEv) {
-          case 'del':
-            util.request({
-              method: 'get',
-              interface: 'deleteDraftFile',
-              data: {
-                html5PageCode: this.list[this.curList]['html5PageCode'],
-                id: this.list[this.curList]['id']
-              }
-            }).then(res => {
-              this.list.splice(this.curList, 1);
-            })
-            break;
-        }
-      },
-      selectTpl(){
-        this.isShow = true;
-        this.alertTitle = '模版列表';
-        this.alertBody = {
-          html: '',
-          type: 'tplList'
-        };
-      },
-      getTemplates(tplCode){
-        this.$emit('getTemplates',tplCode);
-      },
-      catTpl(code,id,ev){
-        this.$emit('catTpl',code,id);
+      deleteById (id, index) {
+        util.request({
+          method: 'post',
+          interface: 'deleteArticle',
+          data: {
+            type: this.$route.name,
+            id: id
+          }
+        }).then(res => {
+          this.list.splice(index, 1)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
       }
     }
   }
 </script>
+<style lang="scss">
+  .allBox {
+    width: 400px;
+    background: #F9F9F9;
+
+    .lists-box {
+      width: 400px;
+      height: 120px;
+      border-bottom: 1px solid #F0F0F0;
+      box-sizing: border-box;
+      padding: 20px 22px;
+      cursor: pointer;
+
+      &.active {
+        background: #EFF2F7;
+      }
+
+      .img-box {
+        float: left;
+        width: 105px;
+        height: 80px;
+        margin-right: 22px;
+      }
+
+      .p-box {
+        float: right;
+        width: 228px;
+
+        .title {
+          display: block;
+          font-size: 16px;
+          color: #000000;
+          margin-bottom: 3px;
+          margin-top: -2px;
+        }
+
+        .des {
+          display: block;
+          height: 40px;
+          font-size: 12px;
+          color: #475669;
+          overflow: hidden;
+          line-height: 20px;
+        }
+
+        div {
+          height: 16px;
+          line-height: 16px;
+          text-align: right;
+
+          img {
+            margin-left: 8px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+</style>

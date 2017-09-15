@@ -1,0 +1,465 @@
+<template>
+  <section class="header-web">
+    <router-link class="logo-box" :to="{name: 'house'}"><img src="../../assets/images/logo.png"></router-link>
+
+    <div class="nav-box">
+      <router-link :to="{ name: 'house'}">楼盘维护</router-link>
+      <router-link :to="{ name: 'report'}">报告维护</router-link>
+    </div>
+
+    <div class="member-box">
+      <a class="img-box" @click="editImgUrl"><img :src="userInfo.iconUrl"></a>
+      <a @click="editPassword">
+        您好
+        <span>{{userInfo.userCnName}}</span>
+        <i class="el-icon-caret-bottom"></i>
+      </a>
+    </div>
+
+    <div class="mess-box" v-popover:popover1>
+      <i class="el-icon-message"></i>
+      <span class="circle"></span>
+      <el-popover
+          ref="popover1"
+          placement="bottom"
+          width="600"
+          trigger="click">
+        <div class="con-box">
+          <p class="title">任务</p>
+          <div class="mess-list">
+            <section v-for="item in noticeList">
+              <div class="top">
+                <img :src="item.imgUrl">
+                <p>
+                  <span class="people">{{item.name}}</span>
+                  <span>{{item.company}}</span>
+                </p>
+              </div>
+              <div class="mid">
+                <p>{{item.des}}</p>
+              </div>
+              <div class="bottom">
+                <el-button class="edit" type="primary" icon="edit" size="small" @click="goUrl(item.id)">处理</el-button>
+              </div>
+            </section>
+          </div>
+          <el-pagination
+            small
+            layout="prev, pager, next"
+            :page-size="page.pageSize"
+            :total="page.total"
+            @current-change="changePage">
+          </el-pagination>
+        </div>
+      </el-popover>
+    </div>
+
+    <div class="line-box"></div>
+
+    <div class="add-box" v-popover:popover2>
+      <i class="el-icon-add"></i>
+      <span class="circle"></span>
+      <el-popover
+          ref="popover2"
+          placement="bottom"
+          width="150"
+          trigger="click">
+        <div class="add-mess">
+          <router-link class="a-box" :to="{name: 'addHouse'}">
+            新增物业
+          </router-link>
+          <router-link class="a-box a-bg" :to="{name: 'addReport'}">
+            新增报告
+          </router-link>
+        </div>
+      </el-popover>
+    </div>
+
+    <div class="save-box"></div>
+
+    <div class="search-b">
+      <i @click="getSearch"></i>
+      <input v-model="keyValue"/>
+    </div>
+    <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
+    <password :dialog-form-visible="dialogFormVisible"></password>
+  </section>
+</template>
+<script>
+import util from '../../assets/common/util'
+import uploadFile from './upload-file.vue'
+import password from './password.vue'
+
+export default {
+  data () {
+    return {
+      origin: window._SettingOrigin,
+      userInfo: {
+        name: '',
+        imgUrl: ''
+      },
+      noticeList: [],
+      dialogFormVisible: {
+        visibleF: false,
+        visibleP: false
+      },
+      page: {
+        total: 0,
+        pageSize: 2,
+        currentPage: 1
+      },
+      keyValue: ''
+    }
+  },
+  created () {
+    this.getUserInfo()
+    this.getNotice()
+  },
+  methods: {
+    getSearch () {
+      var formData = {
+        type: this.$route.name,
+        key: this.keyValue
+      }
+
+      util.request({
+        method: 'get',
+        interface: 'getInfoId',
+        data: formData
+      }).then(res => {
+        var path = {
+          name: this.$route.name + 'Add',
+          params: {
+            id: res.result.datas.id
+          }
+        }
+        this.keyValue = ''
+        this.$router.push(path)
+      })
+    },
+    getUserInfo () {
+      util.request({
+        method: 'get',
+        interface: 'getUserInfo',
+        data: {}
+      }).then(res => {
+        this.userInfo = res.result.result
+      })
+    },
+    getNotice () {
+      var formData = {
+        pageSize: this.page.pageSize,
+        currentPage: this.page.currentPage
+      }
+
+      util.request({
+        method: 'get',
+        interface: 'notice',
+        data: formData
+      }).then(res => {
+        this.noticeList = res.result.datas
+        this.page.total = Number(res.result.total)
+      })
+    },
+    changePage (value) {
+      console.log(value)
+      this.page.currentPage = value
+      this.getNotice()
+    },
+    goUrl (id) {
+      this.$router.push({name: 'notice', params: {id: id}})
+    },
+    changeImg (path) {
+      this.userInfo.imgUrl = path
+    },
+    editImgUrl () {
+      this.dialogFormVisible.visibleF = true
+    },
+    editPassword () {
+      this.dialogFormVisible.visibleP = true
+    }
+  },
+  components: {
+    uploadFile,
+    password
+  }
+}
+</script>
+<style lang="scss" scoped>
+  .add-mess {
+    .a-box {
+      display: block;
+      width: 104px;
+      padding-left: 40px;
+      background: url(../../assets/images/wy-icon.png) left center no-repeat;
+      font-size: 16px;
+      line-height: 22px;
+      color: #475669;
+      margin: 20px auto;
+
+      &:hover {
+        color: #20A0FF;
+      }
+    }
+
+    .a-bg {
+      background: url(../../assets/images/bg-icon.png) left center no-repeat;
+    }
+  }
+  .header-web {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background: #000000;
+    color: #fff;
+    padding: 0 20px;
+    z-index: 99;
+
+    .logo-box {
+      float: left;
+      margin-top: 10px;
+      margin-right: 26px;
+    }
+
+    .nav-box {
+      float: left;
+
+      a {
+        display: inline-block;
+        font-size: 13px;
+        color: #A4A4A4;
+        line-height: 50px;
+        margin-right: 30px;
+
+        &:hover {
+          color: #ffffff;
+        }
+      }
+
+      .router-link-active {
+        color: #ffffff;
+      }
+    }
+
+    .member-box {
+      float: right;
+      margin-left: 26px;
+
+      a {
+        float: left;
+        font-size: 14px;
+        line-height: 50px;
+        color: #A4A4A4;
+        cursor: pointer;
+
+        i {
+          margin-left: 10px;
+          color: #999999;
+        }
+      }
+
+      .img-box {
+        width: 24px;
+        height: 24px;
+        margin: 13px 20px 0 0;
+        border-radius: 50%;
+        overflow: hidden;
+        line-height: 0;
+        background: url(../../assets/images/head-icon.png) left top no-repeat;
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+
+    .mess-box {
+      position: relative;
+      float: right;
+      width: 16px;
+      height: 50px;
+      line-height: 50px;
+      cursor: pointer;
+
+      i {
+        color: #999999;
+      }
+      
+      .circle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        overflow: hidden;
+        right: -4px;
+        top: 14px;
+        background: url(../../assets/images/mess-now.png) center no-repeat;
+      }
+    }
+
+    .line-box {
+      float: right;
+      width: 1px;
+      height: 20px;
+      margin: 15px 23px;
+      background: #555555;
+    }
+
+    .add-box {
+      position: relative;
+      float: right;
+      width: 14px;
+      height: 50px;
+      line-height: 50px;
+      cursor: pointer;
+
+      i {
+        display: block;
+        width: 14px;
+        height: 50px;
+        background: url(../../assets/images/add-icon.png) center no-repeat;
+        background-size: 14px 14px;
+      }
+    }
+
+    .save-box {
+      float: right;
+      width: 16px;
+      height: 50px;
+      margin-right: 23px;
+      cursor: pointer;
+      background: url(../../assets/images/save-icon.png) center no-repeat;
+    }
+
+    .search-b {
+      height: 20px;
+      float: right;
+      margin: 15px 23px;
+
+      i {
+        float: right;
+        width: 18px;
+        height: 18px;
+        margin: 1px 0;
+        cursor: pointer;
+        background: url(../../assets/images/search-icon.png) center no-repeat;
+      }
+
+      input {
+        float: right;
+        width: 0;
+        height: 20px;
+        margin-right: 6px;
+        border-radius: 3px;
+        box-sizing: border-box;
+        padding: 0;
+        font-size: 12px;
+        line-height: 14px;
+        color: #666666;
+        border: none;
+        outline: none;
+        transition: all 0.3s;
+      }
+
+      &:hover {
+        input {
+          width: 130px;
+          padding: 3px 5px;
+        }
+      }
+    }
+  }
+  
+  .el-popover {
+    padding: 0;
+  }  
+
+  .con-box {
+
+    .title {
+      font-size: 14px;
+      color: #000000;
+      line-height: 30px;
+      padding: 0 15px;
+      border-bottom: 1px solid #DCDCDC;
+    }
+  }
+  .mess-list {
+    max-height: 380px;
+    overflow: auto;
+
+    section {
+      border-bottom: 1px solid #DCDCDC;
+
+      &:last-child {
+        border: none;
+      }
+    }
+
+    .top {
+      padding: 15px 15px 0;
+
+      img {
+        float: left;
+        margin-right: 13px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      p {
+        width: 220px;
+
+        span {
+          display: block;
+          font-size: 12px;
+          color: #99A9BF;
+          line-height: 24px;
+        }
+
+        .people {
+          font-size: 16px;
+          color: #475669;
+          line-height: 26px;
+        }
+      }
+    }
+
+    .mid {
+      padding: 10px 15px 0;
+
+      p {
+        font-size: 14px;
+        color: #5E6D82;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+      }
+
+      a {
+        display: block;
+        font-size: 14px;
+        color: #0053FF;
+        line-height: 20px;
+      }
+    }
+
+    .bottom {
+      padding: 8px 15px 20px;
+      overflow: hidden;
+
+      .edit {
+        float: right;
+
+        i {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+</style>
+

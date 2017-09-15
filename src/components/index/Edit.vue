@@ -2,7 +2,7 @@
     <div class="box editBoxBody">
         <div class="box editBoxBody editZone">
             <!--文章编辑区-->
-            <div class="box col-lg-6 col-md-6 col-sm-6 flexBox">
+            <div class="box box-edit">
 
                 <div class="flexItem">
                     <div class="editTitle">
@@ -41,7 +41,7 @@
             </div>
 
             <!--文章模板区-->
-            <div class="box col-lg-6 col-md-6 col-sm-6 flexBox">
+            <div class="box eidt-btn">
 
                 <div class="flexItem">
                     <div class="list-group">
@@ -574,3 +574,14 @@
         }
     }
 </script>
+<style lang="scss">
+    .box-edit {
+        float: left;
+        width: 400px;
+    }
+
+    .edit-btn {
+        float: left;
+        width: 400px;
+    }
+</style>

@@ -1,0 +1,89 @@
+<template>
+  <el-dialog title="头像更改" v-model="dialogFormVisible.visibleF" size="tiny">
+    <div class="el-upload file-container">
+      <div class="el-dragger">
+        <a target="_blank" :href="imgPath">
+          <img class="preview-img" :src="imgPath" v-show="imgPath" />
+        </a>
+      </div>
+      <el-button size="small" type="primary" >点击上传</el-button> {{remark}}
+      <input class="btn_file" type="file" @change="fileChange"/>
+    </div>
+  </el-dialog>
+</template>
+<script>
+import util from '../../assets/common/util'
+import interfaces from '../../assets/common/interfaces'
+
+export default {
+  props: {
+    dialogFormVisible: {
+      type: Object,
+      default: {}
+    },
+    path: String,
+    remark: {
+      type: String,
+      default: '（请上传1:1的图片）'
+    }
+  },
+  data () {
+    return {
+      curFile: null,
+      imgPath: ''
+    }
+  },
+  mounted () {
+    this.imgPath = this.path
+  },
+  watch: {
+    path (val) {
+      this.imgPath = val
+    }
+  },
+  methods: {
+    fileChange (event) {
+      util.upFile(event).then(res => {
+        this.imgPath = res.result.result.path
+        this.$message({
+          showClose: true,
+          message: '恭喜你，修改成功'
+        })
+        this.$emit('imgChange', this.imgPath)
+        this.dialogFormVisible.visibleF = false
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  .file-container {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .el-dragger {
+      width: 180px;
+    }
+
+    .preview-img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .btn_file {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 65px;
+      height: 30px;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .el-button--small {
+      width: 80px;
+    }
+  }
+</style>

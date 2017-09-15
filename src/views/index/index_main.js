@@ -1,11 +1,19 @@
 import Vue from 'vue'
-import App from './Index'
+import VueRouter from 'vue-router'
 import VueHtml5Editor from 'vue-html5-editor'
+import routes from './router'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
+import '../../assets/scss/common.scss'
+import './scss/index.scss';
 
 import '../../../static/plugin/ueditor/ueditor.config'
 import '../../../static/plugin/ueditor/ueditor.all'
 import '../../../static/plugin/ueditor/lang/zh-cn/zh-cn'
 import '../../../static/plugin/ueditor/ueditor.parse'
+
+import webHeader from '../../components/common/header.vue'
+import webFooter from '../../components/common/footer.vue'
 
 Vue.use(VueHtml5Editor, {
     showModuleName: true,
@@ -36,8 +44,32 @@ Vue.use(VueHtml5Editor, {
     ]
 })
 
+Vue.use(VueRouter)
+Vue.use(Element)
+
+// 实例化VueRouter
+const router = new VueRouter({
+  mode: 'history',
+  routes
+})
+
+// 验证登录
+router.beforeEach((to, from, next) => {
+  // 滚动置顶
+  window.scrollTo && window.scrollTo(0, 0)
+
+  next()
+  // if (!Cookies.get('uid') && to.name !== 'login') {
+  //   next({ path: '/login' })
+  //   return false
+  // }
+})
+
 new Vue({
     el: '#app',
-    template: '<App/>',
-    components: {App}
+    router,
+    components: {
+      webHeader,
+      webFooter
+    }
 })

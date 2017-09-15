@@ -3,19 +3,19 @@ var glob = require('glob')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
-var entries = getEntry('./src/views/**/*.js')
+var entries = getEntry('./src/views/**/*.html')
 
 
 
 //获取入口js文件
 function getEntry(globPath) {
   var entries = {},
-    basename, tmp, pathname;
+    basename, ext;
 
   glob.sync(globPath).forEach(function(entry) {
-    basename = path.basename(entry, path.extname(entry));
-    pathname = basename.split("_")[0];
-    entries[pathname] = entry;
+    ext = path.extname(entry)
+    basename = path.basename(entry, ext);
+    entries[basename] = entry.replace(ext, '_main.js');
   });
   return entries;
 }
