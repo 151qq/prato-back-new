@@ -65,10 +65,10 @@
           width="150"
           trigger="click">
         <div class="add-mess">
-          <router-link class="a-box" :to="{name: 'addHouse'}">
+          <router-link class="a-box" :to="{name: 'house', params: { type: 'create' }}">
             新增物业
           </router-link>
-          <router-link class="a-box a-bg" :to="{name: 'addReport'}">
+          <router-link class="a-box a-bg" :to="{name: 'report', params: { type: 'create' }}">
             新增报告
           </router-link>
         </div>

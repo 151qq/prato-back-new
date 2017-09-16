@@ -3,13 +3,12 @@
 
     <div class="listBox">
       <section v-if="list.length">
-        <div class="lists-box" :class="index === curIndex ? 'active' : ''" v-for="(item, index) in list" @click="getInfo(item.id)">
+        <div class="lists-box" :class="index === curIndex ? 'active' : ''" v-for="(item, index) in list" @click="getInfo(item.id, index)">
           <img class="img-box" :src="item.imgUrl">
           <div class="p-box">
             <span class="title">{{item.title}}</span>
             <span class="des">{{item.address}}</span>
             <div>
-              <img v-if="item.isSubmit" src="../../assets/images/yfb.png">
               <img @click.stop="delItem(item.id, index)" src="../../assets/images/delete-icon.png">
             </div>
           </div>
@@ -42,14 +41,14 @@
       loadList(){
         util.request({
           method: 'get',
-          interface: 'reportList',
-          data: {
-            type: this.$route.name
-          }
+          interface: this.$route.name + 'List',
+          data: {}
         }).then(res => {
           this.list = res.result.datas
           if (this.list.length && this.isfirst) {
             this.$emit('getInfo', this.list[0].id)
+            // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+            localStorage.setItem("id", this.list[0].id)
             this.isfirst = false
           }
         })
@@ -68,15 +67,20 @@
           })       
         })
       },
-      getInfo (id) {
+      getInfo (id, index) {
+        if (this.curIndex === index) {
+          return false
+        }
+        this.curIndex = index
         this.$emit('getInfo', id)
+        // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+        localStorage.setItem("id", id)
       },
       deleteById (id, index) {
         util.request({
           method: 'post',
-          interface: 'deleteArticle',
+          interface: 'delete' + this.$route.name,
           data: {
-            type: this.$route.name,
             id: id
           }
         }).then(res => {

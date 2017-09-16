@@ -25,12 +25,12 @@ export default {
         * pageSize 每页多少条
         * currentPage 当前页数
         */
-        "notice": '/static/api/common/notice.json',
+        notice: '/static/api/common/notice.json',
         /**
         * 任务详情 get
         * id 任务标识
         */
-        "noticeDetail": '/static/api/common/noticeDetail.json',
+        noticeDetail: '/static/api/common/noticeDetail.json',
         /**
         * 获取二维码 get
         * path
@@ -49,21 +49,45 @@ export default {
         */
         getInfoId: '/static/api/report/getInfoId.json',
         /**
+        * 楼盘列表 get
+        */
+        houseList: '/static/api/property/houseList.json',
+        /**
+        * 楼盘详情 get
+        * id 楼盘序列标识
+        */
+        info: '/static/api/property/info.json',
+        /**
         * 我的报告列表 get
-        * type 列表类型
+        * pageSize 每页数量
+        * id 文章报告id 关联用
         */
         reportList: '/static/api/report/reportList.json',
         /**
+        * 我的选中报告列表 get
+        * ids 文章报告id eg: 1,2,3
+        */
+        reportSelectList: '/static/api/report/reportSelectList.json',
+        /**
         * 删除文章或报告 post
-        * type 列表类型
         * id
         */
-        deleteArticle: '/static/api/report/reportList.json',
+        deletehouse: '/static/api/property/deletehouse.json',
+        /**
+        * 保存楼盘 post
+        * id
+        * formdata
+        */
+        savehouse: '/static/api/property/savehouse.json',
+        /**
+        * 删除文章或报告 post
+        * id
+        */
+        deletereport: '/static/api/report/deletereport.json',
         /**
         * 报告详情 get
-        * type string（business house mall）页面类型
-        * city string eg: "北京" 所选城市
-        * id 报告序列标识
+        * type 列表类型
+        * id 序列标识
         */
         reportDetail: '/static/api/report/reportDetail.json',
         /**
@@ -75,6 +99,16 @@ export default {
         * 获取商圈list get
         * city 要过滤的数据
         */
-        malls: '/static/api/property/malls.json'
+        malls: '/static/api/property/malls.json',
+        /**
+        * 地图过滤条件 get
+        */
+        typeMap: '/static/api/property/typeMap.json',
+        /**
+        * 楼盘对标列表 get
+        * type 列表类型
+        * id 楼盘序列标识
+        */
+        benchList: '/static/api/property/benchList.json'
     }
 }

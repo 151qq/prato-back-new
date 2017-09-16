@@ -21,6 +21,7 @@ export default {
     width: 100%;
     height: 90px;
     background: #000000;
+    z-index: 99;
 
     .mid-box {
       width: 1160px;

@@ -4,7 +4,7 @@
         <articles @getInfo="getInfo"></articles>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-house></form-house>
+            <form-house :list-info="listInfo"></form-house>
             <!-- <edit-box ref="editFn" @getTemplates="getTemplates"></edit-box> -->
         </div>
     </div>
@@ -29,13 +29,14 @@ export default {
         getInfo (id) {
             util.request({
                 method: 'get',
-                interface: 'reportDetail',
+                interface: 'info',
                 data: {
-                    type: this.$route.name
+                    type: this.$route.name,
+                    id: id
                 }
             }).then(res => {
                 this.listInfo = res.result.datas
-                console.log(this.listInfo)
+                console.log(this.listInfo, 'info')
             })
         }
     },
