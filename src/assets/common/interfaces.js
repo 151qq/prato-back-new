@@ -50,6 +50,7 @@ export default {
         getInfoId: '/static/api/report/getInfoId.json',
         /**
         * 楼盘列表 get
+        * key 搜索时使用，返回搜索相关数据
         */
         houseList: '/static/api/property/houseList.json',
         /**
@@ -59,8 +60,7 @@ export default {
         info: '/static/api/property/info.json',
         /**
         * 我的报告列表 get
-        * pageSize 每页数量
-        * id 文章报告id 关联用
+        * key 搜索时使用，返回搜索相关数据
         */
         reportList: '/static/api/report/reportList.json',
         /**
@@ -84,6 +84,12 @@ export default {
         * id
         */
         deletereport: '/static/api/report/deletereport.json',
+        /**
+        * 保存报告 post
+        * id
+        * formdata
+        */
+        savereport: '/static/api/report/savereport.json',
         /**
         * 报告详情 get
         * type 列表类型

@@ -8,9 +8,9 @@
 
 <body>
 <div id="app" v-cloak>
-    <web-header></web-header>
+    <web-header @savedata="saveData"></web-header>
     <section class="body-box">
-        <router-view></router-view>
+        <router-view ref="showBox"></router-view>
     </section>
     <web-footer></web-footer>
 </div>

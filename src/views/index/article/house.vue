@@ -1,10 +1,12 @@
 <template>
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
-        <articles @getInfo="getInfo"></articles>
+        <section class="leftBox" v-if="$route.params.type !== 'add'">
+            <articles @getInfo="getInfo"></articles>
+        </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-house :list-info="listInfo"></form-house>
+            <form-house ref="editBox" :list-info="listInfo"></form-house>
             <!-- <edit-box ref="editFn" @getTemplates="getTemplates"></edit-box> -->
         </div>
     </div>
@@ -27,6 +29,9 @@ export default {
             this.$refs.editFn.getTemplates(tplCode);
         },
         getInfo (id) {
+            if (this.$route.params.type === 'add') {
+                return false
+            }
             util.request({
                 method: 'get',
                 interface: 'info',
@@ -48,6 +53,9 @@ export default {
 }
 </script>
 <style lang="scss">
+.leftBox {
+    width: 400px;
+}
 .el-collapse-item__header {
     font-size: 20px;
     color: #000000;

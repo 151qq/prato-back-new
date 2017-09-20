@@ -2,10 +2,10 @@ const routers = [
   {
     path: '/',
     name: 'home',
-    redirect: '/index/house'
+    redirect: '/index/house/edit'
   },
   {
-    path: '/index/house',
+    path: '/index/house/:type',
     name: 'house',
     component (resolve) {
       require.ensure(['./article/house.vue'], () => {
@@ -14,7 +14,7 @@ const routers = [
     }
   }, {
     // 报告维护
-    path: '/index/report',
+    path: '/index/report/:type',
     name: 'report',
     component (resolve) {
       require.ensure(['./article/report.vue'], () => {

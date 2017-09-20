@@ -344,12 +344,13 @@ export default {
                 measure: []
             },
             benchList: [],
-            activeNames: [],
+            activeNames: ['1'],
             pickerPre: {
                 disabledDate(time) {
                     return time.getTime() > Date.now() - 8.64e7;
                 }
-            }
+            },
+            isCanSaved: false
         }
     },
     mounted () {
@@ -359,22 +360,28 @@ export default {
         map.centerAndZoom(point, 15)
 
         this.getTypes()
-        setTimeout(() => {
-            this.formData = this.listInfo
-            this.drawMap()
-            this.getBenchList()
-        }, 300)
 
-        var houseColl = localStorage.getItem("houseColl")
-        if (houseColl) {
-            this.activeNames = houseColl.split(',')
+        this.type = this.$route.params.type
+        if (this.type !== 'add') {
+            var houseColl = localStorage.getItem("houseColl")
+            if (houseColl) {
+                this.activeNames = houseColl.split(',')
+            }
         }
     },
     watch: {
         listInfo () {
-            this.formData = this.listInfo
-            this.drawMap()
-            this.getBenchList()
+            if (this.type === 'add') {
+                this.getBenchList()
+                this.isCanSaved = true
+            } else {
+                this.formData = this.listInfo
+                this.drawMap()
+                this.getBenchList()
+                setTimeout(() => {
+                  this.isCanSaved = true
+                }, 300)
+            }
         }
     },
     methods: {
@@ -382,8 +389,12 @@ export default {
             localStorage.setItem("houseColl", this.activeNames)
         },
         saveData () {
+            // 防止初始formData保存
+            if (!this.isCanSaved) {
+                return false
+            }
             util.request({
-                method: 'get',
+                method: 'post',
                 interface: 'savehouse',
                 data: this.formData
             }).then(res => {
@@ -493,7 +504,7 @@ export default {
 .formStyle {
     position: relative;
     width: 640px;
-    margin-left: 120px;
+    margin: 0 auto;
 
     .add-btn {
         position: absolute;

@@ -50,6 +50,7 @@ import searchBox from '../common/search-box.vue'
 import util from '../../assets/common/util'
 
 export default {
+    props: ['listInfo'],
     data () {
         return {
             formData: {
@@ -60,24 +61,50 @@ export default {
             total: 0,
             reportSelect: [],
             reportList: [],
-            activeNames: [],
+            activeNames: ['1'],
             dialogVisible: false
         }
     },
     mounted () {
-        setTimeout(() => {
-            this.getSelectList()
-            this.getReportList()
-        }, 300)
-
-        var reportColl = localStorage.getItem("reportColl")
-        if (reportColl) {
-            this.activeNames = reportColl.split(',')
+        this.type = this.$route.params.type
+        if (this.type !== 'add') {
+            var reportColl = localStorage.getItem("reportColl")
+            if (reportColl) {
+                this.activeNames = reportColl.split(',')
+            }
         }
+    },
+    watch: {
+      listInfo () {
+          if (this.type === 'add') {
+              this.getReportList()
+              this.isCanSaved = true
+          } else {
+              this.formData = this.listInfo
+              this.getSelectList()
+              this.getReportList()
+              setTimeout(() => {
+                  this.isCanSaved = true
+              }, 300)
+          }
+      }
     },
     methods: {
         collChange () {
             localStorage.setItem("reportColl", this.activeNames)
+        },
+        saveData () {
+          // 防止初始formData保存
+          if (!this.isCanSaved) {
+              return false
+          }
+          util.request({
+              method: 'post',
+              interface: 'savereport',
+              data: this.formData
+          }).then(res => {
+              console.log(res)
+          })
         },
         getSelectList () {
           var formD = {
@@ -115,6 +142,7 @@ export default {
           this.reportSelect.splice(index, 1)
           this.formData.articles = selects.join(',')
           this.resetReport()
+          this.saveData()
         },
         resetReport () {
           // 存储选择状态
@@ -172,6 +200,7 @@ export default {
           })
           this.formData.articles = selects.join(',')
           this.dialogVisible = false
+          this.saveData()
         },
         changePage (size) {
           this.pageNum = size
@@ -195,7 +224,7 @@ export default {
 .formStyleR {
     position: relative;
     width: 640px;
-    margin-left: 120px;
+    margin: 0 auto;
 
     .add-b {
         position: absolute;

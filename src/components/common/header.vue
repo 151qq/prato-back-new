@@ -63,22 +63,22 @@
           ref="popover2"
           placement="bottom"
           width="150"
-          trigger="click">
+          trigger="hover">
         <div class="add-mess">
-          <router-link class="a-box" :to="{name: 'house', params: { type: 'create' }}">
+          <router-link target="_blank" class="a-box" :to="{name: 'house', params: { type: 'add' }}">
             新增物业
           </router-link>
-          <router-link class="a-box a-bg" :to="{name: 'report', params: { type: 'create' }}">
+          <router-link target="_blank" class="a-box a-bg" :to="{name: 'report', params: { type: 'add' }}">
             新增报告
           </router-link>
         </div>
       </el-popover>
     </div>
 
-    <div class="save-box"></div>
+    <div class="save-box" @click="saveData"></div>
 
     <div class="search-b">
-      <i @click="getSearch"></i>
+      <router-link target="_blank" class="goU" :to="{name: $route.name, params: { type: 'detail' }, query: { key: keyValue }}"></router-link>
       <input v-model="keyValue"/>
     </div>
     <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
@@ -115,6 +115,10 @@ export default {
     this.getUserInfo()
     this.getNotice()
   },
+  beforeRouteUpdate (to, from, next) {
+    this.keyValue = ''
+    next()
+  },
   methods: {
     getSearch () {
       var formData = {
@@ -136,6 +140,9 @@ export default {
         this.keyValue = ''
         this.$router.push(path)
       })
+    },
+    saveData () {
+      this.$emit('savedata')
     },
     getUserInfo () {
       util.request({
@@ -340,7 +347,7 @@ export default {
       float: right;
       margin: 15px 23px;
 
-      i {
+      .goU {
         float: right;
         width: 18px;
         height: 18px;

@@ -39,10 +39,14 @@
   			this.loadList();		
   		},
       loadList(){
+        var formData = {}
+        if (this.$route.params.type === 'detail') {
+          formData.key = this.$route.query.key
+        }
         util.request({
           method: 'get',
           interface: this.$route.name + 'List',
-          data: {}
+          data: formData
         }).then(res => {
           this.list = res.result.datas
           if (this.list.length && this.isfirst) {
