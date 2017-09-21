@@ -50,9 +50,8 @@ export default {
         getInfoId: '/static/api/report/getInfoId.json',
         /**
         * 楼盘列表 get
-        * key 搜索时使用，返回搜索相关数据
         */
-        houseList: '/static/api/property/houseList.json',
+        houseTree: '/static/api/property/houseTree.json',
         /**
         * 楼盘详情 get
         * id 楼盘序列标识
@@ -63,6 +62,10 @@ export default {
         * key 搜索时使用，返回搜索相关数据
         */
         reportList: '/static/api/report/reportList.json',
+        /**
+        * 我的报告列表 get
+        */
+        reportTree: '/static/api/report/reportTree.json',
         /**
         * 我的选中报告列表 get
         * ids 文章报告id eg: 1,2,3

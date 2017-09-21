@@ -54,6 +54,8 @@ export default {
 <style lang="scss">
 .leftBox {
     width: 400px;
+    min-height: 100%;
+    background: #F0F0F0;
 }
 .el-collapse-item__header {
     font-size: 20px;

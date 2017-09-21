@@ -77,10 +77,6 @@
 
     <div class="save-box" @click="saveData"></div>
 
-    <div class="search-b">
-      <router-link target="_blank" class="goU" :to="{name: $route.name, params: { type: 'detail' }, query: { key: keyValue }}"></router-link>
-      <input v-model="keyValue"/>
-    </div>
     <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
     <password :dialog-form-visible="dialogFormVisible"></password>
   </section>
@@ -340,44 +336,6 @@ export default {
       margin-right: 23px;
       cursor: pointer;
       background: url(../../assets/images/save-icon.png) center no-repeat;
-    }
-
-    .search-b {
-      height: 20px;
-      float: right;
-      margin: 15px 23px;
-
-      .goU {
-        float: right;
-        width: 18px;
-        height: 18px;
-        margin: 1px 0;
-        cursor: pointer;
-        background: url(../../assets/images/search-icon.png) center no-repeat;
-      }
-
-      input {
-        float: right;
-        width: 0;
-        height: 20px;
-        margin-right: 6px;
-        border-radius: 3px;
-        box-sizing: border-box;
-        padding: 0;
-        font-size: 12px;
-        line-height: 14px;
-        color: #666666;
-        border: none;
-        outline: none;
-        transition: all 0.3s;
-      }
-
-      &:hover {
-        input {
-          width: 130px;
-          padding: 3px 5px;
-        }
-      }
     }
   }
   

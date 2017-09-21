@@ -1,20 +1,36 @@
 <template>
   <div class="allBox">
+    <el-input
+      class="search-title"
+      placeholder="输入关键字进行过滤"
+      v-model="filterText">
+    </el-input>
 
-    <div class="listBox">
-      <section v-if="list.length">
-        <div class="lists-box" :class="index === curIndex ? 'active' : ''" v-for="(item, index) in list" @click="getInfo(item.id, index)">
-          <img class="img-box" :src="item.imgUrl">
-          <div class="p-box">
-            <span class="title">{{item.title}}</span>
-            <span class="des">{{item.address}}</span>
-            <div>
-              <img @click.stop="delItem(item.id, index)" src="../../assets/images/delete-icon.png">
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+    <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
+      <el-submenu v-for="(item1, index1) in treeData" :index="index1 + ''">
+        <template slot="title">{{item1.label}}</template>
+        <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
+          <template slot="title">{{item2.label}}</template>
+          <el-menu-item v-for="(item3, index3) in item2.children" 
+              :index="index1 + '-' + index2 + '-' + index3">
+
+                <div class="lists-box"
+                    @click="getInfo(item3.id, index1, index2, index3)">
+                  <img class="img-box" :src="item3.imgUrl">
+                  <div class="p-box">
+                    <span class="title">{{item3.title}}</span>
+                    <span class="des">{{item3.address}}</span>
+                    <div>
+                      <img @click.stop="delItem(item3.id, index3)" src="../../assets/images/delete-icon.png">
+                    </div>
+                  </div>
+                </div>
+
+          </el-menu-item>
+        </el-submenu>
+      </el-submenu>
+    </el-menu>
+
   </div>
 </template>
 <script>
@@ -22,13 +38,63 @@
   export default{
     data(){
       return {
-        list: [],
         curIndex: 0,
-        isfirst: true
+        isfirst: true,
+        filterText: '',
+        treeData: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        activeName: '0-0-0',
+        openeds: ['0', '0-0']
       }
     },
     mounted(){
       this.loadList()
+    },
+    watch: {
+      filterText (value) {
+        var opens = []
+        if (value === '') {
+          let arrs = this.activeName.split('-')
+          opens = [arrs[0], arrs[0] + '-' + arrs[1]]
+          this.openeds = opens
+          return false
+        }
+        if (!this.treeData[0].children.length) {
+          return false
+        }
+        this.treeData.forEach((item1, index1) => {
+          // 外层有，打开
+          if (item1.label.indexOf(value) > -1) {
+            opens.push(String(index1))
+          }
+
+          if (!item1.children.length) {
+            return false
+          }
+          // 外层没有，内层有，也要打开外层
+          item1.children.forEach((item2, index2) => {
+            if (item2.label.indexOf(value) > -1) {
+              opens.push(String(index1))
+              opens.push(String(index1 + '-' + index2))
+            }
+
+            if (!item2.children.length) {
+              return false
+            }
+
+            item2.children.forEach((item3, index3) => {
+              if (item3.title.indexOf(value)> -1) {
+                opens.push(String(index1))
+                opens.push(String(index1 + '-' + index2))
+              }
+            })
+          })
+        })
+        this.openeds = opens
+      }
     },
     methods: {
   		//获取时间		
@@ -40,19 +106,17 @@
   		},
       loadList(){
         var formData = {}
-        if (this.$route.params.type === 'detail') {
-          formData.key = this.$route.query.key
-        }
         util.request({
           method: 'get',
-          interface: this.$route.name + 'List',
+          interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
-          this.list = res.result.datas
-          if (this.list.length && this.isfirst) {
-            this.$emit('getInfo', this.list[0].id)
+          this.treeData = res.result.datas
+          if (this.treeData[0].children.length && this.isfirst) {
+            let id = this.treeData[0].children[0].children[0].id
+            this.$emit('getInfo', id)
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
-            localStorage.setItem("id", this.list[0].id)
+            localStorage.setItem("id", id)
             this.isfirst = false
           }
         })
@@ -71,11 +135,12 @@
           })       
         })
       },
-      getInfo (id, index) {
-        if (this.curIndex === index) {
+      getInfo (id, index1, index2, index3) {
+        if (this.curIndex === index3) {
           return false
         }
-        this.curIndex = index
+        this.curIndex = index3
+        this.activeName = index1 + '-' + index2 + '-' + index3
         this.$emit('getInfo', id)
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
@@ -103,54 +168,108 @@
     width: 400px;
     background: #F9F9F9;
 
-    .lists-box {
-      width: 400px;
-      height: 120px;
-      border-bottom: 1px solid #F0F0F0;
-      box-sizing: border-box;
-      padding: 20px 22px;
-      cursor: pointer;
+    .search-title {
+      margin: 10px 0;
+      padding: 0 10px;
+    }
 
-      &.active {
-        background: #EFF2F7;
+    .el-submenu {
+      .el-submenu__title {
+        font-size: 16px;
+        color: #000000;
+        background: #F0F0F0;
+        border-bottom: 1px solid #E0E0E0;
+
+        &:hover {
+          background: #EFF2F7;
+        }
+      }
+    }
+
+    .two-box {
+      background: #F9F9F9;
+  
+      .el-submenu__title {
+        font-size: 14px;
+        color: #000000;
+        background: #F9F9F9;
+        border-bottom: 1px solid #E0E0E0;
+
+        &:hover {
+          background: #EFF2F7;
+        }
       }
 
-      .img-box {
-        float: left;
-        width: 105px;
-        height: 80px;
-        margin-right: 22px;
-      }
+      .el-menu-item {
+        height: 60px;
+        background: #F9F9F9;
+        border-bottom: 1px solid #E0E0E0;
 
-      .p-box {
-        float: right;
-        width: 228px;
+        .lists-box {
+          position: relative;
+          height: 60px;
+          box-sizing: border-box;
+          cursor: pointer;
 
-        .title {
-          display: block;
-          font-size: 16px;
-          color: #000000;
-          margin-bottom: 3px;
-          margin-top: -2px;
+          .img-box {
+            float: left;
+            width: 50px;
+            height: 30px;
+            margin: 15px 15px 0 0;
+          }
+
+          .p-box {
+            float: left;
+            width: 230px;
+            margin-top: 10px;
+
+            .title {
+              display: block;
+              font-size: 14px;
+              color: #000000;
+              line-height: 18px
+            }
+
+            .des {
+              display: block;
+              height: 26px;
+              font-size: 12px;
+              color: #5E6D82;
+              overflow: hidden;
+              line-height: 26px;
+            }
+
+            div {
+              display: none;
+              position: absolute;
+              right: -20px;
+              top: 22px;
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+
+              img {
+                display: block;
+                width: 16px;
+                height: 16px;
+              }
+
+              &:hover {
+                opacity: 0.8;
+              }
+            }
+          }
         }
 
-        .des {
-          display: block;
-          height: 40px;
-          font-size: 12px;
-          color: #475669;
-          overflow: hidden;
-          line-height: 20px;
+        &.is-active {
+          background: #EFF2F7;
         }
 
-        div {
-          height: 16px;
-          line-height: 16px;
-          text-align: right;
+        &:hover {
+          background: #EFF2F7;
 
-          img {
-            margin-left: 8px;
-            cursor: pointer;
+          .p-box div {
+            display: block;
           }
         }
       }
