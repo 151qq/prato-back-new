@@ -76,6 +76,29 @@
         "ewm": "/static/images/ewm.png"
       }
     },
+    "article": [
+      {
+        "type":"upload",
+        "imgUrl":"http://img.esocial-cloud.com/2c4579f0-71b2-4776-b984-739b516888dd.png",
+        "content":"<img src=\"http://img.esocial-cloud.com/2c4579f0-71b2-4776-b984-739b516888dd.png\" style=\"display: block; max-width: 100%; margin: 10px 0;\">"
+      },{
+        "type":"title",
+        "title":"第一段标题",
+        "style": "display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;",
+        "content":"<div style=\"display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;\">第一段标题</div>"
+      },{
+        "type":"text",
+        "content":"<p>第一段文本</p>"
+      },{
+        "type":"title",
+        "title":"第二段标题",
+        "style": "display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;",
+        "content": "<div style=\"display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;\">第二标题</div>"
+      },{
+        "type":"text",
+        "content":"<p>第二段文本</p>"
+      }
+    ],
     "imgs": {
       "appearance": [
         "/static/images/img1.png",

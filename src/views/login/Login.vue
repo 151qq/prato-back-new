@@ -149,7 +149,7 @@
                     data: data
                 }).then((res) => {
                     console.log(res);
-                    window.location.href = '/index.html';
+                    window.location.href = '/';
                 });
             },
             regBtn(){

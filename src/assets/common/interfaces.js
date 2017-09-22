@@ -27,6 +27,11 @@ export default {
         */
         notice: '/static/api/common/notice.json',
         /**
+        * 我的任务列表 get
+        * tmpCode 模版号
+        */
+        getTemplate: '/static/api/common/getTemplate.json',
+        /**
         * 任务详情 get
         * id 任务标识
         */
@@ -52,6 +57,11 @@ export default {
         * 楼盘列表 get
         */
         houseTree: '/static/api/property/houseTree.json',
+        /**
+        * 楼盘列表 get
+        * id 楼盘序列标识
+        */
+        bigImgs: '/static/api/property/bigImgs.json',
         /**
         * 楼盘详情 get
         * id 楼盘序列标识

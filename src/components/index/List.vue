@@ -15,13 +15,13 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.id, index1, index2, index3)">
+                    @click="getInfo(item3.id, item3.tmpCode, index1, index2, index3)">
                   <img class="img-box" :src="item3.imgUrl">
                   <div class="p-box">
                     <span class="title">{{item3.title}}</span>
                     <span class="des">{{item3.address}}</span>
                     <div>
-                      <img @click.stop="delItem(item3.id, index3)" src="../../assets/images/delete-icon.png">
+                      <img @click.stop="delItem(item3.id, index1, index2, index3)" src="../../assets/images/delete-icon.png">
                     </div>
                   </div>
                 </div>
@@ -114,20 +114,27 @@
           this.treeData = res.result.datas
           if (this.treeData[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].id
-            this.$emit('getInfo', id)
+            let tmpCode = this.treeData[0].children[0].children[0].tmpCode
+
+            let data = {
+              id: id,
+              tmpCode: tmpCode
+            }
+            this.$emit('getInfo', data)
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
+            localStorage.setItem("tmpCode", tmpCode)
             this.isfirst = false
           }
         })
       },
-      delItem (id, index) {
+      delItem (id, index1, index2, index3) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.deleteById(id, index)
+          this.deleteById(id, index1, index2, index3)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -135,17 +142,22 @@
           })       
         })
       },
-      getInfo (id, index1, index2, index3) {
+      getInfo (id, tmpCode, index1, index2, index3) {
         if (this.curIndex === index3) {
           return false
         }
         this.curIndex = index3
         this.activeName = index1 + '-' + index2 + '-' + index3
-        this.$emit('getInfo', id)
+        var data = {
+          id: id,
+          tmpCode: tmpCode
+        }
+        this.$emit('getInfo', data)
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
+        localStorage.setItem("tmpCode", tmpCode)
       },
-      deleteById (id, index) {
+      deleteById (id, index1, index2, index3) {
         util.request({
           method: 'post',
           interface: 'delete' + this.$route.name,
@@ -153,7 +165,21 @@
             id: id
           }
         }).then(res => {
-          this.list.splice(index, 1)
+          if (this.treeData[index1].children[index2].children.length === 1) {
+            if (this.treeData[index1].children.length === 1) {
+              this.treeData.splice(index1, 1)
+            } else {
+              this.treeData[index1].children.splice(index2, 1)
+            }
+          } else {
+            this.treeData[index1].children[index2].children.splice(index3, 1)
+          }
+          if (this.curIndex === index3) {
+            let id = this.treeData[0].children[0].children[0].id
+            this.$emit('getInfo', id)
+            this.activeName = '0-0-0'
+            this.openeds = ['0', '0-0']
+          }
           this.$message({
             type: 'success',
             message: '删除成功!'

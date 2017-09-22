@@ -1,10 +1,10 @@
 <template>
-    <div class="box editBoxBody">
-        <div class="box editBoxBody editZone">
+    <div>
+        <div class="editZone">
             <!--文章编辑区-->
-            <div class="box box-edit">
+            <div class="box">
 
-                <div class="flexItem">
+                <div>
                     <div class="editTitle">
                         <textarea rows="1" placeholder="请输入标题，最长标题不能超过26个字" v-model="html5PageTitle"></textarea>
                         <input type="hidden" v-model="id"/>
@@ -42,15 +42,9 @@
 
             <!--文章模板区-->
             <div class="box eidt-btn">
-
-                <div class="flexItem">
-                    <div class="list-group">
-                        <ul id="templateArea">
-                            <li v-for="(element,index) in list" @click="clickLiTpl(index,$event)">
-                                <div class="list-group-item" v-html="element.html"></div>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="templateArea" class="list-group">
+                    <div class="list-group-item"  v-for="(element,index) in list" 
+                        @click="clickLiTpl(index,$event)" v-html="element.html"></div>
                 </div>
             </div>
         </div>
@@ -76,6 +70,7 @@
     import ueditor from './../../components/assembly/ueditor.vue';
 
     export default{
+        props: ['articleIn'],
         name: 'app',
         components: {
             formDiscounts,
@@ -125,6 +120,7 @@
                 filter: '.filter',
                 sort: true,
                 onAdd: function (/**Event*/evt) {
+                    console.log(evt)
                     var itemEl = evt.item;
                     articleArea.removeChild(itemEl);
                     _self.articleAreaList.splice(evt.newIndex, 0, {});
@@ -163,9 +159,35 @@
                 , type: 'datetime'
                 , format: 'yyyy-MM-dd HH-mm-ss'
             });
-        },
-        methods: {
 
+            setTimeout(() => {
+                this.getInfo()
+                console.log(this.articleAreaList, 'list')
+            }, 300)
+        },
+        // watch: {
+        //     articleIn (value) {
+        //         this.articleAreaList = value
+        //         console.log(this.articleAreaList, 'area')
+        //     }
+        // },
+        methods: {
+            getInfo () {
+                if (this.$route.params.type === 'add') {
+                    return false
+                }
+
+                util.request({
+                    method: 'get',
+                    interface: 'findArticleByFileCode',
+                    data: {
+                        fileCode: 'aaddc213-c16e-4a8e-8cff-d7d49eb180b0',
+                        id: 27
+                    }
+                }).then(res => {
+                    this.articleAreaList = res.result.result.fileAreaList
+                })
+            },
             getUEContent(index) {
                 var ue = "ue" + index
                 let content = this.$refs[ue][0].getUEContent();
@@ -574,14 +596,3 @@
         }
     }
 </script>
-<style lang="scss">
-    .box-edit {
-        float: left;
-        width: 400px;
-    }
-
-    .edit-btn {
-        float: left;
-        width: 400px;
-    }
-</style>

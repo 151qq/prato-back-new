@@ -1,7 +1,7 @@
 <template>
   <div class="imgs-box">
     <section class="img-box" v-for="(item, index) in imgLists">
-      <img class="img-big" :src="item">
+      <img class="img-big" :src="item" @click="showImg">
       <div>
         <img class="del-btn" src="../../assets/images/del-icon.png">
         <p>
@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import $ from 'Jquery'
 import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 
@@ -40,6 +41,10 @@ export default {
             this.imgLists.push(imgUrl)
           }
         })
+      },
+      showImg (e) {
+        let index = $('body .img-big').index($(e.target))
+        this.$emit('showimg', index)
       }
     }
 }

@@ -2,7 +2,7 @@
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="报告详情" name="1">
-            
+            <edit-box :article-in="articleinfo" @saveHandle="saveData"></edit-box>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="推荐文章" name="2">
@@ -46,15 +46,15 @@
     </div>
 </template>
 <script>
-import searchBox from '../common/search-box.vue'
 import util from '../../assets/common/util'
+import editBox from '../../components/common/edit'
 
 export default {
-    props: ['listInfo'],
+    props: ['listInfo', 'articleInfo'],
     data () {
         return {
             formData: {
-              articles: '1,3'
+              articles: ''
             },
             pageSize: 2,
             pageNum: 1,
@@ -62,16 +62,26 @@ export default {
             reportSelect: [],
             reportList: [],
             activeNames: ['1'],
-            dialogVisible: false
+            dialogVisible: false,
+            articleinfo: []
         }
     },
     mounted () {
         this.type = this.$route.params.type
         if (this.type !== 'add') {
+            this.formData = this.listInfo
+            this.getSelectList()
+            this.getReportList()
+            setTimeout(() => {
+                this.isCanSaved = true
+            }, 300)
             var reportColl = localStorage.getItem("reportColl")
             if (reportColl) {
                 this.activeNames = reportColl.split(',')
             }
+        } else {
+          this.getReportList()
+          this.isCanSaved = true
         }
     },
     watch: {
@@ -87,6 +97,10 @@ export default {
                   this.isCanSaved = true
               }, 300)
           }
+      },
+      articleInfo () {
+        this.articleinfo = this.articleInfo
+        console.log(this.articleinfo, 'ls')
       }
     },
     methods: {
@@ -98,6 +112,12 @@ export default {
           if (!this.isCanSaved) {
               return false
           }
+          if (this.type !== 'add') {
+            this.formData.id = localStorage.getItem("id")
+          }
+
+          this.formData.article = this.articleinfo
+
           util.request({
               method: 'post',
               interface: 'savereport',
@@ -137,6 +157,9 @@ export default {
             })
         },
         deleteReport (index) {
+          if (!this.formData.articles) {
+            return false
+          }
           var selects = this.formData.articles.split(',')
           selects.splice(index, 1)
           this.reportSelect.splice(index, 1)
@@ -206,6 +229,9 @@ export default {
           this.pageNum = size
           this.getReportList()
         }
+    },
+    components: {
+      editBox
     }
 }
 </script>

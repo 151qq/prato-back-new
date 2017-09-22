@@ -6,29 +6,26 @@
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-report ref="editBox" :list-info="listInfo"></form-report>
-            <!-- <edit-box ref="editFn" @getTemplates="getTemplates"></edit-box> -->
+            <form-report ref="editBox" :list-info="listInfo" :article-info="articleInfo"></form-report>
         </div>
     </div>
     
 </template>
 <script>
-import articles from '../../../components/index/List.vue'
-// import editBox from '../../../components/index/Edit'
+import articles from '../../../components/index/list.vue'
 import formReport from '../../../components/index/formReport'
 import util from '../../../assets/common/util'
 
 export default {
     data () {
         return {
-            listInfo: {}
+            listInfo: {},
+            articleInfo: []
         }
     },
     methods: {
-        getTemplates(tplCode){
-            this.$refs.editFn.getTemplates(tplCode);
-        },
-        getInfo (id) {
+        getInfo (data) {
+            console.log(data, 'data')
             if (this.$route.params.type === 'add') {
                 return false
             }
@@ -36,16 +33,18 @@ export default {
                 method: 'get',
                 interface: 'reportDetail',
                 data: {
-                    type: this.$route.name
+                    type: this.$route.name,
+                    id: data.id,
+                    tmpCode: data.tmpCode
                 }
             }).then(res => {
                 this.listInfo = res.result.datas
-                console.log(this.listInfo)
+                this.articleInfo = res.result.datas.article
+                console.log(this.articleInfo, 'info')
             })
         }
     },
     components: {
-        // editBox,
         articles,
         formReport
     }

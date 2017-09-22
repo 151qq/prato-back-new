@@ -2,7 +2,17 @@
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyle" title="物业基本信息" name="1">
-            <search-box :is-page="true" @mapChange="drawMap"></search-box>
+            <section v-if="$route.params.type === 'edit'" class="baseInput bigB">
+                <span>楼盘名字</span>
+                <el-input
+                  class="input-box"
+                  placeholder="请输入内容"
+                  @blur="saveData"
+                  :disabled="true"
+                  v-model="formData.base.name">
+                </el-input>
+            </section>
+            <search-box v-if="$route.params.type !== 'edit'" :is-page="true" @mapChange="drawMap"></search-box>
             <div id="container"></div>
             <div class="form-box">
                 <div class="clear"></div>
@@ -244,35 +254,40 @@
             </div>
           </el-collapse-item>
           <div class="line-bold"></div>
-          <el-collapse-item class="formStyle" title="物业评述" name="4">
-            
+          <el-collapse-item class="formStyle editShow" title="物业评述" name="4">
+            <edit-box :article-in="articleinfo" @saveHandle="saveData"></edit-box>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业外观图片" name="5">
-            <upload-list :img-lists="formData.imgs.appearance"></upload-list>
+            <upload-list :img-lists="formData.imgs.appearance" @showimg="showImg"></upload-list>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业公共区域图片" name="6">
-            <upload-list :img-lists="formData.imgs.public"></upload-list>
+            <upload-list :img-lists="formData.imgs.public" @showimg="showImg"></upload-list>
           </el-collapse-item>
           <div class="line-bold"></div>
-          <el-collapse-item class="formStyle" title="物业周围环境图片" name="6">
-            <upload-list :img-lists="formData.imgs.surround"></upload-list>
+          <el-collapse-item class="formStyle" title="物业周围环境图片" name="7">
+            <upload-list :img-lists="formData.imgs.surround" @showimg="showImg"></upload-list>
           </el-collapse-item>
         </el-collapse>
+  
+        <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
     </div>
 </template>
 <script>
 import searchBox from '../common/search-box.vue'
 import util from '../../assets/common/util'
 import uploadList from '../../components/index/upload-list'
+import swiperImg from '../../components/common/swiper-img.vue'
+import editBox from '../../components/common/edit'
 
 export default {
-    props: ['listInfo'],
+    props: ['listInfo', 'articleInfo'],
     data () {
         return {
             formData: {
                 base: {
+                    name: '',
                     point: {
                         lng: '',
                         lat: ''
@@ -350,7 +365,13 @@ export default {
                     return time.getTime() > Date.now() - 8.64e7;
                 }
             },
-            isCanSaved: false
+            isShow: {
+              value: false
+            },
+            index: 0,
+            bigImgs: [],
+            isCanSaved: false,
+            articleinfo: []
         }
     },
     mounted () {
@@ -382,17 +403,40 @@ export default {
                   this.isCanSaved = true
                 }, 300)
             }
+        },
+        articleInfo () {
+          this.articleinfo = this.articleInfo
         }
     },
     methods: {
+        showImg (index) {
+          util.request({
+              method: 'get',
+              interface: 'bigImgs',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.bigImgs = res.result.datas
+              this.index = index
+              this.isShow.value = true
+          })
+        },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
         },
         saveData () {
+            console.log(this.isCanSaved)
             // 防止初始formData保存
             if (!this.isCanSaved) {
                 return false
             }
+            if (this.type !== 'add') {
+              this.formData.id = localStorage.getItem("id")
+            }
+
+            this.formData.article = this.articleinfo
+
             util.request({
                 method: 'post',
                 interface: 'savehouse',
@@ -492,7 +536,9 @@ export default {
     },
     components: {
         searchBox,
-        uploadList
+        uploadList,
+        swiperImg,
+        editBox
     }
 }
 </script>
@@ -502,7 +548,6 @@ export default {
 }
 
 .formStyle {
-    position: relative;
     width: 640px;
     margin: 0 auto;
 
