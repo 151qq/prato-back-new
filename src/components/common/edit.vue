@@ -5,7 +5,7 @@
         <li class="list-group-item" v-for="(item, index) in articleList" :data-id="index"> 
             <div class="show-box" v-if="item.type === 'upload'">
                 <div v-if="disabled">
-                    <upload :path="item.imgUrl" :num="index" @delImg="delImg" @changeImg="changeImg"></upload>
+                    <upload :path="item.imgUrl" :num="index" :is-btn.sync="disabled" @delImg="delImg" @changeImg="changeImg"></upload>
                 </div>
                 <img @click.prevent="preHandl" v-if="!disabled && item.imgUrl"
                         :src="item.imgUrl" :style="imgStyle">
@@ -28,7 +28,8 @@
                         @blur="titleBlur(item, index)" :style="item.style" placeholder="编辑中的内标题样式">
                 <div v-if="!disabled && item.title" :style="item.style">{{item.title}}</div>
                 <div v-if="!disabled && !item.title" :style="item.style">编辑中的内标题样式</div>
-                <img v-if="!item.style" class="img-default" @click.prevent="setStyle(index, item.style)"
+                <img v-if="!item.style && !disabled" class="img-default"
+                        @click.prevent="setStyle(index, item.style)"
                         src="../../assets/images/title-default.jpg">
                 <div class="btns" v-if="item.style && disabled">
                     <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleteTitle(index)">
@@ -263,8 +264,9 @@ export default {
                 this.templateAdd = res.result.datas.editTem
                 this.titleLists = res.result.datas.titles
                 this.imgStyle = this.templateAdd[0].style
-
-                $('.bodyMain').append($('#articleArea'))
+                setTimeout(() => {
+                    $('.bodyMain').html($('#articleArea'))
+                }, 0)  
             })
         },
         preHandl () {}
@@ -281,6 +283,10 @@ export default {
     position: relative;
     min-height: 300px;
 
+    #articleArea {
+        min-height: 300px;
+    }
+
     .show-box {
         cursor: pointer;
         margin-bottom: 30px;
@@ -294,13 +300,15 @@ export default {
 
     .btn-show {
         .btn-hover {
-            display: none;
+            background: #EFF2F7;
+            display: block;
             overflow: hidden;
             padding: 12px;
         }
 
         .btns {
-            display: none;
+            background: #EFF2F7;
+            display: block;
             padding: 12px;
             overflow: hidden;
 
@@ -320,13 +328,6 @@ export default {
 
         .delete-btn {
             float: right;
-        }
-
-        &:hover {
-            .btn-hover, .btns {
-                background: #EFF2F7;
-                display: block;
-            }
         }
     }
 

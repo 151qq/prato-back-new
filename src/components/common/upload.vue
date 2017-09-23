@@ -3,7 +3,7 @@
     <section class="upload-box">
       <img v-if="!curPath" class="img-big" src="../../assets/images/img-default.jpg" @click="showSelect">
       <img v-else class="img-big" :src="curPath">
-      <div>
+      <div v-if="isBtn">
         <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
         <img class="del-btn" src="../../assets/images/pen-icon.png" @click="showSelect">
         <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetPath">
@@ -32,7 +32,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num'],
+    props: ['path', 'num', 'isBtn'],
     data() {
       return {
         isShow: false,
@@ -101,6 +101,7 @@ export default {
 .upload-box {
   position: relative;
   cursor: pointer;
+  background: #EFF2F7;
 
   .img-big {
     display: block;
@@ -109,8 +110,8 @@ export default {
   }
 
   div {
-    display: none;
-    margin-top: 20px;
+    display: block;
+    padding: 16px 0;
     overflow: hidden;
       
     img {
@@ -123,15 +124,6 @@ export default {
       &:hover {
         opacity: 0.8;
       }
-    }
-  }
-
-  &:hover {
-    background: #EFF2F7;
-
-    div {
-      display: block;
-      padding-bottom: 20px;
     }
   }
 }

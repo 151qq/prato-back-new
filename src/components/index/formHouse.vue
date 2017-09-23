@@ -440,7 +440,7 @@ export default {
             this.formData.article = this.articleinfo
 
             util.request({
-                method: 'post',
+                method: 'get',
                 interface: 'savehouse',
                 data: this.formData
             }).then(res => {
