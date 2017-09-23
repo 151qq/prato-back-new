@@ -1,5 +1,6 @@
 <template>
     <section class="edit-box">
+      <section v-html="templateBg"></section>
       <ul id="articleArea" name="content" class="list-group">
         <li class="list-group-item" v-for="(item, index) in articleList" :data-id="index"> 
             <div class="show-box" v-if="item.type === 'upload'">
@@ -63,6 +64,8 @@ import draggable from 'vuedraggable'
 import util from '../../assets/common/util'
 import upload from '../../components/common/upload'
 import ueditor from '../../components/common/ueditor'
+import $ from 'Jquery'
+import sortable from 'sortablejs'
 
 export default {
     props: ['articleIn'],
@@ -99,32 +102,37 @@ export default {
     },
     mounted () {
         this.getTemplate()
-        var _this = this
-
-        var articleArea = document.getElementById('articleArea')
-        this.sortable = Sortable.create(articleArea, {
-            handle: ".list-group-item",
-            animation: 100,
-            group: {name: "articleArea", pull: false, put: false},
-            filter: '.filter',
-            sort: true,
-            disabled: true,
-            onUpdate ({oldIndex, newIndex}) {
-                let preData = _this.articleList[newIndex]
-                _this.articleList[newIndex] = _this.articleList[oldIndex]
-                _this.articleList[oldIndex] = preData
-                console.log(_this.articleList, 'ls')
-                // _this.$emit('saveHandle')
-            }
-        })
+        this.setSortable()
     },
     watch: {
         articleIn () {
             this.articleList = this.articleIn
             this.getTemplate()
+            this.disabled = true
+            this.sortable.option('disabled', true)
         }
     },
     methods:{
+        setSortable () {
+            var _this = this
+
+            var articleArea = document.getElementById('articleArea')
+            this.sortable = sortable.create(articleArea, {
+                handle: ".list-group-item",
+                animation: 100,
+                group: {name: "articleArea", pull: false, put: false},
+                filter: '.filter',
+                sort: true,
+                disabled: true,
+                onUpdate ({oldIndex, newIndex}) {
+                    let preData = _this.articleList[newIndex]
+                    _this.articleList[newIndex] = _this.articleList[oldIndex]
+                    _this.articleList[oldIndex] = preData
+                    console.log(_this.articleList, 'ls')
+                    // _this.$emit('saveHandle')
+                }
+            })
+        },
         addTem (type) {
             switch (type) {
                 case 'upload':
@@ -161,6 +169,7 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'change':
+                    console.log(this.sortable, 's')
                     this.sortable.option('disabled', !this.sortable.option('disabled'))
                     this.disabled = !this.disabled
                     
@@ -254,6 +263,8 @@ export default {
                 this.templateAdd = res.result.datas.editTem
                 this.titleLists = res.result.datas.titles
                 this.imgStyle = this.templateAdd[0].style
+
+                $('.bodyMain').append($('#articleArea'))
             })
         },
         preHandl () {}
