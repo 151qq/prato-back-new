@@ -25,23 +25,11 @@ export default {
     },
     methods: {
         getInfo (data) {
-            console.log(data, 'data')
             if (this.$route.params.type === 'add') {
                 return false
             }
-            util.request({
-                method: 'get',
-                interface: 'reportDetail',
-                data: {
-                    type: this.$route.name,
-                    id: data.id,
-                    tmpCode: data.tmpCode
-                }
-            }).then(res => {
-                this.listInfo = res.result.datas
-                this.articleInfo = res.result.datas.article
-                console.log(this.articleInfo, 'info')
-            })
+            // 编辑区域获取初始数据
+            this.$refs.editBox.getAllData()
         }
     },
     components: {

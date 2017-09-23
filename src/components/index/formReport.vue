@@ -3,12 +3,12 @@
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="报告详情" name="1">
             <section class="title-input">
-                <el-input type="text" placeholder="请输入标题,最多25个字符" v-model="formData.title"
+                <el-input type="text" placeholder="请输入标题,最多25个字符" v-model="title"
                     @change="checkTitle" @blur="saveData" autofocus></el-input>
             </section>
             <section class="abInput">
-              <el-select class="se-box" @change="saveData"
-                  v-model="formData.investor" placeholder="请选择投资顾问">
+              <el-select class="se-box"
+                  v-model="investor" placeholder="请选择投资顾问">
                   <el-option
                     v-for="item in investors"
                     :key="item"
@@ -18,7 +18,11 @@
               </el-select>
             </section>
             <div class="clear"></div>
-            <edit-box :article-in="articleinfo" @saveHandle="saveData"></edit-box>
+            <edit-box :article-in="articleinfo"></edit-box>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('articleinfo')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="推荐文章" name="2">
@@ -32,6 +36,10 @@
                 <el-button class="delete-b" type="danger" :plain="true" size="small" icon="delete"
                     @click="deleteReport(index)">删除</el-button>
             </div>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('articles')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
         </el-collapse>
 
@@ -70,11 +78,9 @@ export default {
     props: ['listInfo', 'articleInfo'],
     data () {
         return {
-            formData: {
-              title: '',
-              investor: '',
-              articles: ''
-            },
+            title: '',
+            investor: '',
+            articles: '',
             pageSize: 2,
             pageNum: 1,
             total: 0,
@@ -89,74 +95,84 @@ export default {
     mounted () {
         this.type = this.$route.params.type
         if (this.type !== 'add') {
-            this.formData = this.listInfo
-            this.getSelectList()
-            this.getReportList()
-            setTimeout(() => {
-                this.isCanSaved = true
-            }, 300)
             var reportColl = localStorage.getItem("reportColl")
             if (reportColl) {
                 this.activeNames = reportColl.split(',')
             }
-        } else {
-          this.getReportList()
-          this.isCanSaved = true
         }
-        this.getInvestors()
-    },
-    watch: {
-      listInfo () {
-          if (this.type === 'add') {
-              this.getReportList()
-              this.isCanSaved = true
-          } else {
-              this.formData = this.listInfo
-              this.getSelectList()
-              this.getReportList()
-              setTimeout(() => {
-                  this.isCanSaved = true
-              }, 300)
-          }
-          this.getInvestors()
-          $('.title-input input').focus()
-      },
-      articleInfo () {
-        this.articleinfo = this.articleInfo
-      }
+        this.getAllData()
     },
     methods: {
+        getAllData () {
+          if (this.type !== 'add') {
+            this.getArticle()
+            this.getArticles()
+          }
+          this.getReportList()
+          this.getInvestors()
+          $('.title-input input').focus()
+        },
+        getArticle () {
+          util.request({
+              method: 'get',
+              interface: 'reportDetail',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.title = res.result.datas.title
+              this.investor = res.result.datas.investor
+              this.articleinfo = res.result.datas.article
+          })
+        },
+        getArticles () {
+          util.request({
+              method: 'get',
+              interface: 'articles',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.articles = res.result.datas.articles
+              this.getSelectList()
+          })
+        },
         checkTitle () {
-          console.log(this.formData.title.length)
-          if (this.formData.title.length > 25) {
+          console.log(this.title.length)
+          if (this.title.length > 25) {
             this.$message({
               message: '最多只能输入25个字符',
               type: 'warning'
             })
-            this.formData.title = this.formData.title.substring(0, 25)
+            this.title = this.title.substring(0, 25)
           }
         },
         collChange () {
             localStorage.setItem("reportColl", this.activeNames)
         },
-        saveData () {
-          // 防止初始formData保存
-          if (!this.isCanSaved) {
-              return false
-          }
-          if (this.type !== 'add') {
-            this.formData.id = localStorage.getItem("id")
-          }
+        saveData (type, index) {
+            var formData = {
+              id: localStorage.getItem("id"),
+              type: type,
+              data: this[type],
+            }
 
-          this.formData.article = this.articleinfo
+            if (index !== undefined) {
+              formData.index = index
+            }
 
-          util.request({
-              method: 'get',
-              interface: 'savereport',
-              data: this.formData
-          }).then(res => {
-              console.log(res)
-          })
+            if (type === 'articleinfo') {
+              formData.title = this.title
+              formData.investor = this.investor
+            }
+
+            util.request({
+                method: 'post',
+                interface: 'savehouse',
+                data: formData
+            }).then(res => {
+                console.log(res)
+            })
         },
         getInvestors () {
             util.request({
@@ -171,7 +187,7 @@ export default {
         },
         getSelectList () {
           var formD = {
-            ids: this.formData.articles
+            ids: this.articles
           }
 
           util.request({
@@ -200,13 +216,13 @@ export default {
             })
         },
         deleteReport (index) {
-          if (!this.formData.articles) {
+          if (!this.articles) {
             return false
           }
-          var selects = this.formData.articles.split(',')
+          var selects = this.articles.split(',')
           selects.splice(index, 1)
           this.reportSelect.splice(index, 1)
-          this.formData.articles = selects.join(',')
+          this.articles = selects.join(',')
           this.resetReport()
           this.saveData()
         },
@@ -214,7 +230,7 @@ export default {
           // 存储选择状态
           this.selListInit = []
 
-          var selects = this.formData.articles.split(',')
+          var selects = this.articles.split(',')
           this.reportList.forEach((item) => {
             var index = selects.indexOf(String(item.id))
             // 存储选择状态
@@ -248,7 +264,7 @@ export default {
         confirmSelect () {
           // 存储选择状态
           this.selListInit = []
-          var selects = this.formData.articles.split(',')
+          var selects = this.articles.split(',')
           this.reportList.forEach((item, num) => {
             var index = selects.indexOf(String(item.id))
             // 存储选择状态
@@ -264,7 +280,7 @@ export default {
               this.reportSelect.push(item)
             }
           })
-          this.formData.articles = selects.join(',')
+          this.articles = selects.join(',')
           this.dialogVisible = false
           this.saveData()
         },
@@ -294,6 +310,11 @@ export default {
     position: relative;
     width: 640px;
     margin: 0 auto;
+
+    .save-btn {
+      float: right;
+      margin-top: 10px;
+    }
 
     .title-input {
       margin: 30px 0;
@@ -393,17 +414,15 @@ export default {
 
     .delete-b {
         float: right;
-        display: none;
+        display: block;
         margin-top: 4px;
         cursor: pointer;
     }
 
-    &:hover {
-        background: #EFF2F7;
-
-        .delete-b {
-            display: block;
-        }
+    .save-sub-btn {
+      float: right;
+      margin-top: 4px;
+      margin-left: 12px;
     }
 }
 

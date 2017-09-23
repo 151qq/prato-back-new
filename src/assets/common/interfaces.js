@@ -68,10 +68,40 @@ export default {
         */
         getInvestors: '/static/api/common/getInvestors.json',
         /**
-        * 楼盘详情 get
+        * 物业基本信息 get
         * id 楼盘序列标识
         */
-        info: '/static/api/property/info.json',
+        base: '/static/api/property/base.json',
+        /**
+        * 物业交易历史 get
+        * id 楼盘序列标识
+        */
+        changes: '/static/api/property/changes.json',
+        /**
+        * 物业租金历史 get
+        * id 楼盘序列标识
+        */
+        rent: '/static/api/property/rent.json',
+        /**
+        * 物业评述 get
+        * id 楼盘序列标识
+        */
+        articleHouse: '/static/api/property/article.json',
+        /**
+        * 物业公共区域图片 get
+        * id 楼盘序列标识
+        */
+        public: '/static/api/property/public.json',
+        /**
+        * 物业外观图片 get
+        * id 楼盘序列标识
+        */
+        appearance: '/static/api/property/appearance.json',
+        /**
+        * 物业周围环境图片 get
+        * id 楼盘序列标识
+        */
+        surround: '/static/api/property/surround.json',
         /**
         * 我的报告列表 get
         * key 搜索时使用，返回搜索相关数据
@@ -114,6 +144,11 @@ export default {
         * id 序列标识
         */
         reportDetail: '/static/api/report/reportDetail.json',
+        /**
+        * 关联报告 get
+        * id 楼盘序列标识
+        */
+        articles: '/static/api/report/articles.json',
         /**
         * 过滤地图数据 get
         * vr 要过滤的数据

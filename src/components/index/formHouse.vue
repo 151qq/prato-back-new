@@ -7,9 +7,8 @@
                 <el-input
                   class="input-box"
                   placeholder="请输入内容"
-                  @blur="saveData"
                   :disabled="true"
-                  v-model="formData.base.name">
+                  v-model="base.name">
                 </el-input>
             </section>
             <search-box v-if="$route.params.type !== 'edit'" :is-page="true" @mapChange="drawMap"></search-box>
@@ -21,14 +20,13 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
-                      v-model="formData.base.city"
+                      v-model="base.city"
                       :disabled="true">
                     </el-input>
                 </section>
                 <section class="baseInput rightF">
                     <span>所属商圈</span>
-                    <el-select class="input-box" @change="saveData" v-model="formData.base.mall" placeholder="请选择">
+                    <el-select class="input-box" v-model="base.mall" placeholder="请选择">
                         <el-option
                           v-for="item in malls"
                           :key="item"
@@ -39,7 +37,7 @@
                 </section>
                 <section class="baseInput">
                     <span>物业类型</span>
-                    <el-select class="input-box" @change="saveData" v-model="formData.base.proType" placeholder="请选择">
+                    <el-select class="input-box" v-model="base.proType" placeholder="请选择">
                         <el-option
                           v-for="item in types.property"
                           :key="item"
@@ -50,7 +48,7 @@
                 </section>
                 <section class="baseInput rightF">
                     <span>楼盘等级</span>
-                    <el-select class="input-box" @change="saveData" v-model="formData.base.level" placeholder="请选择">
+                    <el-select class="input-box" v-model="base.level" placeholder="请选择">
                         <el-option
                           v-for="item in types.level"
                           :key="item"
@@ -64,25 +62,23 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
-                      v-model="formData.base.massif">
+                      v-model="base.massif">
                     </el-input>
                 </section>
                 <section class="baseInput">
                     <span>剩余年限</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="formData.base.year"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="base.year"></el-input-number>
                 </section>
                 <section class="baseInput rightF">
                     <span>容积率</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :step="0.01" :min="0" :max="1" v-model="formData.base.ratio"></el-input-number>
+                    <el-input-number class="input-box" size="small" :step="0.01" :min="0" :max="1" v-model="base.ratio"></el-input-number>
                 </section>
                 <section class="baseInput bigB">
                     <span>业主信息</span>
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
-                      v-model="formData.base.owner">
+                      v-model="base.owner">
                     </el-input>
                 </section>
                 <section class="baseInput bigB">
@@ -90,7 +86,7 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      v-model="formData.base.property">
+                      v-model="base.property">
                     </el-input>
                 </section>
                 <section class="baseInput bigB">
@@ -100,29 +96,28 @@
                       type="textarea"
                       autosize
                       placeholder="请输入内容"
-                      @blur="saveData"
-                      v-model="formData.base.rent">
+                      v-model="base.rent">
                     </el-input>
                 </section>
                 <section class="baseInput">
                     <span>物业面积</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="formData.base.area"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="base.area"></el-input-number>
                 </section>
                 <section class="baseInput rightF">
                     <span>总层数</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="1" v-model="formData.base.plies"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="1" v-model="base.plies"></el-input-number>
                 </section>
                 <section class="baseInput">
                     <span>电梯数</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="formData.base.elevator"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="base.elevator"></el-input-number>
                 </section>
                 <section class="baseInput rightF">
                     <span>空调数</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="formData.base.conditioner"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="base.conditioner"></el-input-number>
                 </section>
                 <section class="baseInput">
                     <span>地板类型</span>
-                    <el-select class="input-box" @change="saveData" v-model="formData.base.floor" placeholder="请选择">
+                    <el-select class="input-box" v-model="base.floor" placeholder="请选择">
                         <el-option
                           v-for="item in types.floors"
                           :key="item"
@@ -133,7 +128,7 @@
                 </section>
                 <section class="baseInput rightF">
                     <span>物业持有</span>
-                    <el-select class="input-box" @change="saveData" v-model="formData.base.holding" placeholder="请选择">
+                    <el-select class="input-box" v-model="base.holding" placeholder="请选择">
                         <el-option
                           v-for="item in types.hold"
                           :key="item"
@@ -147,20 +142,18 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
-                      v-model="formData.base.traffic">
+                      v-model="base.traffic">
                     </el-input>
                 </section>
                 <section class="baseInput bigB">
                     <span>对标物业</span>
                     <div class="input-box">
                         <el-select
-                            v-model="formData.base.benchmark"
+                            v-model="base.benchmark"
                             multiple
                             filterable
                             allow-create
                             :multiple-limit="3"
-                            @change="saveData"
                             placeholder="请选择文章标签">
                             <el-option
                               v-for="item in benchList"
@@ -173,11 +166,14 @@
                 </section>
                 <div class="clear"></div>
             </div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('base')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业交易历史" name="2">
             <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addChange">增加</el-button>
-            <div v-for="(item, index) in formData.changes" class="over-box">
+            <div v-for="(item, index) in changes" class="over-box">
                 <section class="baseInput">
                     <span>交易日期</span>
                     <el-date-picker
@@ -185,20 +181,18 @@
                       v-model="item.date"
                       type="date"
                       placeholder="选择日期"
-                      @change="saveData"
                       :picker-options="pickerPre">
                     </el-date-picker>
                 </section>
                 <section class="baseInput rightF">
                     <span>交易价格</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="item.price"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="item.price"></el-input-number>
                 </section>
                 <section class="baseInput">
                     <span>交易甲方</span>
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
                       v-model="item.changeA">
                     </el-input>
                 </section>
@@ -207,7 +201,6 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
                       v-model="item.changeB">
                     </el-input>
                 </section>
@@ -216,18 +209,19 @@
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
-                      @blur="saveData"
                       v-model="item.block">
                     </el-input>
                 </section>
                 <div class="clear"></div>
-                <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteChange(index)">删除</el-button>
+                <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                  @click="saveData('changes', item.id)">保存</el-button>
+                <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteChange(index, item.id)">删除</el-button>
             </div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业租金历史" name="3">
             <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addRent">增加</el-button>
-            <div v-for="(item, index) in formData.rents" class="over-box">
+            <div v-for="(item, index) in rents" class="over-box">
                 <section class="baseInput">
                     <span>交易日期</span>
                     <el-date-picker
@@ -241,27 +235,29 @@
                 </section>
                 <section class="baseInput rightF">
                     <span>高区租金</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="item.priceT"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="item.priceT"></el-input-number>
                 </section>
                 <div class="clear"></div>
                 <section class="baseInput rightF">
                     <span>中区租金</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="item.priceM"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="item.priceM"></el-input-number>
                 </section>
                 <div class="clear"></div>
                 <section class="baseInput rightF">
                     <span>低区租金</span>
-                    <el-input-number class="input-box" @change="saveData" size="small" :min="0" v-model="item.priceB"></el-input-number>
+                    <el-input-number class="input-box" size="small" :min="0" v-model="item.priceB"></el-input-number>
                 </section>
                 <div class="clear"></div>
-                <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteRent(index)">删除</el-button>
+                <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                  @click="saveData('rents', item.id)">保存</el-button>
+                <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteRent(index, item.id)">删除</el-button>
             </div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle editShow" title="物业评述" name="4">
             <section class="abInput">
-              <el-select class="se-box" @change="saveData"
-                  v-model="formData.investor" placeholder="请选择投资顾问">
+              <el-select class="se-box"
+                  v-model="investor" placeholder="请选择投资顾问">
                   <el-option
                     v-for="item in investors"
                     :key="item"
@@ -271,19 +267,32 @@
               </el-select>
             </section>
             <div class="clear"></div>
-            <edit-box :article-in="articleinfo" @saveHandle="saveData"></edit-box>
+            <edit-box :article-in="articleinfo"></edit-box>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('articleinfo')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业外观图片" name="5">
-            <upload-list :img-lists="formData.imgs.appearance" @showimg="showImg"></upload-list>
+            <upload-list :img-lists="appearance" @showimg="showImg"></upload-list>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('appearance')">保存</el-button>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业公共区域图片" name="6">
-            <upload-list :img-lists="formData.imgs.public" @showimg="showImg"></upload-list>
+            <upload-list :img-lists="public" @showimg="showImg"></upload-list>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('public')">保存</el-button>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业周围环境图片" name="7">
-            <upload-list :img-lists="formData.imgs.surround" @showimg="showImg"></upload-list>
+            <upload-list :img-lists="surround" @showimg="showImg"></upload-list>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveData('surround')">保存</el-button>
           </el-collapse-item>
         </el-collapse>
   
@@ -301,56 +310,49 @@ export default {
     props: ['listInfo', 'articleInfo'],
     data () {
         return {
-            formData: {
-                base: {
-                    name: '',
-                    point: {
-                        lng: '',
-                        lat: ''
-                    },
-                    city: '',
-                    mall: '',
-                    proType: '',
-                    level: '',
-                    massif: '',
-                    year: 0,
-                    ratio: 1,
-                    owner: '',
-                    property: '',
-                    rent: '',
-                    area: '',
-                    plies: '',
-                    elevator: '',
-                    conditioner: '',
-                    floor: '',
-                    benchmark: [],
-                    holding: '',
-                    traffic: ''
-                },
-                investor: '',
-                changes: [
-                    {
-                        date: '',
-                        price: '',
-                        changeA: '',
-                        changeB: '',
-                        block: ''
-                    }
-                ],
-                rents: [
-                    {
-                        date: '',
-                        priceT: '',
-                        priceM: '',
-                        priceB: ''
-                    }
-                ],
-                imgs: {
-                  appearance: [],
-                  public: [],
-                  surround: []
-                }
+            base: {
+              name: '',
+              point: {
+                  lng: '',
+                  lat: ''
+              },
+              city: '',
+              mall: '',
+              proType: '',
+              level: '',
+              massif: '',
+              year: 0,
+              ratio: 1,
+              owner: '',
+              property: '',
+              rent: '',
+              area: '',
+              plies: '',
+              elevator: '',
+              conditioner: '',
+              floor: '',
+              benchmark: [],
+              holding: '',
+              traffic: ''
             },
+            investor: '',
+            changes: [
+                {
+                    date: '',
+                    price: '',
+                    changeA: '',
+                    changeB: '',
+                    block: ''
+                }
+            ],
+            rents: [
+                {
+                    date: '',
+                    priceT: '',
+                    priceM: '',
+                    priceB: ''
+                }
+            ],
             malls: [],
             investors: [],
             types: {
@@ -373,8 +375,10 @@ export default {
             },
             index: 0,
             bigImgs: [],
-            isCanSaved: false,
-            articleinfo: []
+            articleinfo: [],
+            appearance: [],
+            public: [],
+            surround: []
         }
     },
     mounted () {
@@ -392,28 +396,98 @@ export default {
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-        }
-    },
-    watch: {
-        listInfo () {
-            if (this.type === 'add') {
-                this.getBenchList()
-                this.isCanSaved = true
-            } else {
-                this.formData = this.listInfo
-                this.drawMap()
-                this.getBenchList()
-                setTimeout(() => {
-                  this.isCanSaved = true
-                }, 300)
-            }
-            this.getInvestors()
-        },
-        articleInfo () {
-          this.articleinfo = this.articleInfo
+            this.getAllData()
+            this.drawMap()
         }
     },
     methods: {
+        getAllData () {
+          this.getBase()
+          this.getChanges()
+          this.getRents()
+          this.getArticle()
+          this.getAppearance()
+          this.getPublic()
+          this.getSurround()
+        },
+        getBase () {
+          util.request({
+              method: 'get',
+              interface: 'base',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.base = res.result.datas.base
+          })
+        },
+        getAppearance () {
+          util.request({
+              method: 'get',
+              interface: 'appearance',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.appearance = res.result.datas.appearance
+          })
+        },
+        getPublic () {
+          util.request({
+              method: 'get',
+              interface: 'public',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.public = res.result.datas.public
+          })
+        },
+        getSurround () {
+          util.request({
+              method: 'get',
+              interface: 'surround',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.surround = res.result.datas.surround
+          })
+        },
+        getArticle () {
+          util.request({
+              method: 'get',
+              interface: 'articleHouse',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.investor = res.result.datas.investor
+              this.articleinfo = res.result.datas.article
+          })
+        },
+        getChanges () {
+          util.request({
+              method: 'get',
+              interface: 'changes',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.changes = res.result.datas.changes
+          })
+        },
+        getRents () {
+          util.request({
+              method: 'get',
+              interface: 'rent',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.rents = res.result.datas.rents
+          })
+        },
         showImg (index) {
           util.request({
               method: 'get',
@@ -431,22 +505,25 @@ export default {
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
         },
-        saveData () {
-            console.log(this.isCanSaved)
-            // 防止初始formData保存
-            if (!this.isCanSaved) {
-                return false
-            }
-            if (this.type !== 'add') {
-              this.formData.id = localStorage.getItem("id")
+        saveData (type, index) {
+            var formData = {
+              id: localStorage.getItem("id"),
+              type: type,
+              data: this[type],
             }
 
-            this.formData.article = this.articleinfo
+            if (index !== undefined) {
+              formData.index = index
+            }
+
+            if (type === 'articleinfo') {
+              formData.investor = this.investor
+            }
 
             util.request({
-                method: 'get',
+                method: 'post',
                 interface: 'savehouse',
-                data: this.formData
+                data: formData
             }).then(res => {
                 console.log(res)
             })
@@ -473,14 +550,14 @@ export default {
         },
         drawMap (mapInfo) {
             if (mapInfo) {
-                this.formData.base.city = mapInfo.city
-                this.formData.base.point = {
+                base.city = mapInfo.city
+                base.point = {
                     lng: mapInfo.point.lng,
                     lat: mapInfo.point.lat
                 }
                 var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
             } else {
-                var point = new window.BMap.Point(this.formData.base.point.lng, this.formData.base.point.lat)
+                var point = new window.BMap.Point(this.base.point.lng, this.base.point.lat)
             }
             
             this.getMalls()
@@ -494,7 +571,7 @@ export default {
                 method: 'get',
                 interface: 'malls',
                 data: {
-                    city: this.formData.base.city
+                    city: this.base.city
                 }
             }).then(res => {
                 this.malls = res.result.datas
@@ -519,17 +596,17 @@ export default {
                 changeB: '',
                 block: ''
             }
-            this.formData.changes.push(data)
+            this.changes.push(data)
         },
         deleteChange (index) {
-            if (this.formData.changes.length === 1) {
+            if (this.changes.length === 1) {
                 this.$message({
                   message: '至少要保留一条交易记录',
                   type: 'warning'
                 })
                 return false
             }
-            this.formData.changes.splice(index, 1)
+            this.changes.splice(index, 1)
         },
         addRent () {
             var data = {
@@ -538,17 +615,17 @@ export default {
                 priceM: '',
                 priceB: ''
             }
-            this.formData.rents.push(data)
+            this.rents.push(data)
         },
         deleteRent (index) {
-            if (this.formData.rents.length === 1) {
+            if (this.rents.length === 1) {
                 this.$message({
                   message: '至少要保留一条租金记录',
                   type: 'warning'
                 })
                 return false
             }
-            this.formData.rents.splice(index, 1)
+            this.rents.splice(index, 1)
         }
     },
     components: {
@@ -572,7 +649,12 @@ export default {
     .add-btn {
         position: absolute;
         right: 0;
-        top: 23px;
+        top: 7px;
+    }
+
+    .save-btn {
+      float: right;
+      margin-top: 10px;
     }
 
     .abInput {
@@ -624,7 +706,6 @@ export default {
 
 .baseInput {
     float: left;
-    height: 30px;
     margin-bottom: 20px;
 
     &>span {
@@ -638,7 +719,6 @@ export default {
     .input-box {
         float: left;
         width: 235px;
-        height: 30px;
 
         input {
             height: 30px;
@@ -673,17 +753,14 @@ export default {
 
     .delete-btn {
         float: right;
-        display: none;
         margin-bottom: 20px;
         cursor: pointer;
     }
 
-    &:hover {
-        background: #EFF2F7;
-
-        .delete-btn {
-            display: block;
-        }
+    .save-sub-btn {
+      float: right;
+      margin-bottom: 20px;
+      margin-left: 12px;
     }
 }
 </style>

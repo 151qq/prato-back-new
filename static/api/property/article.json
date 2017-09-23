@@ -1,8 +1,8 @@
 {
   "statusCode": 0,
   "datas": {
-    "title": "报告大标题",
-    "investor": "投资顾问二",
+    "id": 0,
+    "investor": "投资顾问一",
     "article": [
       {
         "type":"upload",

@@ -6,7 +6,7 @@
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-house ref="editBox" :list-info="listInfo" :article-info="articleInfo"></form-house>
+            <form-house ref="editBox"></form-house>
         </div>
     </div>
     
@@ -19,8 +19,6 @@ import util from '../../../assets/common/util'
 export default {
     data () {
         return {
-            listInfo: {},
-            articleInfo: []
         }
     },
     methods: {
@@ -28,18 +26,8 @@ export default {
             if (this.$route.params.type === 'add') {
                 return false
             }
-            util.request({
-                method: 'get',
-                interface: 'info',
-                data: {
-                    type: this.$route.name,
-                    id: data.id,
-                    tmpCode: data.tmpCode
-                }
-            }).then(res => {
-                this.listInfo = res.result.datas
-                this.articleInfo = res.result.datas.article
-            })
+            // 编辑区域获取初始数据
+            this.$refs.editBox.getAllData()
         }
     },
     components: {

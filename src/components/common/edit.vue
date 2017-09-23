@@ -76,12 +76,26 @@ export default {
             disabled: true,
             templateBg: '',
             templateAdd: [],
-            imgStyle: '',
+            imgStyle: 'display: block; max-width: 100%; margin: 10px 0;',
             isStyle: false,
             curIndex: '',
             curStyle: '',
             titleIndex: '',
             titleLists: [],
+            templateAdd: [
+                {
+                    type: "upload"
+                },
+                {
+                    type: "text"
+                },
+                {
+                    type: "title"
+                },
+                {
+                    type: "change"
+                }
+            ],
             config: {
                 initialFrameWidth: null,
                 initialFrameHeight: null,
@@ -130,7 +144,6 @@ export default {
                     _this.articleList[newIndex] = _this.articleList[oldIndex]
                     _this.articleList[oldIndex] = preData
                     console.log(_this.articleList, 'ls')
-                    // _this.$emit('saveHandle')
                 }
             })
         },
@@ -195,12 +208,10 @@ export default {
                 content: '<img src="' + data.url + '" style="' + this.imgStyle +'">'
             }
             this.articleList.splice(data.index, 1, imgData)
-            this.$emit('saveHandle')
-
         },
         setContent (data) {
             this.articleList[data.index].content = data.content
-            this.$emit('saveHandle')
+         
         },
         deleteText (index) {
             this.articleList.splice(index, 1)
@@ -247,9 +258,7 @@ export default {
         },
         titleBlur (item, index) {
             this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
-            this.articleList[index].style = item.style
-            console.log(this.articleList, 'l')
-            // this.$emit('saveHandle')
+            this.articleList[index].style = item.style            
         },
         // 获取添加模版
         getTemplate () {
@@ -261,9 +270,7 @@ export default {
                 }
             }).then(res => {
                 this.templateBg = res.result.datas.bgTem
-                this.templateAdd = res.result.datas.editTem
                 this.titleLists = res.result.datas.titles
-                this.imgStyle = this.templateAdd[0].style
                 setTimeout(() => {
                     $('.bodyMain').html($('#articleArea'))
                 }, 0)  
