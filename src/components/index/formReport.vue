@@ -3,11 +3,10 @@
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="报告详情" name="1">
             <section class="title-input">
-                <input type="text" placeholder="请输入标题,最多26个字符" v-model="formData.title"
-                    @input="checkTitle" @blur="saveData">
+                <el-input type="text" placeholder="请输入标题,最多25个字符" v-model="formData.title"
+                    @change="checkTitle" @blur="saveData" autofocus></el-input>
             </section>
-            <section class="baseInput">
-              <span>投资顾问</span>
+            <section class="abInput">
               <el-select class="se-box" @change="saveData"
                   v-model="formData.investor" placeholder="请选择投资顾问">
                   <el-option
@@ -65,6 +64,7 @@
 <script>
 import util from '../../assets/common/util'
 import editBox from '../../components/common/edit'
+import $ from 'Jquery'
 
 export default {
     props: ['listInfo', 'articleInfo'],
@@ -119,6 +119,7 @@ export default {
               }, 300)
           }
           this.getInvestors()
+          $('.title-input input').focus()
       },
       articleInfo () {
         this.articleinfo = this.articleInfo
@@ -127,12 +128,12 @@ export default {
     methods: {
         checkTitle () {
           console.log(this.formData.title.length)
-          if (this.formData.title.length > 26) {
+          if (this.formData.title.length > 25) {
             this.$message({
-              message: '最多只能输入26个字符',
+              message: '最多只能输入25个字符',
               type: 'warning'
             })
-            this.formData.title = this.formData.title.substring(0, 26)
+            this.formData.title = this.formData.title.substring(0, 25)
           }
         },
         collChange () {
@@ -295,24 +296,23 @@ export default {
     margin: 0 auto;
 
     .title-input {
-      margin-bottom: 30px;
+      margin: 30px 0;
 
       input {
         width: 100%;
         display: block;
         font-size: 20px;
         color: #000000;
-        line-height: 30px;
         text-align: center;
         border: none;
-        padding: 0;
       }
     }
 
-    .baseInput {
-      float: left;
+    .abInput {
+      position: absolute;
+      right: 0;
+      top: 4px;
       height: 30px;
-      margin-bottom: 20px;
     }
 
     .add-b {

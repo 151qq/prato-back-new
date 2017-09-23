@@ -255,8 +255,7 @@
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle editShow" title="物业评述" name="4">
-            <section class="baseInput">
-              <span>投资顾问</span>
+            <section class="abInput">
               <el-select class="se-box" @change="saveData"
                   v-model="formData.investor" placeholder="请选择投资顾问">
                   <el-option
@@ -562,6 +561,7 @@ export default {
 }
 
 .formStyle {
+    position: relative;
     width: 640px;
     margin: 0 auto;
 
@@ -569,6 +569,13 @@ export default {
         position: absolute;
         right: 0;
         top: 23px;
+    }
+
+    .abInput {
+      position: absolute;
+      right: 0;
+      top: 4px;
+      height: 30px;
     }
 
     &:last-child {
