@@ -2,6 +2,10 @@
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="报告详情" name="1">
+            <section class="title-input">
+                <input type="text" placeholder="请输入标题,最多26个字符" v-model="formData.title"
+                    @input="checkTitle" @blur="saveData">
+            </section>
             <section class="baseInput">
               <span>投资顾问</span>
               <el-select class="se-box" @change="saveData"
@@ -67,6 +71,7 @@ export default {
     data () {
         return {
             formData: {
+              title: '',
               investor: '',
               articles: ''
             },
@@ -75,6 +80,7 @@ export default {
             total: 0,
             reportSelect: [],
             reportList: [],
+            investors: [],
             activeNames: ['1'],
             dialogVisible: false,
             articleinfo: []
@@ -97,6 +103,7 @@ export default {
           this.getReportList()
           this.isCanSaved = true
         }
+        this.getInvestors()
     },
     watch: {
       listInfo () {
@@ -115,10 +122,19 @@ export default {
       },
       articleInfo () {
         this.articleinfo = this.articleInfo
-        this.getInvestors()
       }
     },
     methods: {
+        checkTitle () {
+          console.log(this.formData.title.length)
+          if (this.formData.title.length > 26) {
+            this.$message({
+              message: '最多只能输入26个字符',
+              type: 'warning'
+            })
+            this.formData.title = this.formData.title.substring(0, 26)
+          }
+        },
         collChange () {
             localStorage.setItem("reportColl", this.activeNames)
         },
@@ -277,6 +293,21 @@ export default {
     position: relative;
     width: 640px;
     margin: 0 auto;
+
+    .title-input {
+      margin-bottom: 30px;
+
+      input {
+        width: 100%;
+        display: block;
+        font-size: 20px;
+        color: #000000;
+        line-height: 30px;
+        text-align: center;
+        border: none;
+        padding: 0;
+      }
+    }
 
     .baseInput {
       float: left;
