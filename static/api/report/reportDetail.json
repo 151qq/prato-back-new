@@ -1,6 +1,7 @@
 {
   "statusCode": 0,
   "datas": {
+    "investor": "投资顾问二",
     "article": [
       {
         "type":"upload",

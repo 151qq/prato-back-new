@@ -76,6 +76,7 @@
         "ewm": "/static/images/ewm.png"
       }
     },
+    "investor": "投资顾问一",
     "article": [
       {
         "type":"upload",

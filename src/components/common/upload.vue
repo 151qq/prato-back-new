@@ -5,10 +5,7 @@
       <img v-else class="img-big" :src="curPath">
       <div>
         <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
-        <p>
-          <img src="../../assets/images/pen-icon.png">
-          <input type="file" class="pen-input" @change="postImg($event)">
-        </p>
+        <img class="del-btn" src="../../assets/images/pen-icon.png" @click="showSelect">
         <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetPath">
       </div>
     </section>
@@ -111,22 +108,12 @@ export default {
     height: auto;
   }
 
-  .img-input {
-    position: absolute;
-    left: 10px;
-    top: 7px;
-    opacity: 0.01;
-    width: 200px;
-    height: 140px;
-    cursor: pointer;
-  }
-
   div {
     display: none;
     margin-top: 20px;
     overflow: hidden;
       
-    .del-btn {
+    img {
       float: right;
       width: 16px;
       height: 16px;
@@ -135,43 +122,6 @@ export default {
 
       &:hover {
         opacity: 0.8;
-      }
-    }
-
-    .reset-btn {
-      float: right;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      margin-right: 13px;
-    }
-
-    p {
-      float: right;
-      width: 16px;
-      height: 16px;
-      margin-right: 13px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      
-      img {
-        display: block;
-        width: 16px;
-        height: 16px;
-
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-
-      input {
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0.01;
-        width: 16px;
-        height: 16px; 
       }
     }
   }

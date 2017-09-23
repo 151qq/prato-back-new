@@ -63,6 +63,11 @@ export default {
         */
         bigImgs: '/static/api/property/bigImgs.json',
         /**
+        * 投资顾问 get
+        * id 序列标识
+        */
+        getInvestors: '/static/api/common/getInvestors.json',
+        /**
         * 楼盘详情 get
         * id 楼盘序列标识
         */

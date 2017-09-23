@@ -255,6 +255,19 @@
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle editShow" title="物业评述" name="4">
+            <section class="baseInput">
+              <span>投资顾问</span>
+              <el-select class="se-box" @change="saveData"
+                  v-model="formData.investor" placeholder="请选择投资顾问">
+                  <el-option
+                    v-for="item in investors"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                  </el-option>
+              </el-select>
+            </section>
+            <div class="clear"></div>
             <edit-box :article-in="articleinfo" @saveHandle="saveData"></edit-box>
           </el-collapse-item>
           <div class="line-bold"></div>
@@ -311,6 +324,7 @@ export default {
                     holding: '',
                     traffic: ''
                 },
+                investor: '',
                 changes: [
                     {
                         date: '',
@@ -350,6 +364,7 @@ export default {
                 }
             },
             malls: [],
+            investors: [],
             types: {
                 property: [],
                 level: [],
@@ -381,6 +396,7 @@ export default {
         map.centerAndZoom(point, 15)
 
         this.getTypes()
+        this.getInvestors()
 
         this.type = this.$route.params.type
         if (this.type !== 'add') {
@@ -403,6 +419,7 @@ export default {
                   this.isCanSaved = true
                 }, 300)
             }
+            this.getInvestors()
         },
         articleInfo () {
           this.articleinfo = this.articleInfo
@@ -492,6 +509,17 @@ export default {
                 }
             }).then(res => {
                 this.malls = res.result.datas
+            })
+        },
+        getInvestors () {
+            util.request({
+                method: 'get',
+                interface: 'getInvestors',
+                data: {
+                    id: localStorage.getItem("id")
+                }
+            }).then(res => {
+                this.investors = res.result.datas
             })
         },
         addChange () {

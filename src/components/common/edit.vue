@@ -1,7 +1,7 @@
 <template>
     <section class="edit-box">
       <ul id="articleArea" name="content" class="list-group">
-        <li class="list-group-item" v-for="(item, index) in articleList" :key="index"> 
+        <li class="list-group-item" v-for="(item, index) in articleList" :data-id="index"> 
             <div class="show-box" v-if="item.type === 'upload'">
                 <div v-if="disabled">
                     <upload :path="item.imgUrl" :num="index" @delImg="delImg" @changeImg="changeImg"></upload>
@@ -99,6 +99,7 @@ export default {
     },
     mounted () {
         this.getTemplate()
+        var _this = this
 
         var articleArea = document.getElementById('articleArea')
         this.sortable = Sortable.create(articleArea, {
@@ -108,9 +109,12 @@ export default {
             filter: '.filter',
             sort: true,
             disabled: true,
-            onUpdate (evt) {
-                console.log(evt)
-                this.$emit('saveHandle')
+            onUpdate ({oldIndex, newIndex}) {
+                let preData = _this.articleList[newIndex]
+                _this.articleList[newIndex] = _this.articleList[oldIndex]
+                _this.articleList[oldIndex] = preData
+                console.log(_this.articleList, 'ls')
+                // _this.$emit('saveHandle')
             }
         })
     },
@@ -157,9 +161,17 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'change':
-                    console.log('change')
                     this.sortable.option('disabled', !this.sortable.option('disabled'))
                     this.disabled = !this.disabled
+                    
+                    if (this.sortable.option('disabled')) {
+                        this.articleSave = this.articleList.concat([])
+                        this.articleList = []
+                        setTimeout(() => {
+                            this.articleList = this.articleSave
+                        }, 0)
+                    }
+                    console.log(this.articleList, 'change')
                     break
             }
         },
@@ -226,7 +238,8 @@ export default {
         titleBlur (item, index) {
             this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
             this.articleList[index].style = item.style
-            this.$emit('saveHandle')
+            console.log(this.articleList, 'l')
+            // this.$emit('saveHandle')
         },
         // 获取添加模版
         getTemplate () {
