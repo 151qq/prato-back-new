@@ -97,6 +97,8 @@
                     <span>现在租户</span>
                     <el-input
                       class="input-box"
+                      type="textarea"
+                      autosize
                       placeholder="请输入内容"
                       @blur="saveData"
                       v-model="formData.base.rent">
@@ -157,6 +159,8 @@
                             multiple
                             filterable
                             allow-create
+                            :multiple-limit="3"
+                            @change="saveData"
                             placeholder="请选择文章标签">
                             <el-option
                               v-for="item in benchList"
