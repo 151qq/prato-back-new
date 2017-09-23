@@ -278,6 +278,12 @@ export default {
     width: 640px;
     margin: 0 auto;
 
+    .baseInput {
+      float: left;
+      height: 30px;
+      margin-bottom: 20px;
+    }
+
     .add-b {
         position: absolute;
         right: 0;

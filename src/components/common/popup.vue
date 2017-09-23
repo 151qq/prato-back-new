@@ -29,7 +29,7 @@ export default {
     },
     title: {
       type: String,
-      default: '提示'
+      default: ''
     },
     isDel: {
       type: Boolean,

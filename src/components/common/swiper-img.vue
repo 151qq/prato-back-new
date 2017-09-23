@@ -17,6 +17,7 @@
   </popup>
 </template>
 <script>
+import 'swiper/dist/css/swiper.css'
 import popup from './popup.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
@@ -30,7 +31,7 @@ export default {
     return {
       notNextTick: true,
       swiperOption: {
-        // swiper optionss 所有的配置同swiper官方api配置
+        // swiper options 所有的配置同swiper官方api配置
         direction: 'horizontal',
         prevButton: '.swiper-button-prev',
         nextButton: '.swiper-button-next',
@@ -45,6 +46,7 @@ export default {
   watch: {
     index () {
       this.$refs.mySwiper.swiper.slideTo(this.index)
+      console.log(this.index, 'index')
     }
   },
   components: {
@@ -54,7 +56,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .swiper-slide img {
     width: 100%;
   }
@@ -76,7 +78,7 @@ export default {
   }
 
   .swiper-button-disabled {
-    pointer-events: all;
+    pointer-events: all !important;
     opacity: 0.35;
   }
 </style>

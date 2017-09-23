@@ -343,24 +343,9 @@ export default {
                     }
                 ],
                 imgs: {
-                  appearance: [
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png'
-                  ],
-                  public: [
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png'
-                  ],
-                  surround: [
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png',
-                    '/static/images/img1.png'
-                  ]
+                  appearance: [],
+                  public: [],
+                  surround: []
                 }
             },
             malls: [],
@@ -435,6 +420,7 @@ export default {
               }
           }).then(res => {
               this.bigImgs = res.result.datas
+              console.log(this.bigImgs)
               this.index = index
               this.isShow.value = true
           })
