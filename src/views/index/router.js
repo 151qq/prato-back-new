@@ -22,6 +22,15 @@ const routers = [
       })
     }
   }, {
+    // 素材库
+    path: '/index/source',
+    name: 'source',
+    component (resolve) {
+      require.ensure(['./source/source.vue'], () => {
+        resolve(require('./source/source.vue'))
+      })
+    }
+  }, {
     // 任务列表
     path: '/notice/detail/:id',
     name: 'notice',

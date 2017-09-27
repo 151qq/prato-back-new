@@ -18,7 +18,7 @@ var build = {
   //index: path.resolve(__dirname, '../dist/index.html'),
   assetsRoot: path.resolve(__dirname, '../dist'),
   assetsSubDirectory: 'static',
-  assetsPublicPath: './',
+  assetsPublicPath: '/',
   productionSourceMap: false,
   productionGzip: false,
   productionGzipExtensions: ['js', 'css'],
@@ -35,7 +35,7 @@ module.exports = {
 
   dev: {
     env: require('./dev.env'),
-    port: 8888,
+    port: 8889,
     autoOpenBrowser: false,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
