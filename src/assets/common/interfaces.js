@@ -79,6 +79,10 @@ export default {
         */
         sendMail: '/static/api/report/sendMail.json',
         /**
+        * 我的报告列表 get
+        */
+        productTree: '/static/api/product/productTree.json',
+        /**
         * 获取相关标题的楼盘或报告ID get
         * type 楼盘或报告标识
         * key 搜索关键字

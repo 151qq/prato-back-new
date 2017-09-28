@@ -21,6 +21,16 @@ const routers = [
         resolve(require('./article/report.vue'))
       })
     }
+  },
+  {
+    // 产品中心
+    path: '/index/product/:type',
+    name: 'product',
+    component (resolve) {
+      require.ensure(['./article/product.vue'], () => {
+        resolve(require('./article/product.vue'))
+      })
+    }
   }, {
     // 素材库
     path: '/index/source',

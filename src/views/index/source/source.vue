@@ -25,8 +25,8 @@
                         <span v-if="isCheck" :class="selectList.indexOf(item1.id) > -1 ? 'active' : ''"></span>
                         <img :src="item1.imgUrl">
                         <p v-if="!isCheck">
-                            <a class="delete" @click="deleteImg(item1.id)"></a>
-                            <a class="import" @click="importImg(item1.id)"></a>
+                            <a class="delete" @click.stop="deleteImg(item1.id)"></a>
+                            <a class="import" @click.stop="importImg(item1.id)"></a>
                         </p>
                     </div>
                 </section>
@@ -410,7 +410,7 @@ export default {
             this.labelList = data
         },
         selectImg (index) {
-            if (!this.isCheck && this.isSingleO) {
+            if (!this.isCheck && !this.isSingleO) {
                 this.getBigImgs()
                 this.index = index
                 this.isShow.value = true
