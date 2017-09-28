@@ -15,6 +15,43 @@ export default {
         "publishArticle": platform + "siteEdit/publishArticle.json",       //发布
         "changePassword": platform + "changePassword.json",         //修改密码
         /**
+        * 我的素材库 get
+        */
+        getSource: '/static/api/source/getSource.json',
+        /**
+        * 我的素材库大图 get
+        * id 素材分类id
+        */
+        getSourceBig: '/static/api/source/bigImgs.json',
+        /**
+        * 添加素材tab post
+        * name
+        */
+        createTab: '/static/api/source/createTab.json',
+        /**
+        * 添加素材tab post
+        * id 素材分类id
+        */
+        deleteTab: '/static/api/source/createTab.json',
+        /**
+        * 删除素材tab img post
+        * id 素材分类id
+        * imgs []
+        */
+        deleteImgs: '/static/api/source/createTab.json',
+        /**
+        * 添加素材tab img post
+        * id 素材分类id
+        * imgs []
+        */
+        addImgs: '/static/api/source/createTab.json',
+        /**
+        * 更新素材tab name post
+        * id 素材分类id
+        * name
+        */
+        putSource: '/static/api/source/updateSource.json',
+        /**
         * 我的任务列表 get
         * pageSize 每页多少条
         * currentPage 当前页数

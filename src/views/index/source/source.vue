@@ -21,12 +21,12 @@
             <el-tab-pane v-for="(item, index) in sourceDatas" :label="item.label" :name="index + ''">
                 <section v-if="item.imgs.length" class="sou-box">
                     <div v-for="(item1, index1) in item.imgs" :class="isCheck ? 'check' : ''"
-                            @click="selectImg(index1)">
-                        <span v-if="isCheck" :class="selectList.indexOf(index1) > -1 ? 'active' : ''"></span>
-                        <img :src="item1">
+                            @click="selectImg(item1.id)">
+                        <span v-if="isCheck" :class="selectList.indexOf(item1.id) > -1 ? 'active' : ''"></span>
+                        <img :src="item1.imgUrl">
                         <p v-if="!isCheck">
-                            <a class="delete" @click="deleteImg(index1)"></a>
-                            <a class="import" @click="importImg(index1)"></a>
+                            <a class="delete" @click="deleteImg(item1.id)"></a>
+                            <a class="import" @click="importImg(item1.id)"></a>
                         </p>
                     </div>
                 </section>
@@ -170,60 +170,24 @@ export default {
             this.isCheck = false
         },
         getImgs () {
-            var data = [
-                {
-                    label: '产品图片',
-                    imgs: [
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg'
-                    ]
-                },
-                {
-                    label: '公司形象',
-                    imgs: [
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg'
-                    ]
-                },
-                {
-                    label: '客户上传',
-                    imgs: [
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg',
-                        '/static/images/sc1.jpg'
-                    ]
-                }
-            ]
-
-            this.sourceDatas = data
-            this.initSet()
+            util.request({
+                method: 'get',
+                interface: 'getSource',
+                data: {}
+            }).then(res => {
+                this.sourceDatas = res.result.datas
+                this.initSet()
+            })       
         },
         getBigImgs () {
-            var bigImgs = [
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg',
-                '/static/images/sc1.jpg'
-            ]
-
-            this.bigImgs = bigImgs
+            util.request({
+                method: 'get',
+                interface: 'getSourceBig',
+                data: {}
+            }).then(res => {
+                this.bigImgs = res.result.datas.imgs
+                this.initSet()
+            })
         },
         upLoadImg (e) {
             var tabIndex = Number(this.activeName)
@@ -231,8 +195,46 @@ export default {
                 if (!res.result) {
                     return false
                 }
-                var path = res.result.result.path
-                this.sourceDatas[tabIndex].imgs.push(path)
+
+                var formData = {
+                    id: this.sourceDatas[tabIndex].id,
+                    imgs: [res.result.result.id]
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'addImgs',
+                    data: formData
+                }).then(res => {
+                    this.getImgs()
+                })
+            })
+        },
+        uploadSource (data) {
+            util.request({
+                method: 'post',
+                interface: 'putSource',
+                data: data
+            }).then(res => {
+                this.getImgs()
+            })
+        },
+        createTab (data) {
+            util.request({
+                method: 'post',
+                interface: 'createTab',
+                data: data
+            }).then(res => {
+                this.getImgs()
+            })
+        },
+        deleteTab (data) {
+            util.request({
+                method: 'post',
+                interface: 'deleteTab',
+                data: data
+            }).then(res => {
+                this.getImgs()
             })
         },
         deleteImg (index) {
@@ -260,6 +262,14 @@ export default {
             if (item.isNew) {
                 this.labelList.splice(index, 1)
             } else {
+                if (this.sourceDatas[item.ids].imgs.length) {
+                    this.$notify({
+                      title: '警告',
+                      message: '该分类下有图片存在，不能删除',
+                      type: 'warning'
+                    })
+                    return false
+                }
                 item.isDelete = true
             }
         },
@@ -286,18 +296,50 @@ export default {
                         label: item.text,
                         imgs: []
                     }
+
+                    editList.push(data)
+
+                    var formData = {
+                        name: item.text
+                    }
+
+                    this.createTab(formData)
                 } else if (!item.isDelete) {
                     var data = {
+                        id: this.sourceDatas[item.ids].id,
                         label: item.text,
                         imgs: this.sourceDatas[item.ids].imgs
                     }
 
+                    editList.push(data)
+
+                    if (item.text !== this.sourceDatas[item.ids].label) {
+                        var formData = {
+                            id: this.sourceDatas[item.ids].id,
+                            label: item.text,
+                        }
+
+                        this.uploadSource(formData)
+                    }
+                    
+                } else if (item.isDelete) {
+                    var data = {
+                        id: this.sourceDatas[item.ids].id,
+                    }
+
+                    this.deleteTab(data)
                 }
-                editList.push(data)
             })
 
             this.sourceDatas = editList
             this.issetVisible = false
+        },
+        setFormData (imgs) {
+            var data = []
+            imgs.forEach((item) => {
+                data.push(item.id)
+            })
+            return data
         },
         setCheck () {
             this.isCheck = !this.isCheck
@@ -322,22 +364,28 @@ export default {
 
             var imgs = this.sourceDatas[tabIndex].imgs
 
-            this.selectList = this.selectList.sort()
+            var data = {
+                id: this.sourceDatas[tabIndex].id,
+                imgs: this.selectList
+            }
 
             this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.selectList.forEach((item) => {
-                    imgs.splice(item, 1)
+                util.request({
+                    method: 'post',
+                    interface: 'deleteImgs',
+                    data: data
+                }).then(res => {
+                    this.getImgs()
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    })
                 })
-                this.selectList = []
-
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                })
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -362,7 +410,7 @@ export default {
             this.labelList = data
         },
         selectImg (index) {
-            if (!this.isCheck) {
+            if (!this.isCheck && this.isSingleO) {
                 this.getBigImgs()
                 this.index = index
                 this.isShow.value = true
@@ -376,8 +424,6 @@ export default {
             } else {
                 this.selectList.splice(ids, 1)
             }
-
-            console.log(this.selectList)
         },
         selectConfirm () {
             // 划分选中于为选中图片
@@ -387,22 +433,34 @@ export default {
             var isSelf = this.checkedLabels.indexOf(tabIndex) > -1
 
             var imgs = this.sourceDatas[tabIndex].imgs
-            var selectImgs = []
-            this.selectList = this.selectList.sort()
-            this.selectList.forEach((item) => {
-                // 选中自己不变，否则为移动
-                selectImgs.push(imgs[item])
-                if (!isSelf) {
-                    imgs.splice(item, 1)
+            
+            if (!isSelf) {
+                var data = {
+                    id: this.sourceDatas[tabIndex].id,
+                    imgs: this.selectList
                 }
-            })
-
-            // 清空选中图片
-            this.selectList = []
+                util.request({
+                    method: 'post',
+                    interface: 'deleteImgs',
+                    data: data
+                }).then(res => {
+                    this.getImgs()
+                })
+            }
 
             this.checkedLabels.forEach((item) => {
                 if (tabIndex !== item) {
-                    this.sourceDatas[item].imgs.push(...selectImgs)
+                    var data = {
+                        id: this.sourceDatas[item].id,
+                        imgs: this.selectList
+                    }
+                    util.request({
+                        method: 'post',
+                        interface: 'addImgs',
+                        data: data
+                    }).then(res => {
+                        this.getImgs()
+                    })
                 }
             })
 
