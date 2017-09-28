@@ -1,27 +1,37 @@
 <template>
     <div class="source-box">
-        <a class="set-btn">设置</a>
+        <a class="set-btn" @click="setOpotion">设置</a>
         <section class="btns-op">
-            <img src="../../../assets/images/select-icon.png">
+            <img v-show="!isCheck" src="../../../assets/images/select-icon.png" @click="setCheck">
+            <img v-show="isCheck" src="../../../assets/images/select-now.png" @click="setCheck">
             <span></span>
-            <img src="../../../assets/images/import-icon.png">
+            <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/import-icon.png"
+                    @click="setImport">
             <span></span>
-            <img src="../../../assets/images/delete-icon-n.png">
+            <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/delete-icon-n.png"
+                    @click="deleteImgs">
             <span></span>
-            <img src="../../../assets/images/adds-icon.png">
+            <div class="up-box">
+                <img src="../../../assets/images/adds-icon.png">
+                <input type="file" @change="upLoadImg($event)">
+            </div>
         </section>
 
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane v-for="(item, index) in sourceDatas" :label="item.label" :name="index">
-                <section class="sou-box">
-                    <div v-for="item1 in item.imgs">
-                        <span class="active"></span>
+            <el-tab-pane v-for="(item, index) in sourceDatas" :label="item.label" :name="index + ''">
+                <section v-if="item.imgs.length" class="sou-box">
+                    <div v-for="(item1, index1) in item.imgs" :class="isCheck ? 'check' : ''"
+                            @click="selectImg(index1)">
+                        <span v-if="isCheck" :class="selectList.indexOf(index1) > -1 ? 'active' : ''"></span>
                         <img :src="item1">
-                        <p>
-                            <a class="delete"></a>
-                            <a class="import"></a>
+                        <p v-if="!isCheck">
+                            <a class="delete" @click="deleteImg(index1)"></a>
+                            <a class="import" @click="importImg(index1)"></a>
                         </p>
                     </div>
+                </section>
+                <section v-else class="no-img">
+                    当前无图，请上传图片！！！
                 </section>
             </el-tab-pane>
         </el-tabs>
@@ -31,20 +41,24 @@
         <el-dialog title="设置" :visible.sync="issetVisible">
             <section class="dia-body">
                 <div class="btns-b">
-                    <img src="../../../assets/images/sort-icon.png" @click="sortLabel">
+                    <img v-show="!isStragble" src="../../../assets/images/sort-icon.png"@click="sortLabel">
+                    <img v-show="isStragble" src="../../../assets/images/sort-now.png"@click="sortLabel">
                     <span></span>
                     <img src="../../../assets/images/adds-icon.png" @click="addLabel">
                 </div>
                 
-                <div class="con-box">
-                    <section v-for="(item, index) in labelList">
-                        <input v-if="item.isEdit && !isStragble" type="text"
-                                v-model="item.text" placeholder="最少输入2个字，最多输入6个字">
+                <div class="con-box" id="sortArea">
+                    <section  class="item-strag" v-if="!item.isDelete" v-for="(item, index) in labelList">
+                        <input :id="'input' + index" v-if="item.isEdit && !isStragble" type="text"
+                                v-model="item.text" placeholder="最少输入2个字，最多输入6个字"
+                                @blur="editHandle(item)">
                         <div v-else>
-                            <span>{{item.text}}</span>
+                            <span v-if="item.text">{{item.text}}</span>
+                            <span v-else>最少输入2个字，最多输入6个字</span>
                             <p v-if="!isStragble">
-                                <img src="../../../assets/images/del-icon.png" @click="deleLabel(item.id, index)">
-                                <img src="../../../assets/images/pen-icon.png" @click="editLabel(item.id, index)">
+                                <img src="../../../assets/images/del-icon.png" @click="deleLabel(item, index)">
+                                <img src="../../../assets/images/pen-icon.png"
+                                        @click="editLabel(item, 'input' + index)">
                             </p>
                         </div>
                     </section>
@@ -65,7 +79,7 @@
                     v-model="checkedLabels"
                     :min="0"
                     :max="10">
-                    <el-checkbox v-for="(item, index) in labelList" :label="item.text" :key="index">{{item.text}}</el-checkbox>
+                    <el-checkbox v-for="(item, index) in labelList" :label="index" :key="index">{{item.text}}</el-checkbox>
                 </el-checkbox-group>
             </section>
           
@@ -74,13 +88,89 @@
                 <el-button type="primary" @click="selectConfirm">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- 大图 -->
+        <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
     </div>
 </template>
 <script>
+import $ from 'Jquery'
+import sortable from 'sortablejs'
+import swiperImg from '../../../components/common/swiper-img.vue'
+import util from '../../../assets/common/util'
+
 export default {
     data() {
         return {
-            sourceDatas: [
+            sourceDatas: [],
+            labelList: [],
+            activeName: '0',
+            checkedLabels: [],
+            issetVisible: false,
+            isselectVisible: false,
+            isStragble: false,
+            isAdd: false,
+            isCheck: false,
+            isSingleO: false,
+            // 选中的图片
+            selectList: [],
+            bigImgs: [],
+            isShow: {
+              value: false
+            },
+            index: 0
+        }
+    },
+    mounted () {
+        this.getImgs()
+    },
+    methods: {
+        setSortable () {
+            var _this = this
+
+            var sortArea = document.getElementById('sortArea')
+            this.sortable = sortable.create(sortArea, {
+                handle: ".item-strag",
+                animation: 100,
+                group: {name: "sortArea", pull: false, put: false},
+                filter: '.filter',
+                sort: true,
+                disabled: true,
+                onUpdate ({oldIndex, newIndex}) {
+                    let preData = _this.labelList[newIndex]
+                    _this.labelList[newIndex] = _this.labelList[oldIndex]
+                    _this.labelList[oldIndex] = preData
+                    console.log(_this.labelList, 'ls')
+                }
+            })
+        },
+        sortLabel () {
+            this.sortable.option('disabled', !this.sortable.option('disabled'))
+            this.isStragble = !this.isStragble
+            
+            if (this.sortable.option('disabled')) {
+                this.articleSave = this.labelList.concat([])
+                this.labelList = []
+                setTimeout(() => {
+                    this.labelList = this.articleSave
+                }, 0)
+            }
+        },
+        addLabel () {
+            var data = {
+                text: '',
+                isNew: true,
+                isEdit: true,
+                isDelete: false
+            }
+            this.labelList.unshift(data)
+        },
+        handleClick(tab, event) {
+            console.log(this.activeName)
+            this.isCheck = false
+        },
+        getImgs () {
+            var data = [
                 {
                     label: '产品图片',
                     imgs: [
@@ -116,43 +206,212 @@ export default {
                         '/static/images/sc1.jpg'
                     ]
                 }
-            ],
-            labelList: [
-                {
-                    text: '产品图片',
-                    isEdit: false,
-                },
-                {
-                    text: '公司形象',
-                    isEdit: false,
-                },
-                {
-                    text: '客户上传',
-                    isEdit: false,
+            ]
+
+            this.sourceDatas = data
+            this.initSet()
+        },
+        getBigImgs () {
+            var bigImgs = [
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg',
+                '/static/images/sc1.jpg'
+            ]
+
+            this.bigImgs = bigImgs
+        },
+        upLoadImg (e) {
+            var tabIndex = Number(this.activeName)
+            util.upFile(e).then(res => {
+                if (!res.result) {
+                    return false
                 }
-            ],
-            activeName: 0,
-            checkedLabels: [],
-            issetVisible: false,
-            isselectVisible: true,
-            isStragble: false,
-            isAdd: false
+                var path = res.result.result.path
+                this.sourceDatas[tabIndex].imgs.push(path)
+            })
+        },
+        deleteImg (index) {
+            this.selectList = [index]
+            this.isSingleO = true
+            this.deleteImgs()
+        },
+        importImg (index) {
+            this.selectList = [index]
+            this.isSingleO = true
+            this.setImport()
+        },
+        setOpotion () {
+            this.sortable && this.sortable.destroy()
+            this.initSet()
+            this.isCheck = false
+            this.isStragble = false
+            this.issetVisible = true
+            this.$nextTick(() => {
+                this.setSortable()
+            })
+        },
+        deleLabel (item, index) {
+            // 新添的直接删除，原有的添加删除状态
+            if (item.isNew) {
+                this.labelList.splice(index, 1)
+            } else {
+                item.isDelete = true
+            }
+        },
+        editLabel (item, id) {
+            item.isEdit = true
+            setTimeout(() => {
+                $('#' + id).focus()
+            }, 0)
+        },
+        editHandle (item) {
+            if (item.text === '') {
+                return false
+            } else {
+                item.isEdit = false
+            }
+        },
+        resetConfirm () {
+            var editList = []
+
+            this.labelList.forEach((item) => {
+                // 新添tab,添加imgs,原有的看是否删除状态,tab以labelList为准
+                if (item.isNew) {
+                    var data = {
+                        label: item.text,
+                        imgs: []
+                    }
+                } else if (!item.isDelete) {
+                    var data = {
+                        label: item.text,
+                        imgs: this.sourceDatas[item.ids].imgs
+                    }
+
+                }
+                editList.push(data)
+            })
+
+            this.sourceDatas = editList
+            this.issetVisible = false
+        },
+        setCheck () {
+            this.isCheck = !this.isCheck
+            this.selectList = []
+        },
+        setImport () {
+            if (!this.isCheck && !this.isSingleO) {
+                return false
+            }
+
+            this.isselectVisible = true
+            this.checkedLabels = []
+            this.isSingleO = false
+        },
+        deleteImgs () {
+            if (!this.isCheck && !this.isSingleO) {
+                return false
+            }
+
+            // 划分选中于为选中图片
+            var tabIndex = Number(this.activeName)
+
+            var imgs = this.sourceDatas[tabIndex].imgs
+
+            this.selectList = this.selectList.sort()
+
+            this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.selectList.forEach((item) => {
+                    imgs.splice(item, 1)
+                })
+                this.selectList = []
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })     
+            })
+
+            this.isSingleO = false
+        },
+        initSet () {
+            var data = []
+            this.sourceDatas.forEach((item, index) => {
+                var obj = {
+                    isEdit: false,
+                    isNew: false,
+                    isDelete: false,
+                    ids: index,
+                    text: item.label
+                }
+                data.push(obj)
+            })
+            this.labelList = data
+        },
+        selectImg (index) {
+            if (!this.isCheck) {
+                this.getBigImgs()
+                this.index = index
+                this.isShow.value = true
+                return false
+            }
+
+            var ids = this.selectList.indexOf(index)
+
+            if (ids < 0) {
+                this.selectList.push(index)
+            } else {
+                this.selectList.splice(ids, 1)
+            }
+
+            console.log(this.selectList)
+        },
+        selectConfirm () {
+            // 划分选中于为选中图片
+            var tabIndex = Number(this.activeName)
+
+            // 是否选中自己
+            var isSelf = this.checkedLabels.indexOf(tabIndex) > -1
+
+            var imgs = this.sourceDatas[tabIndex].imgs
+            var selectImgs = []
+            this.selectList = this.selectList.sort()
+            this.selectList.forEach((item) => {
+                // 选中自己不变，否则为移动
+                selectImgs.push(imgs[item])
+                if (!isSelf) {
+                    imgs.splice(item, 1)
+                }
+            })
+
+            // 清空选中图片
+            this.selectList = []
+
+            this.checkedLabels.forEach((item) => {
+                if (tabIndex !== item) {
+                    this.sourceDatas[item].imgs.push(...selectImgs)
+                }
+            })
+
+            this.isCheck = false
+            this.isselectVisible = false
         }
     },
-    methods: {
-        handleClick(tab, event) {
-            console.log(tab, event)
-        },
-        sortLabel () {
-            this.isStragble = !this.isStragble
-        },
-        addLabel () {
-            var data = {
-                text: '',
-                isEdit: true
-            }
-            this.labelList.unshift(data)
-        }
+    components: {
+        swiperImg
     }
 }
 </script>
@@ -203,10 +462,38 @@ export default {
                 display: inline-block;
                 margin: 13px 0;
                 cursor: pointer;
+                padding: 0 5px;
 
                 &:hover {
-                    opacity: 0.8;
+                    opacity: 0.7;
                 }
+            }
+
+            .up-box {
+                position: relative;
+                height: 27px;
+
+                img {
+                    display: block;
+                    width: 14px;
+                    height: 14px;
+                    margin: 13px auto;
+                    padding: 0;
+                }
+
+                input {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 27px;
+                    opacity: 0.01;
+                }
+            }
+
+            .disable {
+                opacity: 0.5;
+                cursor: no-drop;
             }
 
             span {
@@ -333,6 +620,13 @@ export default {
             color: #20A0FF;
         }
 
+        .no-img {
+            text-align: center;
+            line-height: 300px;
+            font-size: 20px;
+            color: #999999;
+        }
+
         .sou-box {
             width: 110%;
             padding-top: 10px;
@@ -371,7 +665,7 @@ export default {
                 p {
                     display: none;
                     height: 16px;
-                    margin-top: 11px;
+                    margin-top: 10px;
 
                     a {
                         &:hover {
@@ -392,6 +686,11 @@ export default {
                         float: right;
                         background: url(../../../assets/images/delete-icon-n.png) center no-repeat;
                     }
+                }
+
+                &.check {
+                    height: 200px;
+                    margin-bottom: 30px;
                 }
 
                 &:hover {
