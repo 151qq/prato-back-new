@@ -4,7 +4,7 @@
       <img v-if="!curPath" class="img-big" src="../../assets/images/img-default.jpg" @click="showSelect">
       <img v-else class="img-big" :src="curPath">
       <div v-if="isBtn">
-        <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
+        <img v-if="!isNotDel" class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
         <img class="del-btn" src="../../assets/images/pen-icon.png" @click="showSelect">
         <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetPath">
       </div>
@@ -32,7 +32,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num', 'isBtn', 'idx'],
+    props: ['path', 'num', 'isBtn', 'idx', 'isNotDel'],
     data() {
       return {
         isShow: false,

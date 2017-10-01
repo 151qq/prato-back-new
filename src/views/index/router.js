@@ -23,6 +23,26 @@ const routers = [
     }
   },
   {
+    // 营销计划
+    path: '/index/market/:type',
+    name: 'market',
+    component (resolve) {
+      require.ensure(['./article/market.vue'], () => {
+        resolve(require('./article/market.vue'))
+      })
+    }
+  },
+  {
+    // 推广文章
+    path: '/index/spread/:type',
+    name: 'spread',
+    component (resolve) {
+      require.ensure(['./article/spread.vue'], () => {
+        resolve(require('./article/spread.vue'))
+      })
+    }
+  },
+  {
     // 产品中心
     path: '/index/product/:type',
     name: 'product',

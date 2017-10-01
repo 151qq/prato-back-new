@@ -5,6 +5,8 @@
     <div class="nav-box">
       <router-link :to="{ name: 'house'}">楼盘维护</router-link>
       <router-link :to="{ name: 'report'}">报告维护</router-link>
+      <router-link :to="{ name: 'market'}">营销计划</router-link>
+      <router-link :to="{ name: 'spread'}">推广文章</router-link>
       <router-link :to="{ name: 'product'}">产品中心</router-link>
       <router-link :to="{ name: 'source'}">素材库</router-link>
     </div>
@@ -74,7 +76,7 @@
             新增报告
           </router-link>
           <router-link target="_blank" class="a-box a-bg" :to="{name: 'product', params: { type: 'add' }}">
-            新增报产品
+            新增产品
           </router-link>
         </div>
       </el-popover>

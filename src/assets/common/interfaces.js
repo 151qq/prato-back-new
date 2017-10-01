@@ -14,6 +14,8 @@ export default {
         "draftArticle": platform + "siteEdit/draftArticle.json",          //保存草草
         "publishArticle": platform + "siteEdit/publishArticle.json",       //发布
         "changePassword": platform + "changePassword.json",         //修改密码
+        "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
+        "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
         /**
         * 我的素材库 get
         */
@@ -58,11 +60,6 @@ export default {
         */
         notice: '/static/api/common/notice.json',
         /**
-        * 我的任务列表 get
-        * tmpCode 模版号
-        */
-        getTemplate: '/static/api/common/getTemplate.json',
-        /**
         * 任务详情 get
         * id 任务标识
         */
@@ -78,10 +75,67 @@ export default {
         * id 报告序列标识
         */
         sendMail: '/static/api/report/sendMail.json',
+
+
         /**
-        * 我的报告列表 get
+        * 产品树 get
         */
         productTree: '/static/api/product/productTree.json',
+        /**
+        * 产品基础信息 get
+        * id 产品序列标识
+        */
+        proinfo: '/static/api/product/info.json',
+        /**
+        * 产品信息 get
+        * id 产品序列标识
+        */
+        probase: '/static/api/product/base.json',
+        /**
+        * 产品类型 get
+        * id 产品序列标识
+        */
+        protype: '/static/api/product/type.json',
+        /**
+        * 规格 get
+        * id 楼盘序列标识
+        */
+        prospec: '/static/api/product/prospec.json',
+        /**
+        * 产品介绍 get
+        * id 产品序列标识
+        */
+        proarticle: '/static/api/product/article.json',
+        /**
+        * 产品图片图片 get
+        * id 产品序列标识
+        */
+        proimgs: '/static/api/product/proimgs.json',
+        /**
+        * 物业外观图片 get
+        * id 楼盘序列标识
+        */
+        pubimgs: '/static/api/product/pubimgs.json',
+
+
+        /**
+        * 营销树 get
+        */
+        marketTree: '/static/api/market/marketTree.json',
+        /**
+        * 营销监控表 get
+        * id 营销方案序列标识
+        * date 时间段字符串
+        */
+        monitorData: '/static/api/market/monitorData.json',
+
+
+
+        /**
+        * 我的任务列表 get
+        * tmpCode 模版号
+        */
+        getTemplate: '/static/api/common/getTemplate.json',
         /**
         * 获取相关标题的楼盘或报告ID get
         * type 楼盘或报告标识

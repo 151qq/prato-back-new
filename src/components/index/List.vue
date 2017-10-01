@@ -15,7 +15,7 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.id, item3.tplCode, index1, index2, index3)">
+                    @click="getInfo(item3, index1, index2, index3)">
                   <img class="img-box" :src="item3.imgUrl">
                   <div class="p-box">
                     <span class="title">{{item3.title}}</span>
@@ -114,13 +114,22 @@
         }).then(res => {
           this.treeData = res.result.datas
           if (this.treeData[0].children.length && this.isfirst) {
-            let id = this.treeData[0].children[0].children[0].id
-            let tplCode = this.treeData[0].children[0].children[0].tplCode
-            let fileCode = this.treeData[0].children[0].children[0].fileCode
+            let treeItem = this.treeData[0].children[0].children[0]
+            let id = treeItem.id
+            let tplCode = treeItem.tplCode
+            let fileCode = treeItem.fileCode
+            let marketType = treeItem.marketType
 
             let data = {
               id: id,
               tplCode: tplCode
+            }
+
+            console.log(treeItem, 'item')
+            // 营销类型
+            if (marketType) {
+              data.marketType = marketType
+              localStorage.setItem("marketType", marketType)
             }
             this.$emit('getInfo', data)
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
@@ -159,15 +168,20 @@
           })       
         })
       },
-      getInfo (id, tplCode, index1, index2, index3) {
+      getInfo (item, index1, index2, index3) {
         if (this.curIndex === index3) {
           return false
         }
         this.curIndex = index3
         this.activeName = index1 + '-' + index2 + '-' + index3
         var data = {
-          id: id,
-          tplCode: tplCode
+          id: item.id,
+          tplCode: item.tplCode
+        }
+        // 营销类型
+        if (item.marketType) {
+          data.marketType = item.marketType
+          localStorage.setItem("marketType", item.marketType)
         }
         this.$emit('getInfo', data)
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
@@ -193,8 +207,23 @@
             this.treeData[index1].children[index2].children.splice(index3, 1)
           }
           if (this.curIndex === index3) {
-            let id = this.treeData[0].children[0].children[0].id
-            this.$emit('getInfo', id)
+            let treeItem = this.treeData[0].children[0].children[0]
+            let id = treeItem.id
+            let tplCode = treeItem.tplCode
+            let fileCode = treeItem.fileCode
+            let marketType = treeItem.marketType
+
+            let data = {
+              id: id,
+              tplCode: tplCode
+            }
+
+            // 营销类型
+            if (marketType) {
+              data.marketType = marketType
+              localStorage.setItem("marketType", marketType)
+            }
+            this.$emit('getInfo', data)
             this.activeName = '0-0-0'
             this.openeds = ['0', '0-0']
           }

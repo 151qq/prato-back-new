@@ -1,0 +1,77 @@
+.baseInput {
+    float: left;
+    margin-bottom: 20px;
+
+    &>span {
+        float: left;
+        width: 65px;
+        font-size: 14px;
+        color: #1F2D3D;
+        line-height: 30px;
+    }
+
+    .input-box {
+        float: left;
+        width: 235px;
+
+        input {
+            height: 30px;
+        }
+    }
+}
+
+.bigB {
+    .input-box {
+        width: 575px;
+
+        .el-select {
+            width: 575px;
+        }
+    }
+}
+
+.rightF {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.add-btn {
+    position: absolute;
+    right: 0;
+    top: 7px;
+}
+
+.save-btn {
+  float: right;
+  margin-top: 10px;
+  margin-left: 15px;
+}
+
+.search-input {
+  float: left;
+  width: 100%;
+  margin-bottom: 20px;
+
+  &>span {
+    float: left;
+    width: 65px;
+    font-size: 14px;
+    color: #1F2D3D;
+    line-height: 30px;
+  }
+
+  .el-input-group--append .el-input__inner, .el-input-group__prepend {
+    width: 510px;
+  }
+
+  .tag-box {
+    padding-left: 65px;
+
+    .el-tag {
+      margin: 7px 10px 0 0;
+    }
+  }
+}

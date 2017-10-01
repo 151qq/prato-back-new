@@ -1,0 +1,33 @@
+{
+  "statusCode": 0,
+  "result": {
+    "id": 0,
+    "base": {
+      "name": "",
+      "price": 0,
+      "type": 0,
+      "code": "123456",
+      "customs": [
+        {
+          "id": 1,
+          "value": "客户一"
+        },
+        {
+          "id": 2,
+          "value": "客户二"
+        }
+      ],
+      "products": [
+        {
+          "id": 1,
+          "value": "产品一"
+        },
+        {
+          "id": 2,
+          "value": "产品二"
+        }
+      ]
+    }
+  },
+  "mess": ""
+}
