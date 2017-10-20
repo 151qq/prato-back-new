@@ -40,23 +40,17 @@
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="营销活动监控" name="5">
-              <list-monitor></list-monitor>
+              <list-monitor-noline></list-monitor-noline>
             </el-collapse-item>
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="推广明星" name="6">
               <list-people-star></list-people-star>
-            </el-collapse-item>
-            <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="文章排行" name="7">
-              <list-article></list-article>
-            </el-collapse-item>
-
-            <div class="line-bold"></div>
-
-            <el-collapse-item class="formStylePro" title="活动文章" name="8">
-              <list-activity-article></list-activity-article>
+              <section class="bottom-data">
+                迄今为止，销售的日外呼的中位数是{{info.dayMidNum}}，完成预约的中位数{{info.successMidNum}}，
+                外呼预约转换率{{info.changePercent}}%
+              </section>
             </el-collapse-item>
           </template>
         </el-collapse>
@@ -68,7 +62,7 @@ import formDateClick from '../../components/form/formDateClick'
 import formEdit from '../../components/form/formEdit'
 import formActivity from '../../components/form/formActivity'
 import fromReward from '../../components/form/fromReward'
-import listMonitor from '../../components/list/listMonitor'
+import listMonitorNoline from '../../components/list/listMonitorNoline'
 import listPeopleStar from '../../components/list/listPeopleStar'
 import listArticle from '../../components/list/listArticle'
 import listActivityArticle from '../../components/list/listActivityArticle'
@@ -90,8 +84,12 @@ export default {
             activeNames: ['1'],
             index: 0,
             articleinfo: [],
-            type: ''
-            // 线下
+            type: '',
+            info: {
+              dayMidNum: 10,
+              successMidNum: 20,
+              changePercent: 12
+            }
         }
     },
     mounted () {
@@ -101,7 +99,7 @@ export default {
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            this.getAllData()
+            // this.getAllData()
         }
     },
     methods: {
@@ -113,18 +111,29 @@ export default {
         },
         getAllData () {
           this.$refs.formEdit.getArticle('articleHouse')
+          this.getInfo()
         },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
-        }
-        // 线下
+        },
+        getInfo () {
+          util.request({
+              method: 'get',
+              interface: 'nolineInfo',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.info = res.result.result
+          })
+        },
     },
     components: {
         formDateClick,
         formActivity,
         fromReward,
         formEdit,
-        listMonitor,
+        listMonitorNoline,
         listPeopleStar,
         listArticle,
         listActivityArticle

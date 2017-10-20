@@ -1,10 +1,12 @@
 <template>
-    <section class="monitor-box">
-      monitor.dateArea
-
-      <div class="date-b">2016年5月9日</div>
+    <section class="monitor-noline-box">
       <div class="cont-b">
-        {{monitor.name}}营销活动已经进行了{{monitor.day}}天，文章已经发出<span>{{monitor.pubNum}}</span>篇，今天新增阅读<span>{{monitor.reedNum}}</span>，评论<span>{{monitor.comentNum}}</span>条，客户主动咨询<span>{{monitor.askNum}}</span>次。
+        {{monitor.name}}营销活动已经进行了
+        <span>{{monitor.day}}</span>天，
+        外呼总次数<span>{{monitor.totalNum}}</span>，
+        形成预约<span>{{monitor.successNum}}</span>次，
+        今天新增外呼<span>{{monitor.addNum}}</span>，
+        新增预约<span>{{monitor.addCallNum}}</span>次
       </div>
 
       <div class="echar-b">
@@ -22,10 +24,10 @@ export default {
           name: '',
           dateArea: '',
           day: 0,
-          pubNum: 0,
-          reedNum: 0,
-          comentNum: 0,
-          askNum: 0,
+          totalNum: 0,
+          successNum: 0,
+          addNum: 0,
+          addCallNum: 0,
           echartsData: {}
         },
         monitorEcharts: {}
@@ -38,7 +40,7 @@ export default {
       getEchartsM () {
         util.request({
             method: 'get',
-            interface: 'monitorData',
+            interface: 'monitorNoline',
             data: {
               id: localStorage.getItem("id")
             }
@@ -57,7 +59,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.monitor-box {
+.monitor-noline-box {
   width: 640px;
 
   .date-m {
@@ -77,6 +79,7 @@ export default {
     font-size: 14px;
     color: #1F2D3D;
     line-height: 30px;
+    text-align: center;
 
     span {
       color: #20A0FF;

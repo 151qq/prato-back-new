@@ -39,7 +39,6 @@
   export default{
     data(){
       return {
-        curIndex: 0,
         isfirst: true,
         filterText: '',
         treeData: [],
@@ -112,7 +111,7 @@
           interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
-          this.treeData = res.result.datas
+          this.treeData = res.result.result
           if (this.treeData[0].children.length && this.isfirst) {
             let treeItem = this.treeData[0].children[0].children[0]
             let id = treeItem.id
@@ -124,8 +123,6 @@
               id: id,
               tplCode: tplCode
             }
-
-            console.log(treeItem, 'item')
             // 营销类型
             if (marketType) {
               data.marketType = marketType
@@ -169,11 +166,11 @@
         })
       },
       getInfo (item, index1, index2, index3) {
-        if (this.curIndex === index3) {
+        var curIndex = index1 + '-' + index2 + '-' + index3
+        if (this.activeName === curIndex) {
           return false
         }
-        this.curIndex = index3
-        this.activeName = index1 + '-' + index2 + '-' + index3
+        this.activeName = curIndex
         var data = {
           id: item.id,
           tplCode: item.tplCode
@@ -189,6 +186,7 @@
         localStorage.setItem("tplCode", tplCode)
       },
       deleteById (id, html5PageCode, index1, index2, index3) {
+        var curIndex = index1 + '-' + index2 + '-' + index3
         util.request({
           method: 'post',
           interface: 'deleteDraftFile',
@@ -206,7 +204,7 @@
           } else {
             this.treeData[index1].children[index2].children.splice(index3, 1)
           }
-          if (this.curIndex === index3) {
+          if (this.activeName === curIndex) {
             let treeItem = this.treeData[0].children[0].children[0]
             let id = treeItem.id
             let tplCode = treeItem.tplCode

@@ -17,20 +17,25 @@
           <div class="line-bold"></div>
 
           <el-collapse-item class="formStylePro" title="文章封面" name="1">
-            <upLoad :path="coverImg" :is-btn="true" :is-not-del="true"></upLoad>
+            <upLoad :path="coverImg" :is-btn="true"
+                :is-not-del="true"
+                @changeImg="changeImg"></upLoad>
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('articleinfo')">保存</el-button>
+                @click="saveData('coverImg')">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
 
           <div class="line-bold"></div>
           <el-collapse-item class="formStylePro" title="文章摘要" name="2">
-            <textarea class="abstract-box" placeholder="请输入摘要文字，最多不超过40个字" v-model="marketAbstract"></textarea>
+            <textarea class="abstract-box"
+                placeholder="请输入摘要文字，最多不超过40个字"
+                v-model="marketAbstract">
+              </textarea>
             <span class="abstract-least">还可以输入{{leastNum}}个字</span>
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('articleinfo')">保存</el-button>
+                @click="saveData('marketAbstract')">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
 
@@ -42,21 +47,80 @@
           <div class="line-bold"></div>
 
           <el-collapse-item class="formStylePro editShow" title="相关文章" name="4">
+            <form-article ref="formArticle" :articles="articles"></form-article>
           </el-collapse-item>
           
           <template v-if="type !== 'add'">
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="文章统计" name="5">
+              <section class="pie-box">
+                <div class="left">
+                  <echart-pie :id-name="'reedUser'"
+                      :echarts-date="echartData.reedUser"
+                      ref="reedUser"></echart-pie>
+                </div>
+                <div class="right">
+                  <echart-pie :id-name="'reedNum'"
+                      :echarts-date="echartData.reedNum"
+                      ref="reedNum"></echart-pie>
+                </div>
+              </section>
+
+              <section class="tar-box">
+                <div class="left">
+                  <echart-tar :id-name="'reedTop'"
+                      :echarts-date="echartData.reedTop"
+                      ref="reedTop"></echart-tar>
+                </div>
+                <div class="right">
+                  <echart-tar :id-name="'shareTop'"
+                      :echarts-date="echartData.shareTop"
+                      ref="shareTop"></echart-tar>
+                </div>
+              </section>
+
+              <section class="pie-box">
+                <div class="left">
+                  <echart-pie :id-name="'shareStatisticsPublic'"
+                      :echarts-date="echartData.shareStatisticsPublic"
+                      ref="shareStatisticsPublic"></echart-pie>
+                </div>
+                <div class="right">
+                  <echart-pie :id-name="'shareStatisticsPravite'"
+                      :echarts-date="echartData.shareStatisticsPravite"
+                      ref="shareStatisticsPravite"></echart-pie>
+                </div>
+              </section>
+
+              <section class="pie-box">
+                <div class="left">
+                  <echart-pie :id-name="'comentStatistics'"
+                      :echarts-date="echartData.comentStatistics"
+                      ref="comentStatistics"></echart-pie>
+                </div>
+                <div class="right">
+                  <echart-pie :id-name="'askStatistics'"
+                      :echarts-date="echartData.askStatistics"
+                      ref="askStatistics"></echart-pie>
+                </div>
+              </section>
+
             </el-collapse-item>
 
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="文章传播" name="6">
+              <section class="graph-box">
+                <echart-graph :id-name="'spreadGraph'"
+                      :echarts-date="echartData.spreadGraph"
+                      ref="spreadGraph"></echart-graph>
+              </section>
             </el-collapse-item>
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="文章评论" name="7">
+              <list-comment :comments="comments"></list-comment>
             </el-collapse-item>
           </template>
         </el-collapse>
@@ -65,7 +129,12 @@
 <script>
 import util from '../../assets/common/util'
 import formEdit from '../../components/form/formEdit'
+import formArticle from '../../components/form/formArticle'
 import upLoad from '../../components/common/upLoad'
+import echartPie from '../../components/common/echart-pie'
+import echartTar from '../../components/common/echart-tar'
+import echartGraph from '../../components/common/echart-graph'
+import listComment from '../../components/list/listComment'
 
 import $ from 'Jquery'
 
@@ -85,7 +154,10 @@ export default {
             type: '',
             coverImg: '',
             marketAbstract: '',
-            leastNum: 40
+            leastNum: 40,
+            articles: [],
+            echartData: {},
+            comments: []
         }
     },
     mounted () {
@@ -95,7 +167,7 @@ export default {
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            this.getAllData()
+            // this.getAllData()
         }
     },
     methods: {
@@ -106,7 +178,9 @@ export default {
           datas.splice(datas.indexOf(item), 1)
         },
         getAllData () {
+          this.getArticleInfo()
           this.$refs.formEdit.getArticle('articleHouse')
+          this.getEhartData()
         },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
@@ -116,11 +190,59 @@ export default {
           if (this.leastNum === 0) {
             this.marketAbstract = this.marketAbstract.substring(0, 40)
           }
+        },
+        changeImg (data) {
+          this.coverImg = data.url
+        },
+        getArticleInfo () {
+          util.request({
+              method: 'get',
+              interface: 'articleInfo',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.articles = res.result.result.articles
+              this.coverImg = res.result.result.coverImg
+              this.marketAbstract = res.result.result.marketAbstract
+              this.comments = res.result.result.comments
+              setTimeout(() => {
+                this.$refs.formArticle.getData()
+              }, 0)
+              
+          })
+        },
+        getEhartData () {
+          util.request({
+              method: 'get',
+              interface: 'articleEchart',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.echartData = res.result.result
+              setTimeout(() => {
+                this.$refs.reedUser.setEcharts()
+                this.$refs.reedNum.setEcharts()
+                this.$refs.reedTop.setEcharts()
+                this.$refs.shareTop.setEcharts()
+                this.$refs.shareStatisticsPublic.setEcharts()
+                this.$refs.shareStatisticsPravite.setEcharts()
+                this.$refs.comentStatistics.setEcharts()
+                this.$refs.askStatistics.setEcharts()
+                this.$refs.spreadGraph.setEcharts()
+              }, 0) 
+          })
         }
     },
     components: {
         formEdit,
-        upLoad
+        formArticle,
+        upLoad,
+        echartPie,
+        echartTar,
+        echartGraph,
+        listComment
     }
 }
 </script>
@@ -133,6 +255,37 @@ export default {
     position: relative;
     width: 640px;
     margin: 0 auto;
+
+    .pie-box, .tar-box {
+      width: 640px;
+      overflow: hidden;
+      border-bottom: 1px solid #D3DCE6;
+      padding-bottom: 30px;
+      margin-bottom: 30px;
+
+      &:last-child {
+        border: none;
+      }
+
+      .left {
+        width: 280px;
+        float: left;
+      }
+
+      .right {
+        width: 280px;
+        float: right;
+      }
+    }
+
+    .graph-box {
+      background: #F9F9F9;
+    }
+
+    .tar-box {
+      padding-bottom: 0;
+      padding-top: 30px;
+    }
 
     &:last-child {
         margin-bottom: 30px;

@@ -101,7 +101,7 @@ export default {
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            this.getAllData()
+            // this.getAllData()
         }
     },
     methods: {

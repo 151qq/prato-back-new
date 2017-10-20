@@ -1,11 +1,13 @@
 <template>
-    <section class="monitor-box">
+    <section class="monitor-outline-box">
       monitor.dateArea
 
       <div class="date-b">2016年5月9日</div>
       <div class="cont-b">
-        {{monitor.name}}营销活动已经进行了{{monitor.day}}天，文章已经发出<span>{{monitor.pubNum}}</span>篇，今天新增阅读<span>{{monitor.reedNum}}</span>，评论<span>{{monitor.comentNum}}</span>条，客户主动咨询<span>{{monitor.askNum}}</span>次。
+        {{monitor.name}}营销活动已经举报活动{{monitor.hostNum}}次，还将举办{{monitor.mayNum}}次，比原计划多（少）举办{{monitor.muchNum}}次
       </div>
+
+      <div id="container"></div>
 
       <div class="echar-b">
         <echarts-tar :id-name="'echar1'" :echarts-date="monitor.echartsData" :is-change="true" ref="echarts"></echarts-tar>
@@ -21,11 +23,9 @@ export default {
         monitor: {
           name: '',
           dateArea: '',
-          day: 0,
-          pubNum: 0,
-          reedNum: 0,
-          comentNum: 0,
-          askNum: 0,
+          hostNum: 0,
+          mayNum: 0,
+          muchNum: 0,
           echartsData: {}
         },
         monitorEcharts: {}
@@ -38,17 +38,22 @@ export default {
       getEchartsM () {
         util.request({
             method: 'get',
-            interface: 'monitorData',
+            interface: 'monitorOutline',
             data: {
               id: localStorage.getItem("id")
             }
         }).then(res => {
             this.monitor = res.result.result
             setTimeout(() => {
-              console.log(this.$refs, 'refs')
               this.$refs.echarts.setEcharts()
+              this.drawMap(this.monitor.point)
             }, 0)
         })
+      },
+      drawMap (pointData) {
+        var map = new window.BMap.Map('container')
+        var point = new window.BMap.Point(pointData.lng, pointData.lat)
+        map.centerAndZoom(point, 15)
       }
     },
     components: {
@@ -57,7 +62,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.monitor-box {
+.monitor-outline-box {
   width: 640px;
 
   .date-m {
@@ -77,10 +82,17 @@ export default {
     font-size: 14px;
     color: #1F2D3D;
     line-height: 30px;
+    text-align: center;
 
     span {
       color: #20A0FF;
     }
+  }
+
+  #container {
+    width: 640px;
+    height: 140px;
+    margin: 15px 0;
   }
 }
 </style>

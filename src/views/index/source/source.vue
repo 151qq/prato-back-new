@@ -166,7 +166,6 @@ export default {
             this.labelList.unshift(data)
         },
         handleClick(tab, event) {
-            console.log(this.activeName)
             this.isCheck = false
         },
         getImgs () {

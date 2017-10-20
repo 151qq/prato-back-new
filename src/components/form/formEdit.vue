@@ -61,7 +61,7 @@
 
         <div class="clear"></div>
         <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-            @click="saveData('articleinfo')">保存</el-button>
+            @click="saveArticle">保存</el-button>
         <div class="clear"></div>
     </section>
 </template>
@@ -125,6 +125,21 @@ export default {
         this.setSortable()
     },
     methods:{
+        saveArticle () {
+            var formData = {
+                id: localStorage.getItem("id"),
+                type: this.$route.name,
+                data: this.articleinfo
+            }
+            
+            util.request({
+                method: 'post',
+                interface: 'draftArticle',
+                data: formData
+            }).then(res => {
+                console.log(res)
+            })
+        },
         getArticle (url) {     
           util.request({
                 method: 'get',
@@ -155,7 +170,6 @@ export default {
                     let preData = _this.articleList[newIndex]
                     _this.articleList[newIndex] = _this.articleList[oldIndex]
                     _this.articleList[oldIndex] = preData
-                    console.log(_this.articleList, 'ls')
                 }
             })
         },

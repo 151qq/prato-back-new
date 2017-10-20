@@ -81,22 +81,47 @@ export default {
     // 获取echarts数据
     setEcharts () {
       let datas = this.echartsDate
+
       // 设置标题
       this.option.title.text = datas.title ? datas.title : ''
       // 设置legend
       this.option.legend.data = datas.legend
       // 设置横轴数据
-      this.option.xAxis.data = datas.xAxis
+      if (datas.xAxis) {
+        this.option.xAxis.data = datas.xAxis
+      } else {
+        this.option.xAxis = {
+          type: 'value',
+          min: 0,
+          axisLabel: {
+            formatter: '{value}',
+            textStyle: {
+              color: '#999'
+            }
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          }
+        }
+
+        var dataObj = {
+          type: 'category',
+          data: datas.yAxis
+        }
+        this.option.yAxis = dataObj
+      }
+      
       // 设置纵轴数据
       this.option.series = [].concat(this.setStyle(datas.seriesLine, 'lineStyle', this.colors), this.setStyle(datas.seriesBar, 'barStyle'))
-
-      console.log(this.option, 'option')
 
       this.drawEchart()
     },
     setStyle (arrs, type, colors) {
       if (!arrs) {
-        return false
+        return []
       }
       var arrList = arrs.map((item, index) => {
         if (colors) {

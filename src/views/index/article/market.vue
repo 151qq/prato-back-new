@@ -32,12 +32,16 @@ export default {
                 return false
             }
 
+            console.log(data, 'data')
+
             if (data.marketType) {
                 this.marketType = data.marketType
             }
             
             // 编辑区域获取初始数据
-            this.$refs.editBox.getAllData()
+            setTimeout(() => {
+                this.$refs.editBox.getAllData()
+            }, 0)
         }
     },
     components: {

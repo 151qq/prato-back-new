@@ -27,38 +27,34 @@
           </el-collapse-item>
           <div class="line-bold"></div>
 
-          <el-collapse-item class="formStylePro editShow" title="营销活动优惠" name="3">
-            <form-activity></form-activity>
-          </el-collapse-item>
-          <div class="line-bold"></div>
-
-          <el-collapse-item class="formStylePro" title="营销活动激励" name="4">
-            <from-reward></from-reward>
+          <el-collapse-item class="formStylePro editShow" title="营销活动礼品" name="3">
+            <form-gift-outline></form-gift-outline>
           </el-collapse-item>
 
           <template v-if="type !== 'add'">
             <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="营销活动监控" name="5">
-              <list-monitor></list-monitor>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-
-            <el-collapse-item class="formStylePro" title="推广明星" name="6">
-              <list-people-star></list-people-star>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-
-            <el-collapse-item class="formStylePro" title="文章排行" name="7">
-              <list-article></list-article>
+            <el-collapse-item class="formStylePro" title="营销活动监控" name="4">
+              <list-monitor-outline></list-monitor-outline>
             </el-collapse-item>
 
             <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="活动文章" name="8">
-              <list-activity-article></list-activity-article>
+            <el-collapse-item class="formStylePro" title="营销活动现场照片" name="6">
+              <el-button class="link-btn">
+                <router-link target="_blank" :to="{ name: 'source'}">...更多</router-link>
+              </el-button>
+              <section class="img-list-box" v-for="(item, index) in imgList" :key="index">
+                <p class="title-box">{{item.name}}</p>
+                <form-imgs :img-lists="item.smallImgs" :big-imgs="item.bigImgs"></form-imgs>
+                <div class="clear"></div>
+                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                    @click="saveImg(item)">保存</el-button>
+                <div class="clear"></div>
+              </section>
             </el-collapse-item>
           </template>
+
         </el-collapse>
     </div>
 </template>
@@ -66,13 +62,9 @@
 import util from '../../assets/common/util'
 import formDateOutline from '../../components/form/formDateOutline'
 import formEdit from '../../components/form/formEdit'
-import formActivity from '../../components/form/formActivity'
-import fromReward from '../../components/form/fromReward'
-import listMonitor from '../../components/list/listMonitor'
-import listPeopleStar from '../../components/list/listPeopleStar'
-import listArticle from '../../components/list/listArticle'
-import listActivityArticle from '../../components/list/listActivityArticle'
-import upLoad from '../../components/common/upLoad'
+import formGiftOutline from '../../components/form/formGiftOutline'
+import listMonitorOutline from '../../components/list/listMonitorOutline'
+import formImgs from '../../components/form/formImgs'
 
 import $ from 'Jquery'
 
@@ -90,8 +82,8 @@ export default {
             activeNames: ['1'],
             index: 0,
             articleinfo: [],
-            type: ''
-            // 线下
+            type: '',
+            imgList: []
         }
     },
     mounted () {
@@ -101,33 +93,38 @@ export default {
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            this.getAllData()
+            // this.getAllData()
         }
     },
     methods: {
         changeOp (type) {
           this.code = type
         },
-        handleClose (datas, item) {
-          datas.splice(datas.indexOf(item), 1)
-        },
         getAllData () {
           this.$refs.formEdit.getArticle('articleHouse')
+          this.getImgs()
         },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
+        },
+        getImgs () {
+          util.request({
+              method: 'get',
+              interface: 'activityImg',
+              data: {
+                id: localStorage.getItem("id")
+              }
+          }).then(res => {
+              this.imgList = res.result.result
+          })
         }
-        // 线下
     },
     components: {
         formDateOutline,
-        formActivity,
-        fromReward,
+        formGiftOutline,
+        listMonitorOutline,
         formEdit,
-        listMonitor,
-        listPeopleStar,
-        listArticle,
-        listActivityArticle
+        formImgs
     }
 }
 </script>
@@ -141,8 +138,38 @@ export default {
     width: 640px;
     margin: 0 auto;
 
+    .link-btn {
+      position: absolute;
+      right: 0;
+      top: 7px;
+      padding: 7px 9px;
+      font-size: 12px;
+      border-radius: 4px;
+      background-color: #20a0ff;
+      border-radius: 4px;
+      border-color: #20a0ff;
+      
+      a {
+        color: #ffffff;
+      }
+    }
+
     &:last-child {
         margin-bottom: 30px;
+    }
+
+    .img-list-box {
+      margin-bottom: 40px;
+
+      .title-box {
+        font-size: 14px;
+        line-height: 30px;
+        color: #475669;
+      }
+
+      .save-btn {
+        margin: 0;
+      }
     }
 
     .echar-b {
