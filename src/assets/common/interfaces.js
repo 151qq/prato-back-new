@@ -16,6 +16,15 @@ export default {
         "changePassword": platform + "changePassword.json",         //修改密码
         "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
         "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
+
+        /**
+        * 上传头像 post                                
+        */
+        "headImage": platform + "headImage.json",
+        "logout": platform + 'logout.json',
+        "changePassword": platform + "changePassword.json",         //修改密码
+        "resetPassword": platform + "resetPassword.json",  // 重置密码
+        "imageUpload": platform + 'houses/image/upload.json',
         /**
         * 我的素材库 get
         */
@@ -158,7 +167,14 @@ export default {
         /**
         * 推广文章 get
         */
-        spreadTree: '/static/api/article/articleTree.json',
+        // spreadTree: '/static/api/article/articleTree.json',
+        spreadTree: platform +'report/reportTree.json',
+        draftArticle: platform + 'siteEdit/draftArticle.json',
+        findArticleByFileCode: platform + 'siteEdit/findArticleByFileCode.json',
+        getInvestors: platform +'getUserInfoByRoleCode.json',
+        findRecommendArticleByCode: platform + 'siteEdit/findRecommendArticleByCode.json',
+        setArticles: platform + 'siteEdit/setRecommendArticle.json',
+        saveArticleArea: platform + 'siteEdit/saveArticleArea.json',
         /**
         * 推广文章 get
         */

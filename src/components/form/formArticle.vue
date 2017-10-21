@@ -1,31 +1,42 @@
 <template>
     <section class="article-box-outer">
-      <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addArticle">增加</el-button>
-      <div v-for="(item, index) in articleSelect" class="article-box">
-          <img class="article-i" :src="item.imgUrl">
+      <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addReport">增加</el-button>
+      <div v-for="(item, index) in reportSelect"
+          v-if="reportSelect.length"
+          :key="index"
+          class="report-box">
+          <img class="report-i" :src="item.html5PageindexImg">
           <div class="content-b">
-            <p class="title">{{item.title}}</p>
-            <p class="des">{{item.des}}</p>
+            <p class="title">{{item.html5PageTitle}}</p>
           </div>
-          <el-button class="delete-b" type="danger" :plain="true" size="small" icon="delete"
-              @click="deleteArticle(index)">删除</el-button>
+          <el-button class="delete-b"
+                      type="danger"
+                      :plain="true"
+                      size="small"
+                      icon="delete"
+                      @click="deleteReport(index)">删除</el-button>
+      </div>
+      <div v-if="!reportSelect.length"
+            class="null-box">
+        还没有推荐文章，请点击增加按钮添加！
       </div>
       <div class="clear"></div>
-      <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-          @click="saveData('articles')">保存</el-button>
+      <el-button class="save-btn"
+                  v-if="reportSelect.length"
+                  type="info"
+                  :plain="true"
+                  size="small"
+                  icon="document"
+                  @click="setArticles">保存</el-button>
       <div class="clear"></div>
 
-      <el-dialog class="article-m" title="选择文章" :visible.sync="dialogVisible">
-          <div class="articles-box" v-for="(item, index) in articleList.slice(0, 2)"
-              @click="changeArticle(index)"
+      <el-dialog class="report-m" title="选择文章" :visible.sync="dialogVisible">
+          <div class="articles-box" v-for="(item, index) in reportList"
+              @click="changeReport(index)"
               :class="item.isSelected ? 'active' : ''">
-            <img class="article-i" :src="item.imgUrl">
+            <img class="report-i" :src="item.html5PageindexImg">
             <div class="content-b">
-              <p class="title">{{item.title}}</p>
-              <p class="des">{{item.des}}</p>
-              <p>
-                
-              </p>
+              <div class="title">{{item.html5PageTitle}}</div>
             </div>
           </div>
           <el-pagination
@@ -45,67 +56,72 @@
 import util from '../../assets/common/util'
 import './common/form.scss'
 export default {
-    props: ['articles'],
     data () {
         return {
+          articles: [],
           pageSize: 2,
-          pageNum: 1,
+          pageNumber: 1,
           total: 0,
-          articleSelect: [],
-          articleList: [],
+          reportSelect: [],
+          reportAllList: [],
+          reportList: [],
           dialogVisible: false
         }
     },
     methods: {
         getData () {
+          this.getReportList()
           this.getSelectList()
-          this.getArticleList()
+          this.articles = []
         },
         getSelectList () {
           var formD = {
-            ids: this.articles
+            fileCode: localStorage.getItem('code')
           }
 
           util.request({
               method: 'get',
-              interface: 'articleGetByIds',
+              interface: 'findRecommendArticleByCode',
               data: formD
           }).then(res => {
-              this.articleSelect = res.result.result
+              this.reportSelect = res.result.result
+
+              this.reportSelect.forEach((item) => {
+                this.articles.push(item.html5PageCode)
+              })
           })
         },
-        getArticleList () {
-            var formD = {
-              pageSize: this.pageSize,
-              pageNum: this.pageNum,
-              id: localStorage.getItem("id")
-            }
-
+        getReportList () {
             util.request({
                 method: 'get',
-                interface: 'articleList',
-                data: formD
+                interface: 'findRecommendArticleByCode',
+                data: {}
             }).then(res => {
-                this.total = res.result.total
-                this.articleList = res.result.result
-                this.resetArticle()
+                this.reportAllList = res.result.result
+                this.total = this.reportAllList.length
+                this.resetReport()
+                this.getPageReport()
             })
         },
-        deleteArticle (index) {
+        getPageReport () {
+          var startL = this.pageSize * (this.pageNumber - 1)
+          var stopL = this.pageSize * this.pageNumber
+          this.reportList = this.reportAllList.slice(startL, stopL)
+        },
+        deleteReport (index) {
           if (!this.articles.length) {
             return false
           }
-          
-          this.articleSelect.splice(index, 1)
           this.articles.splice(index, 1)
-          this.resetArticle()
+          this.reportSelect.splice(index, 1)
+          this.resetReport()
         },
-        resetArticle () {
+        resetReport () {
           // 存储选择状态
           this.selListInit = []
 
-          this.articleList.forEach((item) => {
-            var index = this.articles.indexOf(Number(item.id))
+          this.reportAllList.forEach((item) => {
+            var index = this.articles.indexOf(String(item.html5PageCode))
             // 存储选择状态
             this.selListInit.push(index > -1)
 
@@ -115,47 +131,51 @@ export default {
               item.isSelected = false
             }
           })
-          this.articleList = this.articleList.concat([])
+          this.reportAllList = this.reportAllList.concat([])
         },
-        changeArticle (index) {
-          let item = this.articleList[index]
+        changeReport (index) {
+          let item = this.reportList[index]
           item.isSelected = !item.isSelected
-          this.articleList = this.articleList.concat([])
+          this.reportList = this.reportList.concat([])
         },
-        addArticle () {
+        addReport () {
           this.dialogVisible = true
         },
         closeSelect () {
-          this.articleList.forEach((item, index) => {
+          this.reportAllList.forEach((item, index) => {
             item.isSelected = this.selListInit[index]
           })
           this.dialogVisible = false
-          this.articleList = this.articleList.concat([])
+          this.reportAllList = this.reportAllList.concat([])
         },
         confirmSelect () {
           // 存储选择状态
           this.selListInit = []
-          this.articles = []
-          this.articleList.forEach((item, num) => {
-            var index = this.articles.indexOf(Number(item.id))
+          var selects = this.articles.concat([])
+          this.reportAllList.forEach((item, num) => {
+            var index = selects.indexOf(item.html5PageCode)
             // 存储选择状态
             this.selListInit.push(item.isSelected)
 
             if (index > -1 && !item.isSelected) {
               // 删除
-              this.articles.splice(index, 1)
-              this.articleSelect.splice(index, 1)
+              selects.splice(index, 1)
+              this.reportSelect.splice(index, 1)
             } if (index < 0 && item.isSelected) {
               // 添加
-              this.articles.push(item.id)
-              this.articleSelect.push(item)
+              selects.push(item.html5PageCode)
+              this.reportSelect.push(item)
             }
           })
+          this.articles = selects.concat([])
           this.dialogVisible = false
         },
         changePage (size) {
-          this.pageNum = size
-          this.getArticleList()
+          this.pageNumber = size
+          this.getPageReport()
+        },
+        setArticles () {
+          this.$emit('saveData', this.articles)
         }
     }
 }
@@ -163,19 +183,11 @@ export default {
 <style lang="scss">
 .article-box-outer {
 
-  .save-btn {
-    margin-top: 15px;
-  }
-
   .el-dialog--small {
     width: 478px;
   }
 
-  .el-pagination {
-    margin-top: 20px;
-  }
-
-  .article-box {
+  .report-box {
     width: 670px;
     padding: 15px;
     box-sizing: border-box;
@@ -186,10 +198,10 @@ export default {
         background: #F9F9F9;
     }
 
-    .article-i {
+    .report-i {
       float: left;
       width: 160px;
-      height: 110px;
+      height: 120px;
     }
 
     .content-b {
@@ -199,13 +211,14 @@ export default {
       .title {
         font-size: 16px;
         color: #000000;
+        margin-bottom: 6px;
       }
 
       .des {
         font-size: 14px;
         color: #475669;
-        line-height: 24px;
-        height: 48px;
+        line-height: 26px;
+        height: 52px;
         overflow: hidden;
       }
     }
@@ -215,7 +228,12 @@ export default {
         display: block;
         margin-top: 4px;
         cursor: pointer;
-        margin-top: 10px;
+    }
+
+    .save-sub-btn {
+      float: right;
+      margin-top: 4px;
+      margin-left: 12px;
     }
   }
 
@@ -235,10 +253,10 @@ export default {
       background-color: #EFF2F7;
     }
 
-    .article-i {
+    .report-i {
       float: left;
       width: 107px;
-      height: 73px;
+      height: 80px;
       border-radius: 4px;
     }
 
@@ -250,13 +268,14 @@ export default {
       .title {
         font-size: 16px;
         color: #000000;
+        margin-bottom: 6px;
       }
 
       .des {
         font-size: 14px;
         color: #475669;
-        line-height: 24px;
-        height: 48px;
+        line-height: 26px;
+        height: 52px;
         overflow: hidden;
       }
     }

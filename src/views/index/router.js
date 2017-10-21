@@ -2,29 +2,11 @@ const routers = [
   {
     path: '/',
     name: 'home',
-    redirect: '/index/house/edit'
-  },
-  {
-    path: '/index/house/:type',
-    name: 'house',
-    component (resolve) {
-      require.ensure(['./article/house.vue'], () => {
-        resolve(require('./article/house.vue'))
-      })
-    }
-  }, {
-    // 报告维护
-    path: '/index/report/:type',
-    name: 'report',
-    component (resolve) {
-      require.ensure(['./article/report.vue'], () => {
-        resolve(require('./article/report.vue'))
-      })
-    }
+    redirect: '/market'
   },
   {
     // 营销计划
-    path: '/index/market/:type',
+    path: '/market',
     name: 'market',
     component (resolve) {
       require.ensure(['./article/market.vue'], () => {
@@ -34,7 +16,7 @@ const routers = [
   },
   {
     // 推广文章
-    path: '/index/spread/:type',
+    path: '/spread',
     name: 'spread',
     component (resolve) {
       require.ensure(['./article/spread.vue'], () => {
@@ -44,7 +26,7 @@ const routers = [
   },
   {
     // 产品中心
-    path: '/index/product/:type',
+    path: '/product',
     name: 'product',
     component (resolve) {
       require.ensure(['./article/product.vue'], () => {
@@ -53,20 +35,11 @@ const routers = [
     }
   }, {
     // 素材库
-    path: '/index/source',
+    path: '/source',
     name: 'source',
     component (resolve) {
       require.ensure(['./source/source.vue'], () => {
         resolve(require('./source/source.vue'))
-      })
-    }
-  }, {
-    // 任务列表
-    path: '/notice/detail/:id',
-    name: 'notice',
-    component (resolve) {
-      require.ensure(['./notice/detail.vue'], () => {
-        resolve(require('./notice/detail.vue'))
       })
     }
   }

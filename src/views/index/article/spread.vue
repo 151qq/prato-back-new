@@ -1,18 +1,18 @@
 <template>
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
-        <section class="leftBox" v-if="$route.params.type !== 'add'">
-            <articles @getInfo="getInfo"></articles>
+        <section class="leftBox">
+            <article-list ref="listBox" @getInfo="getInfo"></article-list>
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-spread ref="editBox"></form-spread>
+            <form-spread ref="editBox" @updateTree="updateTree"></form-spread>
         </div>
     </div>
     
 </template>
 <script>
-import articles from '../../../components/index/list.vue'
+import articleList from '../../../components/index/articleList.vue'
 import formSpread from '../../../components/index/formSpread'
 import util from '../../../assets/common/util'
 
@@ -23,15 +23,15 @@ export default {
     },
     methods: {
         getInfo (data) {
-            if (this.$route.params.type === 'add') {
-                return false
-            }
             // 编辑区域获取初始数据
             this.$refs.editBox.getAllData()
+        },
+        updateTree (data) {
+            this.$refs.listBox.reLoadList(data.code)
         }
     },
     components: {
-        articles,
+        articleList,
         formSpread
     }
 }

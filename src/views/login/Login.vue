@@ -2,101 +2,60 @@
     <div class="wrap">
         <div class="loginBox">
             <div class="l">
-                <swiper :swiperData="swiperData"></swiper>
+                <swiper :options="swiperOption" ref="mySwiper">
+                  <!-- slides -->
+                  <swiper-slide v-for="item in swiperData"><img :src="item.picUrl"></swiper-slide>
+                  <!-- Optional controls -->
+                </swiper>
+
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
             <div class="r">
-                <div class="login-form">
-                    <div class="form-horizontal">
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">用户名</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" v-model="userLoginAccount">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">密码</label>
-                            <div class="col-sm-8">
-                                <input type="password" class="form-control" v-model="userPassword">
-                            </div>
-                        </div>
-                        <input class="form-control" type="hidden" v-model="corpId"/>
-                        <input class="form-control" type="hidden" v-model="wechatName"/>
-
+                <el-form :label-position="'left'" label-width="80px">
+                    <el-form-item label="用户名称">
+                        <el-input v-model="userLoginAccount"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户密码">
+                        <el-input v-model="userPassword" type="password"></el-input>
                         <div class="forget-p" @click="dialogVisible = true">
                             忘记密码
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label"></label>
-                            <div class="col-sm-8 text-center">
-                                <button type="button" id="loginButton" class="btn btn-info" @click="subBtn">登录</button>
-                            </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="subBtn">登录</el-button>
+                    </el-form-item>
+                </el-form>
+                
+                <div class="dased-border"></div>
+
+                <el-form :label-position="'left'" label-width="80px">
+                    <el-form-item label="公司名称">
+                        <el-input v-model="enterpriseCname"></el-input>
+                        <div class="message-box">
+                            请填写公司的工商注册名称，填写不正确或填写公司简称等都会影响贵公司体验的申请。
                         </div>
-
-                    </div>
-                </div>
-
-
-                <div class="login-form" style="border-top: 1px dashed #999999;padding-top:15px;">
-                    <div class="form-horizontal">
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">公司名称</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="enterpriseCname" name="enterpriseCname"
-                                       v-model="enterpriseCname">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">申请人</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="userCname" v-model="userCname"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">注册手机</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="userPhone" v-model="userPhone">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label"></label>
-                            <div class="col-sm-8 text-center">
-                                <button type="button" id="loginButton" class="btn btn-info" @click="regBtn">申请体验
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                    </el-form-item>
+                    <el-form-item label="申请人名">
+                        <el-input v-model="userCname"></el-input>
+                    </el-form-item>
+                    <el-form-item label="注册手机">
+                        <el-input v-model="userPhone"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="regBtn">申请体验</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
         <el-dialog
             title="忘记密码"
             :visible.sync="dialogVisible"
-            size="tiny"
-            :before-close="handleClose">
+            size="tiny">
           
             <div class="form-b">
                 <section>
                     <span>手机</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.tel">
-                        <template slot="append">
-                            <span class="code-b" v-if="iscanPost" @click="getCode">获取验证码</span>
-                            <span v-else>{{leastSencond}}</span>
-                        </template>
-                    </el-input>
-                </section>
-                <section>
-                    <span>验证码</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.code"></el-input>
-                </section>
-                <section>
-                    <span>新密码</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.password"></el-input>
+                    <el-input placeholder="请输入内容" v-model="forgetData.tel"></el-input>
                 </section>
             </div>
 
@@ -108,12 +67,15 @@
     </div>
 </template>
 <script>
-    import Swiper from './../../components/swiper/Swiper.vue';
     import util from '../../assets/common/util';
+    import 'swiper/dist/css/swiper.css'
+    import { swiper, swiperSlide } from 'vue-awesome-swiper'
+    import $ from 'Jquery'
     export default {
         name: 'index',
         components: {
-            Swiper
+            swiper,
+            swiperSlide
         },
         data() {
             return {
@@ -126,73 +88,48 @@
                 enterpriseIndustry: '',
                 userCname: '',
                 userPhone: '',
-                swiperData: {
-                    imgs: [
-                        {picUrl: 'static/bootstrap/images/ip_big1.jpg'},
-                        {picUrl: 'static/bootstrap/images/ip_big2.jpg'},
-                        {picUrl: 'static/bootstrap/images/ip_big4.jpg'},
-                        {picUrl: 'static/bootstrap/images/ip_big3.jpg'}
-                    ]
-                },
+                swiperData: [
+                    {picUrl: '/static/images/ip_big1.jpg'},
+                    {picUrl: '/static/images/ip_big2.jpg'},
+                    {picUrl: '/static/images/ip_big4.jpg'},
+                    {picUrl: '/static/images/ip_big3.jpg'}
+                ],
                 dialogVisible: false,
-                leastSencond: 90,
                 forgetData: {
-                    tel: '',
-                    code: '',
-                    password: ''
+                    tel: ''
                 },
-                telCode: '',
-                iscanPost: true,
-                timer: null
+                swiperOption: {
+                    // swiper options 所有的配置同swiper官方api配置
+                    direction: 'horizontal',
+                    mousewheelControl: true,
+                    observeParents: true,
+                    autoplay: 3000,
+                    initialSlide: 1,
+                    loop: true,
+                    pagination: '.swiper-pagination'
+                }
             }
         },
         mounted() {
-
+            setTimeout(() => {
+                var _selt = this
+                $('.swiper-pagination-bullet').click(function(){
+                    var index = $('.swiper-pagination-bullet').index($(this)) + 1
+                    _selt.$refs.mySwiper.swiper.slideTo(index)
+                })
+            }, 150)
         },
         methods: {
-            getCode () {
-                if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.forgetData.tel.trim())) {
-                    this.$message.error('请输入11位注册手机号')
-                    return
-                }
-                
-                util.request({
-                    method: 'get',
-                    interface: 'getTelCode',
-                    data: {
-                        tel: this.forgetData.tel
-                    }
-                }).then((res) => {
-                    this.telCode = res.result.result.code
-                    this.leastSencond = 90
-                    this.iscanPost = false
-                    this.timer = setInterval(() => {
-                        this.leastSencond = this.leastSencond - 1
-                        if (this.leastSencond === 0) {
-                            this.iscanPost = true
-                            clearInterval(this.timer)
-                        }
-                    }, 1000)
-                })
-            },
             updaetPassword () {
                 if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.forgetData.tel.trim())) {
                     this.$message.error('请输入11位注册手机号')
                     return
                 }
-                if (this.forgetData.code == '' || this.forgetData.code !== this.telCode) {
-                    this.$message.error('请输入正确验证码')
-                    return
-                }
-                if (this.forgetData.password === '') {
-                    this.$message.error('请输入新密码')
-                    return
-                }
                 util.request({
                     method: 'post',
-                    interface: 'forgetPassword',
+                    interface: 'resetPassword',
                     data: {
-                        password: this.forgetData.password
+                        mobile: this.forgetData.tel
                     }
                 }).then((res) => {
                     this.dialogVisible = false
@@ -219,15 +156,18 @@
                     corpId: this.corpId,
                     wechatName: this.wechatName
                 }
-                console.log(data);
 
                 util.request({
                     method: 'post',
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    console.log(res);
-                    window.location.href = '/';
+                    if (res.result.success != '0') {
+                        window.location.href = 'index.html#/';
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                    
                 });
             },
             regBtn(){
@@ -252,15 +192,13 @@
                     userCname: this.userCname,
                     userPhone: this.userPhone
                 }
-                console.log(data);
 
                 util.request({
                     method: 'post',
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    console.log(res);
-                    window.location.href = '/';
+                    window.location.href = 'index.html#/';
                 });
 
             }

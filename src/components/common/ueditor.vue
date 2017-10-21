@@ -14,39 +14,44 @@
         data () {
             return {
                 config: {
-                    initialFrameWidth: null,
-                    initialFrameHeight: null,
-                    zIndex: 0,
                     toolbars: [[
                         'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
                         'lineheight', '|',
                         'fontfamily', 'fontsize', '|',
-                        'emotion', 'map', 'pagebreak',
+                        'emotion', 'map',
                         'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 
                         'horizontal', '|',
                         'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
                         'undo', 'redo'
-
                     ]]
                 },
-                editor: null
+                editor: null,
+                isfirst: true
             }
         },
-
         mounted() {
             const _this = this;
-            this.editor = UE.getEditor(this.editorId, this.config)
+            this.editor = window.UE.getEditor(this.editorId, this.config)
             this.editor.addListener("ready", function () {
-                _this.editor.setContent(_this.content)
+                _this.editor.setContent(_this.content ? _this.content : '')
             })
             this.editor.addListener("blur", function () {
                 var data = {
                     content: _this.editor.getContent(),
                     index: _this.index
                 }
+                this.isfirst = false
                 _this.$emit('setContent', data)
             })
         },
+        // watch: {
+        //     content () {
+        //         if (this.editor && this.isfirst) {
+        //             this.editor.setContent(this.content)
+        //             this.isfirst = false
+        //         }
+        //     }
+        // },
         destroyed() {
             this.editor.destroy();
         }

@@ -110,7 +110,7 @@ export default {
           datas.splice(datas.indexOf(item), 1)
         },
         getAllData () {
-          this.$refs.formEdit.getArticle('articleHouse')
+          // this.$refs.formEdit.getArticle('articleHouse')
           this.getInfo()
         },
         collChange () {

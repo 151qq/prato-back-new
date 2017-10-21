@@ -1,13 +1,29 @@
 <template>
   <div>
     <section class="upload-box">
-      <img v-if="!curPath" class="img-big" src="../../assets/images/img-default.jpg" @click="showSelect">
-      <img v-else class="img-big" :src="curPath">
-      <div v-if="isBtn">
-        <img v-if="!isNotDel" class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
-        <img class="del-btn" src="../../assets/images/pen-icon.png" @click="showSelect">
-        <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetPath">
-      </div>
+      <img v-if="!curPath && !bgPath" class="img-big"
+          src="../../assets/images/img-default.jpg" @click="showSelect">
+      <img v-if="!curPath && bgPath" class="img-big"
+          src="../../assets/images/page-img.jpg" @click="showSelect">
+      <img v-else class="img-big" :src="curPath" @click="showSelect">
+      <section v-if="isBtn">
+        <el-button v-if="!noSave"
+            class="op-btn"
+            type="info"
+            :plain="true"
+            size="small"
+            icon="document"
+            @click="savePath">保存</el-button>
+        <el-button v-if="!noDel"
+            class="op-btn"
+            type="danger"
+            :plain="true"
+            size="small"
+            icon="delete"
+            @click="deleImg">删除</el-button>
+      </section>
+
+      
     </section>
     
     <!-- 本地或素材库选择框 -->
@@ -19,6 +35,7 @@
         </p>
 
         <button class="su-btn" @click="showFile">素材库</button>
+        <!-- <search-message @selectHouse="showFile"></search-message> -->
       </div>
     </el-dialog>
 
@@ -30,9 +47,10 @@ import $ from 'Jquery'
 import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
+// import searchMessage from '../../components/common/search-message'
 
 export default {
-    props: ['path', 'num', 'isBtn', 'idx', 'isNotDel'],
+    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave'],
     data() {
       return {
         isShow: false,
@@ -45,6 +63,11 @@ export default {
     },
     mounted () {
       this.curPath = this.path
+    },
+    watch: {
+      path () {
+        this.curPath = this.path
+      }
     },
     methods: {
       suSelect (datas) {
@@ -65,7 +88,6 @@ export default {
       },
       postImg (e) {
         util.upFile(e).then(res => {
-          console.log(res)
           let imgUrl = res.result.result[0]
           this.curPath = imgUrl
           var data = {
@@ -92,10 +114,14 @@ export default {
           id: this.idx
         }
         this.$emit('changeImg', data)
+      },
+      savePath () {
+        this.$emit('saveImg')
       }
     },
     components: {
       fileLists
+      // searchMessage
     }
 }
 </script>
@@ -106,9 +132,9 @@ export default {
 }
 
 .upload-box {
+  overflow: hidden;
   position: relative;
   cursor: pointer;
-  background: #EFF2F7;
 
   .img-big {
     display: block;
@@ -121,10 +147,8 @@ export default {
     padding: 16px 0;
     overflow: hidden;
       
-    img {
+    .del-btn {
       float: right;
-      width: 16px;
-      height: 16px;
       cursor: pointer;
       margin-right: 13px;
 
@@ -133,29 +157,50 @@ export default {
       }
     }
   }
+
+  .op-btn {
+    float: right;
+    margin: 10px 0 0 10px;
+  }
 }
 
 .btn-sel {
   overflow: hidden;
   margin-bottom: 10px;
 
+  .su-btn {
+    display: block;
+    width: 100%;
+    height: 36px;
+    background: #20A0FF;
+    font-size: 12px;
+    color: #ffffff;
+    line-height: 36px;
+    text-align: center;
+    border: none;
+    padding: 0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
   p {
     position: relative;
+    margin: 0;
     float: left;
-    width: 120px;
-    height: 30px;
+    width: 100%;
+    height: 36px;
     overflow: hidden;
-    margin-left: 20px;
     cursor: pointer;
+    margin-bottom: 15px;
 
     .ben-btn {
       display: block;
-      width: 120px;
-      height: 30px;
+      width: 100%;
+      height: 36px;
       background: #20A0FF;
       font-size: 12px;
       color: #ffffff;
-      line-height: 30px;
+      line-height: 36px;
       text-align: center;
       border: none;
       padding: 0;
@@ -167,27 +212,10 @@ export default {
       position: absolute;
       left: 0;
       top: 0;
-      width: 120px;
-      height: 30px;
+      width: 100%;
+      height: 36px;
       opacity: 0.01;
     }
-  }
-
-  .su-btn {
-    float: right;
-    width: 120px;
-    height: 30px;
-    background: #20A0FF;
-    font-size: 12px;
-    color: #ffffff;
-    line-height: 30px;
-    text-align: center;
-    border: none;
-    padding: 0;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-right: 20px;
-    cursor: pointer;
   }
 }
 </style>

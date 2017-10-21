@@ -5,12 +5,7 @@ import routes from './router'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import '../../assets/scss/common.scss'
-import './scss/index.scss';
-
-import '../../../static/plugin/ueditor/ueditor.config'
-import '../../../static/plugin/ueditor/ueditor.all'
-import '../../../static/plugin/ueditor/lang/zh-cn/zh-cn'
-import '../../../static/plugin/ueditor/ueditor.parse'
+import './scss/index.scss'
 
 import webHeader from '../../components/common/header.vue'
 import webFooter from '../../components/common/footer.vue'

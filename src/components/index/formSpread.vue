@@ -2,41 +2,17 @@
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStylePro" title="营销活动管理" name="0">
-            <section class="status-box">
-                <div class="left">
-                  <a class="xj-box" @click="changeOp('down')">文章下架</a>
-                  <a class="pl-box" @click="changeOp('coment')">关闭评论</a>
-                  <a class="cg-box" @click="changeOp('draft')">草稿删除</a>
-                </div>
-                <div class="right">
-                  产品状态
-                  <span>{{status[code]}}</span>
-                </div>
-            </section>
+            <form-article-base ref="fromBase" :base-data="baseData" @saveData="saveForm"></form-article-base>
           </el-collapse-item>
           <div class="line-bold"></div>
 
           <el-collapse-item class="formStylePro" title="文章封面" name="1">
-            <upLoad :path="coverImg" :is-btn="true"
-                :is-not-del="true"
-                @changeImg="changeImg"></upLoad>
-            <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('coverImg')">保存</el-button>
-            <div class="clear"></div>
-          </el-collapse-item>
-
-          <div class="line-bold"></div>
-          <el-collapse-item class="formStylePro" title="文章摘要" name="2">
-            <textarea class="abstract-box"
-                placeholder="请输入摘要文字，最多不超过40个字"
-                v-model="marketAbstract">
-              </textarea>
-            <span class="abstract-least">还可以输入{{leastNum}}个字</span>
-            <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('marketAbstract')">保存</el-button>
-            <div class="clear"></div>
+            <upLoad :path="baseData.coverImg"
+                :no-del="true"
+                :bg-path="true"
+                :is-btn="true"
+                @changeImg="changeImg"
+                @saveImg="saveForm"></upLoad>
           </el-collapse-item>
 
           <div class="line-bold"></div>
@@ -47,10 +23,10 @@
           <div class="line-bold"></div>
 
           <el-collapse-item class="formStylePro editShow" title="相关文章" name="4">
-            <form-article ref="formArticle" :articles="articles"></form-article>
+            <form-article ref="formArticle" @saveData="setArticles"></form-article>
           </el-collapse-item>
           
-          <template v-if="type !== 'add'">
+          <template>
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="文章统计" name="5">
@@ -129,6 +105,7 @@
 <script>
 import util from '../../assets/common/util'
 import formEdit from '../../components/form/formEdit'
+import formArticleBase from '../../components/form/formArticleBase'
 import formArticle from '../../components/form/formArticle'
 import upLoad from '../../components/common/upLoad'
 import echartPie from '../../components/common/echart-pie'
@@ -141,76 +118,67 @@ import $ from 'Jquery'
 export default {
     data () {
         return {
-            id: 0,
-            code: 'down',
-            status: {
-              down: '下架',
-              coment: '评论',
-              draft: '草稿'
-            },
+            baseData: {},
+            pageSize: 2,
+            pageNumber: 1,
+            total: 0,
+            reportSelect: [],
+            reportList: [],
             activeNames: ['1'],
-            index: 0,
             articleinfo: [],
-            type: '',
             coverImg: '',
-            marketAbstract: '',
-            leastNum: 40,
-            articles: [],
+            articleId: '',
             echartData: {},
             comments: []
         }
     },
     mounted () {
-        this.type = this.$route.params.type
-        if (this.type !== 'add') {
-            var houseColl = localStorage.getItem("houseColl")
-            if (houseColl) {
-                this.activeNames = houseColl.split(',')
-            }
-            // this.getAllData()
+        var houseColl = localStorage.getItem("houseColl")
+        if (houseColl) {
+            this.activeNames = houseColl.split(',')
         }
     },
     methods: {
-        changeOp (type) {
-          this.code = type
-        },
-        handleClose (datas, item) {
-          datas.splice(datas.indexOf(item), 1)
-        },
         getAllData () {
-          this.getArticleInfo()
-          this.$refs.formEdit.getArticle('articleHouse')
+          this.getArticle()
+          this.$refs.fromBase.initData()
+          this.$refs.formArticle.getData()
           this.getEhartData()
         },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
         },
-        abstractChange () {
-          this.leastNum = 40 - this.marketAbstract.length
-          if (this.leastNum === 0) {
-            this.marketAbstract = this.marketAbstract.substring(0, 40)
-          }
-        },
-        changeImg (data) {
-          this.coverImg = data.url
-        },
-        getArticleInfo () {
+        getArticle () {
           util.request({
               method: 'get',
-              interface: 'articleInfo',
+              interface: 'findArticleByFileCode',
               data: {
-                id: localStorage.getItem("id")
+                fileCode: localStorage.getItem('code')
               }
           }).then(res => {
-              this.articles = res.result.result.articles
-              this.coverImg = res.result.result.coverImg
-              this.marketAbstract = res.result.result.marketAbstract
-              this.comments = res.result.result.comments
-              setTimeout(() => {
-                this.$refs.formArticle.getData()
-              }, 0)
-              
+              var resData = res.result.result
+              this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
+
+              localStorage.setItem('articleId', resData.id)
+
+              this.baseData = {
+                title: resData.html5PageTitle,
+                investor: resData.editorCode,
+                coverImg: resData.html5PageindexImg,
+                createTime: res.result.responsetime.split(' ')[0],
+                abstract: resData.html5Summary
+              }
+
+              var data = {
+                article: this.articleinfo,
+                bgImg: resData.backgroundImg
+              }
+
+              this.$refs.formEdit.editInte(data)
           })
+        },
+        changeImg (data) {
+          this.baseData.coverImg = data.url
         },
         getEhartData () {
           util.request({
@@ -233,10 +201,50 @@ export default {
                 this.$refs.spreadGraph.setEcharts()
               }, 0) 
           })
+        },
+        saveForm () {
+          var obj = {
+            html5PageTitle: this.baseData.title,
+            editorCode: this.baseData.investor,
+            html5Summary: this.baseData.abstract,
+            html5PageindexImg: this.baseData.coverImg,
+            id: localStorage.getItem('articleId'),
+            html5CatalogCode: localStorage.getItem('dirCode'),
+            html5PageCode: localStorage.getItem('code')
+          }
+
+          this.$refs.formEdit.saveArticle(obj, this.updateTree)
+        },
+        updateTree () {
+          var data = {
+            code: localStorage.getItem('code')
+          }
+
+          this.$emit('updateTree', data)
+        },
+        setArticles (articles) {
+          var formData = {
+            articleCode: localStorage.getItem('code'),
+            recommend: articles.join(',')
+          }
+
+          util.request({
+              method: 'post',
+              interface: 'setArticles',
+              data: formData
+          }).then(res => {
+              console.log(res)
+          })
+        },
+        saveAll () {
+          this.saveForm()
+          this.$refs.formEdit.saveAll()
+          this.setArticles()
         }
     },
     components: {
         formEdit,
+        formArticleBase,
         formArticle,
         upLoad,
         echartPie,

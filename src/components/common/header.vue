@@ -1,10 +1,8 @@
 <template>
   <section class="header-web">
-    <router-link class="logo-box" :to="{name: 'house'}"><img src="../../assets/images/logo.png"></router-link>
+    <router-link class="logo-box" :to="{name: 'market'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'house'}">楼盘维护</router-link>
-      <router-link :to="{ name: 'report'}">报告维护</router-link>
       <router-link :to="{ name: 'market'}">营销计划</router-link>
       <router-link :to="{ name: 'spread'}">推广文章</router-link>
       <router-link :to="{ name: 'product'}">产品中心</router-link>
@@ -13,76 +11,33 @@
 
     <div class="member-box">
       <a class="img-box" @click="editImgUrl"><img :src="userInfo.iconUrl"></a>
-      <a @click="editPassword">
-        您好
-        <span>{{userInfo.userCnName}}</span>
-        <i class="el-icon-caret-bottom"></i>
-      </a>
-    </div>
-
-    <div class="mess-box" v-popover:popover1>
-      <i class="el-icon-message"></i>
-      <span class="circle"></span>
-      <el-popover
-          ref="popover1"
-          placement="bottom"
-          width="600"
-          trigger="click">
-        <div class="con-box">
-          <p class="title">任务</p>
-          <div class="mess-list">
-            <section v-for="item in noticeList">
-              <div class="top">
-                <img :src="item.imgUrl">
-                <p>
-                  <span class="people">{{item.name}}</span>
-                  <span>{{item.company}}</span>
-                </p>
-              </div>
-              <div class="mid">
-                <p>{{item.des}}</p>
-              </div>
-              <div class="bottom">
-                <el-button class="edit" type="primary" icon="edit" size="small" @click="goUrl(item.id)">处理</el-button>
-              </div>
-            </section>
-          </div>
-          <el-pagination
-            small
-            layout="prev, pager, next"
-            :page-size="page.pageSize"
-            :total="page.total"
-            @current-change="changePage">
-          </el-pagination>
-        </div>
-      </el-popover>
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          您好
+          <span>{{userInfo.userCnName}}</span>
+          <i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <div @click="editPassword">
+              <img src="../../assets/images/change-password.png">
+              修改密码
+            </div>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <div @click="logout">
+              <img src="../../assets/images/logout.png">
+              退出登录
+            </div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
 
     <div class="line-box"></div>
 
-    <div class="add-box" v-popover:popover2>
-      <i class="el-icon-add"></i>
-      <span class="circle"></span>
-      <el-popover
-          ref="popover2"
-          placement="bottom"
-          width="150"
-          trigger="hover">
-        <div class="add-mess">
-          <router-link target="_blank" class="a-box" :to="{name: 'house', params: { type: 'add' }}">
-            新增物业
-          </router-link>
-          <router-link target="_blank" class="a-box a-bg" :to="{name: 'report', params: { type: 'add' }}">
-            新增报告
-          </router-link>
-          <router-link target="_blank" class="a-box a-bg" :to="{name: 'product', params: { type: 'add' }}">
-            新增产品
-          </router-link>
-        </div>
-      </el-popover>
-    </div>
-
-    <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
+    <div class="save-box" @click="saveAll"></div>
+    <upload-file :path="userInfo.iconUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
     <password :dialog-form-visible="dialogFormVisible"></password>
   </section>
 </template>
@@ -96,8 +51,8 @@ export default {
     return {
       origin: window._SettingOrigin,
       userInfo: {
-        name: '',
-        imgUrl: ''
+        name: '小样',
+        iconUrl: ''
       },
       noticeList: [],
       dialogFormVisible: {
@@ -113,35 +68,9 @@ export default {
     }
   },
   created () {
-    this.getUserInfo()
-    this.getNotice()
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.keyValue = ''
-    next()
+    // this.getUserInfo()
   },
   methods: {
-    getSearch () {
-      var formData = {
-        type: this.$route.name,
-        key: this.keyValue
-      }
-
-      util.request({
-        method: 'get',
-        interface: 'getInfoId',
-        data: formData
-      }).then(res => {
-        var path = {
-          name: this.$route.name + 'Add',
-          params: {
-            id: res.result.datas.id
-          }
-        }
-        this.keyValue = ''
-        this.$router.push(path)
-      })
-    },
     getUserInfo () {
       util.request({
         method: 'get',
@@ -151,37 +80,28 @@ export default {
         this.userInfo = res.result.result
       })
     },
-    getNotice () {
-      var formData = {
-        pageSize: this.page.pageSize,
-        currentPage: this.page.currentPage
-      }
-
+    logout () {
       util.request({
-        method: 'get',
-        interface: 'notice',
-        data: formData
+        method: 'post',
+        interface: 'logout',
+        data: {}
       }).then(res => {
-        this.noticeList = res.result.datas
-        this.page.total = Number(res.result.total)
+        if (res.result.success == '1') {
+          window.location.href = 'login.html'
+        }
       })
     },
-    changePage (value) {
-      console.log(value)
-      this.page.currentPage = value
-      this.getNotice()
-    },
-    goUrl (id) {
-      this.$router.push({name: 'notice', params: {id: id}})
-    },
     changeImg (path) {
-      this.userInfo.imgUrl = path
+      this.userInfo.iconUrl = path
     },
     editImgUrl () {
       this.dialogFormVisible.visibleF = true
     },
     editPassword () {
       this.dialogFormVisible.visibleP = true
+    },
+    saveAll () {
+      this.$emit('saveall')
     }
   },
   components: {
@@ -191,6 +111,26 @@ export default {
 }
 </script>
 <style lang="scss">
+  .el-dropdown-menu__item {
+    font-size: 14px;
+
+    img {
+      float: left;
+      width: 16px;
+      height: 16px;
+      margin: 10px 10px 0 2px;
+    }
+
+    div {
+      line-height: 36px;
+      overflow: hidden;
+    }
+  }
+
+  .el-dropdown-menu {
+    min-width: 120px;
+  }
+
   .add-mess {
     .a-box {
       display: block;
@@ -222,6 +162,7 @@ export default {
     color: #fff;
     padding: 0 20px;
     z-index: 99999;
+    box-sizing: border-box;
 
     .logo-box {
       float: left;
@@ -251,22 +192,17 @@ export default {
 
     .member-box {
       float: right;
-      margin-left: 26px;
+      margin-left: 20px;
 
-      a {
-        float: left;
+      .el-dropdown-link {
         font-size: 14px;
         line-height: 50px;
         color: #A4A4A4;
         cursor: pointer;
-
-        i {
-          margin-left: 10px;
-          color: #999999;
-        }
       }
 
       .img-box {
+        float: left;
         width: 24px;
         height: 24px;
         margin: 13px 20px 0 0;
@@ -274,6 +210,8 @@ export default {
         overflow: hidden;
         line-height: 0;
         background: url(../../assets/images/head-icon.png) left top no-repeat;
+        background-size: 100% auto;
+        cursor: pointer;
 
         img {
           width: 24px;
@@ -310,7 +248,7 @@ export default {
       float: right;
       width: 1px;
       height: 20px;
-      margin: 15px 23px;
+      margin: 15px 0;
       background: #555555;
     }
 
@@ -335,7 +273,7 @@ export default {
       float: right;
       width: 16px;
       height: 50px;
-      margin-right: 23px;
+      margin-right: 20px;
       cursor: pointer;
       background: url(../../assets/images/save-icon.png) center no-repeat;
     }

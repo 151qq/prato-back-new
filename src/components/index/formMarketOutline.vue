@@ -101,7 +101,7 @@ export default {
           this.code = type
         },
         getAllData () {
-          this.$refs.formEdit.getArticle('articleHouse')
+          // this.$refs.formEdit.getArticle('articleHouse')
           this.getImgs()
         },
         collChange () {

@@ -28,6 +28,10 @@
             width: 575px;
         }
     }
+
+    .el-textarea {
+      width: 575px;
+    }
 }
 
 .rightF {
@@ -48,6 +52,20 @@
   float: right;
   margin-top: 10px;
   margin-left: 15px;
+}
+
+.abstract-num {
+  float: right;
+  span {
+    color: red;
+  }
+}
+
+.null-box {
+  font-size: 20px;
+  color: #333333;
+  line-height: 200px;
+  text-align: center;
 }
 
 .search-input {

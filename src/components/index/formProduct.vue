@@ -129,7 +129,7 @@ export default {
         getAllData () {
           this.getInfo()
           this.$refs.productBase.initData()
-          this.$refs.formEdit.getArticle('articleHouse')
+          // this.$refs.formEdit.getArticle('articleHouse')
           this.$refs.productSpec.initData()
           this.getProImgs()
           this.getPubImgs()

@@ -2,12 +2,10 @@
   <el-dialog title="头像更改" v-model="dialogFormVisible.visibleF" size="tiny">
     <div class="el-upload file-container">
       <div class="el-dragger">
-        <a target="_blank" :href="imgPath">
-          <img class="preview-img" :src="imgPath" v-show="imgPath" />
-        </a>
+        <img class="preview-img" :src="imgPath" v-show="imgPath" />
+        <input class="btn_file" type="file" @change="fileChange"/>
       </div>
-      <el-button size="small" type="primary" >点击上传</el-button> {{remark}}
-      <input class="btn_file" type="file" @change="fileChange"/>
+      {{remark}}
     </div>
   </el-dialog>
 </template>
@@ -24,7 +22,7 @@ export default {
     path: String,
     remark: {
       type: String,
-      default: '（请上传1:1的图片）'
+      default: '请上传1:1的图片'
     }
   },
   data () {
@@ -38,13 +36,17 @@ export default {
   },
   watch: {
     path (val) {
-      this.imgPath = val
+      this.imgPath = this.path
     }
   },
   methods: {
     fileChange (event) {
-      util.upFile(event).then(res => {
-        this.imgPath = res.result.result.path
+      var data = {
+        url: 'headImage',
+        event: event
+      }
+      util.uploadFile(data).then(res => {
+        this.imgPath = res.result.result.headImg
         this.$message({
           showClose: true,
           message: '恭喜你，修改成功'
@@ -64,7 +66,15 @@ export default {
     transform: translateX(-50%);
 
     .el-dragger {
+      position: relative;
       width: 180px;
+      height: 180px;
+      margin: 0 auto 10px;
+      background: url(http://img2.imgtn.bdimg.com/it/u=1651318081,2860235060&fm=214&gp=0.jpg) center no-repeat;
+      background-size: 100% auto;
+      border: 1px solid #f2f2f2;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     .preview-img {
@@ -74,11 +84,11 @@ export default {
 
     .btn_file {
       position: absolute;
-      bottom: 0;
+      top: 0;
       left: 0;
-      width: 65px;
-      height: 30px;
-      opacity: 0;
+      width: 180px;
+      height: 180px;
+      opacity: 0.001;
       cursor: pointer;
     }
 

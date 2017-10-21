@@ -1,104 +1,146 @@
 <template>
     <section class="edit-box">
-      <section v-html="templateBg"></section>
-      <ul id="articleArea" name="content" class="list-group">
-        <li class="list-group-item" v-for="(item, index) in articleList" :data-id="index"> 
-            <div class="show-box" v-if="item.areaTxt.code === 'upload'">
-                <div v-if="disabled">
-                    <upload :path="item.areaTxt.imgUrl" :num="index" :idx="item.id" :is-btn.sync="disabled" @delImg="delImg" @changeImg="changeImg"></upload>
-                </div>
-                <img @click.prevent="preHandl" v-if="!disabled && item.areaTxt.imgUrl"
-                        :src="item.areaTxt.imgUrl" :style="imgStyle">
-                <img @click.prevent="preHandl" v-if="!disabled && !item.areaTxt.imgUrl"
-                        src="../../assets/images/img-default.jpg" :style="imgStyle">
-            </div>
+        <section class='bodyMain'>
+            <div id="articleArea" name="content" class="list-group">
+                <div class="list-group-item"
+                        v-for="(item, index) in articleList"
+                        :data-id="index"> 
+                    <div class="show-box" v-if="item.type === 'upload'">
+                        <div v-if="disabled">
+                            <upload 
+                                :path="item.imgUrl"
+                                :num="index" 
+                                :idx="item.id"
+                                :no-save="true"
+                                :is-btn.sync="disabled"
+                                @delImg="delImg"
+                                @changeImg="changeImg"
+                                @saveImg="saveData('upload', index)"></upload>
+                        </div>
+                        <img @click.prevent="preHandl"
+                                v-if="!disabled && item.imgUrl"
+                                :src="item.imgUrl"
+                                :style="imgStyle">
+                        <img @click.prevent="preHandl"
+                                v-if="!disabled && !item.imgUrl"
+                                src="../../assets/images/img-default.jpg"
+                                :style="imgStyle">
+                    </div>
 
-            <div class="show-box btn-show" v-if="item.areaTxt.code === 'text'">
-                <ueditor v-if="disabled" :editor-id="'editor' + index" :index="index" :content="item.content"
-                        @setContent="setContent"></ueditor>
-                <div v-show="!disabled && item.areaTxt.html" v-html="item.areaTxt.html"></div>
-                <div v-show="!disabled && !item.areaTxt.html">编辑中的文本样式</div>
-                <div class="btn-hover" v-if="disabled">
-                    <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteText(index)">删除</el-button>
-                </div>
-            </div>
+                    <div class="show-box btn-show" v-if="item.type === 'text'">
+                        <ueditor v-if="disabled"
+                                :editor-id="'editor' + index"
+                                :index="index"
+                                :content="item.content"
+                                @setContent="setContent"></ueditor>
+                        <div v-show="!disabled && item.content"
+                                v-html="item.content"></div>
+                        <div v-show="!disabled && !item.content">编辑中的文本样式</div>
+                        <div class="btn-hover" v-if="disabled">
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small" icon="delete"
+                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
+                        </div>
+                    </div>
 
-            <div class="show-box btn-show" v-if="item.areaTxt.code === 'title'">
-                <input v-if="disabled && item.areaTxt.style" type="text" v-model="item.areaTxt.title"
-                        @blur="titleBlur(item.areaTxt, index)" :style="item.areaTxt.style" placeholder="编辑中的内标题样式">
-                <div v-if="!disabled && item.areaTxt.title" :style="item.areaTxt.style">{{item.areaTxt.title}}</div>
-                <div v-if="!disabled && !item.areaTxt.title" :style="item.areaTxt.style">编辑中的内标题样式</div>
-                <img v-if="!item.areaTxt.style && !disabled" class="img-default"
-                        @click.prevent="setStyle(index, item.areaTxt.style)"
-                        src="../../assets/images/title-default.jpg">
-                <div class="btns" v-if="item.areaTxt.style && disabled">
-                    <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleteTitle(index)">
-                    <img src="../../assets/images/pen-icon.png" @click="setStyle(index, item.areaTxt.style)">
-                    <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetTitle(index)">
+                    <div class="show-box btn-show overflow-box" v-if="item.type === 'title'">
+                        <input v-if="disabled && item.style"
+                                type="text"
+                                v-model="item.title"
+                                @blur="titleBlur(item, index)"
+                                :style="item.style"
+                                placeholder="编辑中的内标题样式">
+                        <div v-if="!disabled && item.title"
+                                :style="item.style">{{item.title}}</div>
+                        <div v-if="!disabled && !item.title"
+                                :style="item.style">编辑中的内标题样式</div>
+                        <img v-if="!item.style && disabled"
+                                class="img-default"
+                                @click.prevent="setStyle(index, item.style)"
+                                src="../../assets/images/title-default.jpg">
+                        <div class="btn-hover" v-if="disabled">
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small" icon="delete"
+                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small" icon="setting"
+                                    @click="setStyle(index, item.style)">配置</el-button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </li> 
-      </ul>
-      <div class="edit-btn">
-          <div v-for="item in templateAdd">
-                <img v-if="item.type === 'upload'" src="../../assets/images/img-btn.png" @click="addTem(item.type)">
-                <img v-if="item.type === 'text'" src="../../assets/images/text-btn.png" @click="addTem(item.type)">
-                <img v-if="item.type === 'title'" src="../../assets/images/title-btn.png" @click="addTem(item.type)">
-                <img :class="disabled ? '' : 'active'" v-if="item.type === 'change'" src="../../assets/images/change-btn.png" @click="addTem(item.type)">
-          </div>
-      </div>
-      <el-dialog class="style-b" title="选择内标题样式" :visible.sync="isStyle">
-          <div class="style-box" v-for="(item, index) in titleLists"
-              @click="selectStyle(index)"
-              :class="index === curIndex ? 'active' : ''">
-            <img :src="item.imgUrl">
-          </div>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="closeSelect">取 消</el-button>
-            <el-button type="primary" @click="confirmSelect">确 定</el-button>
-          </div>
+        </section>
+        <div class="edit-btn">
+            <div @click="addTem('upload')">
+                <img class="gray-box" src="../../assets/images/add-img-icon.png">
+                <img class="now-box" src="../../assets/images/img-now.png">
+            </div>
+            <div @click="addTem('text')">
+                <img class="gray-box" src="../../assets/images/add-text-icon.png">
+                <img class="now-box" src="../../assets/images/text-now.png">
+            </div>
+            <div class="title-box" @click="addTem('title')">
+                <img class="gray-box" src="../../assets/images/add-title-icon.png">
+                <img class="now-box" src="../../assets/images/title-now.png">
+            </div>
+            <div @click="addTem('change')">
+                <img v-if="disabled" class="gray-box" src="../../assets/images/change-model-icon.png">
+                <img v-if="disabled" class="now-box" src="../../assets/images/change-now.png">
+                <img v-if="!disabled" src="../../assets/images/change-now.png">
+            </div>
+            <div class="save-box" @click="saveAll">
+                <img class="gray-box" src="../../assets/images/save-all-data.png">
+                <img class="now-box" src="../../assets/images/save-now.png">
+            </div>
+        </div>
+        <el-dialog class="style-b" title="选择内标题样式" :visible.sync="isStyle">
+            <div class="style-box"
+                    v-for="(item, index) in titleLists"
+                    @click="selectStyle(index)"
+                    :class="index === curIndex ? 'active' : ''">
+                <img :src="item.imgUrl">
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeSelect">取 消</el-button>
+                <el-button type="primary" @click="confirmSelect">确 定</el-button>
+            </div>
         </el-dialog>
-
-        <div class="clear"></div>
-        <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-            @click="saveArticle">保存</el-button>
-        <div class="clear"></div>
     </section>
 </template>
 <script>
 import draggable from 'vuedraggable'
 import util from '../../assets/common/util'
-import upload from '../common/upload'
-import ueditor from '../common/ueditor'
+import upload from '../../components/common/upload'
+import ueditor from '../../components/common/ueditor'
 import $ from 'Jquery'
 import sortable from 'sortablejs'
-import './common/form.scss'
 
 export default {
+    props: ['isSave'],
     data () {
         return {
             articleList: [],
-            disabled: true,
-            templateBg: '',
+            disabled: false,
+            backgroundImg: '#f0f0f0;',
             templateAdd: [],
             imgStyle: 'display: block; max-width: 100%; margin: 10px 0;',
             isStyle: false,
+            curTemIndex: '',
             curIndex: '',
             curStyle: '',
             titleIndex: '',
-            titleLists: [],
-            templateAdd: [
+            titleLists: [
                 {
-                    type: "upload"
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
                 },
                 {
-                    type: "text"
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
                 },
                 {
-                    type: "title"
-                },
-                {
-                    type: "change"
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
                 }
             ],
             config: {
@@ -117,43 +159,115 @@ export default {
                     'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts'
 
                 ]]
-            }
+            },
+            templateList: [],
+            selectTemplate: {},
+            articleId: '',
+            html5PageCode: ''
         }
     },
-    mounted () {
-        this.getTemplate()
-        this.setSortable()
-    },
     methods:{
-        saveArticle () {
-            var formData = {
-                id: localStorage.getItem("id"),
-                type: this.$route.name,
-                data: this.articleinfo
+        editInte (data) {
+            var templateStr = ''
+            var arrData = []
+            data.article.forEach((item) => {
+                if (item.sequence >= 20) {
+                    switch (item.areaType) {
+                        case 'upload':
+                            var data = {
+                                type: 'upload',
+                                imgUrl: $(item.areaTxt).attr('src'),
+                                content: item.areaTxt,
+                                fileCode: item.fileCode,
+                                id: item.id
+                            }
+                            console.log($(item.areaTxt), '$')
+                            arrData.push(data)
+                            break
+                        case 'text':
+                            var data = {
+                                type: 'text',
+                                content: item.areaTxt,
+                                fileCode: item.fileCode,
+                                id: item.id
+                            }
+                            arrData.push(data)
+                            break
+                        case 'title':
+                            var data = {
+                                type: 'title',
+                                title: $(item.areaTxt).text(),
+                                style: $(item.areaTxt).attr('style'),
+                                content: item.areaTxt,
+                                fileCode: item.fileCode,
+                                id: item.id
+                            }
+                            arrData.push(data)
+                            break
+                    }
+                }
+            })
+            this.articleList = arrData
+            this.backgroundImg = data.bgImg ? 'url(' + data.bgImg + ') center top no-repeat' : '#f0f0f0'
+            setTimeout(() => {
+                this.setSortable()
+                $('.bodyMain').css('background', this.backgroundImg)
+            }, 0)
+            this.disabled = true
+            if (this.sortable) {
+                this.sortable.option('disabled', true)
             }
+        },
+        saveArticle (data, cb) {
+            var formData = {
+                type: this.$route.name,
+                areaTxt: '',
+                html5TemplateCode: 'tpl_0003'
+            }
+
+            formData =  Object.assign(formData, data)
             
             util.request({
                 method: 'post',
                 interface: 'draftArticle',
                 data: formData
             }).then(res => {
-                console.log(res)
+                var resData = res.result.result
+
+                if (resData.backgroundImg && !this.articleId) {
+                    this.backgroundImg = 'url(' + resData.backgroundImg + ') center top no-repeat'
+                    $('.bodyMain').css('background', this.backgroundImg)
+                }
+
+                this.html5TemplateCode = resData.html5TemplateCode
+                this.html5PageCode = resData.html5PageCode
+                this.articleId = resData.id
+
+                if (cb) {
+                    cb()
+                }
             })
         },
-        getArticle (url) {     
-          util.request({
-                method: 'get',
-                interface: url,
+        saveData (type, index) {
+            util.request({
+                method: 'post',
+                interface: 'saveArticleArea',
                 data: {
-                    id: localStorage.getItem("id"),
-                    fileCode: localStorage.getItem("fileCode")
+                    areaType: type,
+                    html5TemplateCode: this.html5TemplateCode,
+                    areaTxt: this.articleList[index].content,
+                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem('code'),
+                    id: this.articleList[index].id ? this.articleList[index].id : '',
+                    sequence: index + 20
                 }
-          }).then(res => {
-                this.articleList = res.result.result.fileAreaList
-                this.getTemplate()
-                this.disabled = true
-                this.sortable.option('disabled', true)
-          })
+            }).then(res => {
+                this.articleList[index].id = res.result.result
+            })
+        },
+        saveAll () {
+            this.articleList.forEach((item, index) => {
+                this.saveData(item.type, index)
+            })
         },
         setSortable () {
             var _this = this
@@ -201,9 +315,10 @@ export default {
                         type: 'title',
                         title: '',
                         content: '',
-                        style: ''
+                        style: this.titleLists[0].style
                     }
                     this.articleList.push(data)
+                    this.selectStyle(0)
                     break
                 case 'change':
                     this.sortable.option('disabled', !this.sortable.option('disabled'))
@@ -220,25 +335,19 @@ export default {
             }
         },
         delImg (data) {
-            this.articleList.splice(data.index, 1)
+            this.deleteArticleArea(this.articleList[data.index].id, data.index)
         },
         changeImg (data) {
             var imgData = {
                 id: data.id,
-                areaTxt: {
-                    code: 'upload',
-                    imgUrl: data.url,
-                    html: '<img src="' + data.url + '" style="' + this.imgStyle +'">'
-                }
+                type: 'upload',
+                imgUrl: data.url,
+                content: '<img src="' + data.url + '" style="' + this.imgStyle +'">'
             }
             this.articleList.splice(data.index, 1, imgData)
         },
         setContent (data) {
-            this.articleList[data.index].areaTxt.html = data.content
-         
-        },
-        deleteText (index) {
-            this.articleList.splice(index, 1)
+            this.articleList[data.index].content = data.content
         },
         setStyle (index, style) {
             this.isStyle = true
@@ -262,14 +371,30 @@ export default {
             this.curStyle = this.titleLists[index].style
         },
         confirmSelect () {
-            this.articleList[this.titleIndex].areaTxt.style = this.curStyle
+            this.articleList[this.titleIndex].style = this.curStyle
             this.isStyle = false
         },
         closeSelect () {
             this.isStyle = false
         },
-        deleteTitle (index) {
-            this.articleList.splice(index, 1)
+        deleteArticleArea (id, index) {
+            if (id) {
+                util.request({
+                    method: 'post',
+                    interface: 'deleteArticleArea',
+                    data: {
+                        id: id
+                    }
+                }).then(res => {
+                    this.articleList.splice(index, 1)
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    })
+                })
+            } else {
+                this.articleList.splice(index, 1)
+            }
         },
         resetTitle (index) {
             var data = {
@@ -281,24 +406,8 @@ export default {
             this.articleList.splice(index, 1, data)
         },
         titleBlur (item, index) {
-            this.articleList[index].areaTxt.content = '<div style="' + item.style + '">' + item.title + '</div>'
-            this.articleList[index].areaTxt.style = item.style            
-        },
-        // 获取添加模版
-        getTemplate () {
-            util.request({
-                method: 'get',
-                interface: 'getTemplate',
-                data: {
-                    tplCode: localStorage.getItem("tplCode")
-                }
-            }).then(res => {
-                this.templateBg = res.result.datas.bgTem
-                this.titleLists = res.result.datas.titles
-                setTimeout(() => {
-                    $('.bodyMain').html($('#articleArea'))
-                }, 0)
-            })
+            this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
+            this.articleList[index].style = item.style            
         },
         preHandl () {}
     },
@@ -314,23 +423,28 @@ export default {
     position: relative;
     min-height: 300px;
 
+    .bodyMain {
+        padding: 30px 20px 20px;
+        background-size: 100% auto;
+    }
+
+    .select-template {
+        background: #f0f0f0;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 350px;
+        color: #999999;
+        cursor: pointer;
+    }
+
     #articleArea {
         min-height: 300px;
     }
 
-    .save-btn {
-      float: right;
-      margin-top: 10px;
-      margin-left: 15px;
-    }
-
-    .clear {
-        clear: both;
-    }
-
     .show-box {
         cursor: pointer;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
 
         .img-default {
             display: block;
@@ -339,12 +453,15 @@ export default {
         }
     }
 
+    .overflow-box {
+        overflow: hidden;
+    }
+
     .btn-show {
         .btn-hover {
-            background: #EFF2F7;
             display: block;
+            margin-top: 10px;
             overflow: hidden;
-            padding: 12px;
         }
 
         .btns {
@@ -353,12 +470,12 @@ export default {
             padding: 12px;
             overflow: hidden;
 
-            img {
+            .del-btn {
               float: right;
               width: 16px;
               height: 16px;
               cursor: pointer;
-              margin-left: 13px;
+              margin-left: 9px;
 
               &:hover {
                 opacity: 0.8;
@@ -369,6 +486,7 @@ export default {
 
         .delete-btn {
             float: right;
+            margin-left: 10px;
         }
     }
 
@@ -379,8 +497,8 @@ export default {
         bottom: 0;
 
         div {
-            width: 100px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             overflow: hidden;
             margin-top: 10px;
             border-radius: 5px;
@@ -388,15 +506,36 @@ export default {
 
             img {
                 display: block;
-                width: 100px;
-                height: 60px;
+                width: 100%;
                 box-sizing: border-box;
                 border: 1px solid #ffffff;
+            }
 
-                &.active {
-                    border: 1px solid #FF4949;
+            .now-box {
+                display: none;
+            }
+
+            &:hover {
+                .gray-box {
+                    display: none;
+                }
+
+                .now-box {
+                    display: block;
                 }
             }
+        }
+
+        .title-box {
+            width: 54px;
+            height: 54px;
+            margin-left: -3px;
+        }
+
+        .save-box {
+            width: 42px;
+            height: 42px;
+            margin-left: 3px;
         }
     }
 }
