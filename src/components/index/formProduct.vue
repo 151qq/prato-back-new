@@ -126,7 +126,7 @@ export default {
                 id: localStorage.getItem("id")
               }
           }).then(res => {
-              this.public = res.result.result.imgs
+              this.publishImgs = res.result.result.imgs
           })
         },
         getInfo () {

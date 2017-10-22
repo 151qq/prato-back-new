@@ -2,7 +2,7 @@
     <section class="product-base-box">
       <div class="form-box">
         <section class="baseInput">
-            <span>产品名称</span>
+            <span>礼品名称</span>
             <el-input
               class="input-box"
               placeholder="请输入内容"
@@ -10,7 +10,7 @@
             </el-input>
         </section>
         <section class="baseInput rightF">
-            <span>产品编码</span>
+            <span>礼品编码</span>
             <el-input
               class="input-box"
               placeholder="请输入内容"
@@ -19,18 +19,12 @@
             </el-input>
         </section>
         <section class="baseInput">
-            <span>上代产品</span>
-            <el-select class="input-box" v-model="base.type" placeholder="请选择">
-                <el-option
-                  v-for="item in types"
-                  :key="item.id"
-                  :label="item.text"
-                  :value="item.id">
-                </el-option>
-            </el-select>
+            <span>礼品数量</span>
+            <el-input-number class="input-box" size="small" :min="0"
+                v-model="base.number"></el-input-number>
         </section>
         <section class="baseInput rightF">
-            <span>产品价格</span>
+            <span>礼品价格</span>
             <el-input-number class="input-box" size="small" :min="0"
                 v-model="base.price"></el-input-number>
         </section>
@@ -53,24 +47,7 @@
             </el-select>
         </section>
         <section class="baseInput bigB">
-            <span>相关产品</span>
-            <el-select
-              class="input-box"
-              v-model="base.products"
-              multiple
-              filterable
-              allow-create
-              placeholder="请选择目标客户">
-              <el-option
-                v-for="item in productList"
-                :key="item.id"
-                :label="item.value"
-                :value="item.id">
-              </el-option>
-            </el-select>
-        </section>
-        <section class="baseInput bigB">
-            <span>产品摘要</span>
+            <span>礼品摘要</span>
             <el-input
               type="textarea"
               :rows="4"
@@ -86,12 +63,6 @@
                 :bg-path="true"
                 @changeImg="changeImg"></upLoad>
           </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>产品优惠</span>
-            <div class="input-box">
-              
-            </div>
         </section>
       </div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"

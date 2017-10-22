@@ -33,7 +33,18 @@ const routers = [
         resolve(require('./article/product.vue'))
       })
     }
-  }, {
+  },
+  {
+    // 礼品中心
+    path: '/gift',
+    name: 'gift',
+    component (resolve) {
+      require.ensure(['./article/gift.vue'], () => {
+        resolve(require('./article/gift.vue'))
+      })
+    }
+  },
+  {
     // 素材库
     path: '/source',
     name: 'source',

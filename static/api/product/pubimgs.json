@@ -3,10 +3,10 @@
   "result": {
     "id": 0,
     "imgs": [
-      "/static/images/img1.png",
-      "/static/images/img1.png",
-      "/static/images/img1.png",
-      "/static/images/img1.png"
+      {
+        "id": 0,
+        "link": "/static/images/img1.png"
+      }
     ]
   },
   "mess": ""

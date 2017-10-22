@@ -1,12 +1,12 @@
 <template>
   <div class="imgs-box">
     <section class="img-box" v-for="(item, index) in imgLists">
-      <img class="img-big" :src="item" @click="showImg">
+      <img class="img-big" :src="item.link" @click="showImg">
       <div>
         <img class="del-btn" src="../../assets/images/del-icon.png">
         <p>
           <img src="../../assets/images/pen-icon.png">
-          <input type="file" class="pen-input" @change="postImg($event, index)">
+          <input type="file" name="file" class="pen-input" @change="postImg($event, index)">
         </p>
       </div>
     </section>
@@ -22,7 +22,7 @@ import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['imgLists'],
+    props: ['imgLists', 'type'],
     data() {
       return {
         imgList: []
@@ -32,18 +32,27 @@ export default {
     },
     methods: {
       postImg (e, index) {
-        util.upFile(e).then(res => {
-          console.log(res)
-          let imgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1506154209&di=f50b243177f531b731d02a43fb098405&imgtype=jpg&er=1&src=http%3A%2F%2Ffun.youth.cn%2Fds%2F201708%2FW020170828356276420779.jpg'
+        var opotion = {
+          url: 'uploadArticleAreaImage',
+          event: e,
+          data: {
+            fileCode: localStorage.getItem("id"),
+            catalogCode: this.type
+          }
+        }
+
+        util.uploadFile(opotion).then(res => {
+          let imgUrl = res.result.result.headImg;
+          var imgObject = {link:imgUrl};
           if (index !== undefined) {
-            this.imgLists.splice(index, 1, imgUrl)
+            this.imgLists.splice(index, 1, imgObject)
           } else {
-            this.imgLists.push(imgUrl)
+            this.imgLists.push(imgObject)
           }
         })
       },
       showImg (e) {
-        let index = $('body .img-big').index($(e.target))
+        let index = $('body .img-box .img-big').index($(e.target))
         this.$emit('showimg', index)
       }
     }
@@ -91,6 +100,7 @@ export default {
           float: right;
           width: 16px;
           height: 16px;
+          margin: 0;
           margin-right: 13px;
           position: relative;
           overflow: hidden;

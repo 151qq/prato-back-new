@@ -1,24 +1,9 @@
 <template>
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
-          <!-- 产品管理 -->
-          <el-collapse-item class="formStylePro" title="产品管理" name="0">
-            <section class="status-box">
-              <div class="left">
-                <a class="xj-box" @click="changeOp('down')">产品下架</a>
-                <a class="pl-box" @click="changeOp('clear')">产品清仓</a>
-                <a class="cg-box" @click="changeOp('least')">产品缺货</a>
-              </div>
-              <div class="right">
-                产品状态
-                <span>{{status[code]}}</span>
-              </div>
-              </section>
-          </el-collapse-item>
-          <div class="line-bold"></div>
           <!-- 基本信息 -->
           <el-collapse-item class="formStylePro" title="基本信息" name="1">
-            <form-product-base ref="productBase"></form-product-base>
+            <form-gift-base ref="productBase"></form-gift-base>
           </el-collapse-item>
           <div class="line-bold"></div>
           <!-- 介绍文章 -->
@@ -26,13 +11,8 @@
             <form-edit ref="formEdit"></form-edit>
           </el-collapse-item>
           <div class="line-bold"></div>
-          <!-- 详细规格 -->
-          <el-collapse-item class="formStylePro editShow" title="详细规格" name="3">
-            <form-product-spec ref="productSpec"></form-product-spec>
-          </el-collapse-item>
-          <div class="line-bold"></div>
           <!-- 产品图片 -->
-          <el-collapse-item class="formStylePro" title="产品图片" name="4">
+          <el-collapse-item class="formStylePro" title="礼品图片" name="4">
             <upload-list :img-lists="productImgs" @showimg="showImg"></upload-list>
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -52,7 +32,7 @@
           </el-collapse-item>
           
           <!-- 编辑独有 -->
-          <template v-if="type !== 'add'">
+          <template>
             <div class="line-bold"></div>
             <!-- 二维码 -->
             <el-collapse-item class="formStylePro" title="二维码" name="6">
@@ -72,8 +52,7 @@
 </template>
 <script>
 import util from '../../assets/common/util'
-import formProductBase from '../../components/form/formProductBase'
-import formProductSpec from '../../components/form/formProductSpec'
+import formGiftBase from '../../components/form/formGiftBase'
 import formEdit from '../../components/form/formEdit'
 import uploadList from '../../components/index/upload-list'
 import swiperImg from '../../components/common/swiper-img.vue'
@@ -85,12 +64,6 @@ export default {
     data () {
         return {
             id: 0,
-            code: 'down',
-            status: {
-              down: '下架',
-              clear: '清仓',
-              least: '缺货'
-            },
             ewm: '',
             logs: [],
             isEwm: {
@@ -110,21 +83,14 @@ export default {
         }
     },
     mounted () {
-        this.type = this.$route.params.type
-        if (this.type !== 'add') {
-            var houseColl = localStorage.getItem("houseColl")
-            if (houseColl) {
-                this.activeNames = houseColl.split(',')
-            }
-            this.getAllData()
+        var houseColl = localStorage.getItem("houseColl")
+        if (houseColl) {
+            this.activeNames = houseColl.split(',')
         }
     },
     methods: {
         showBigEwm () {
           this.isEwm.value = true
-        },
-        changeOp (type) {
-          this.code = type
         },
         getAllData () {
           this.getInfo()
@@ -154,7 +120,7 @@ export default {
                 id: localStorage.getItem("id")
               }
           }).then(res => {
-              this.public = res.result.result.imgs
+              this.publishImgs = res.result.result.imgs
           })
         },
         getInfo () {
@@ -221,9 +187,8 @@ export default {
         }
     },
     components: {
-        formProductBase,
+        formGiftBase,
         formEdit,
-        formProductSpec,
         uploadList,
         swiperImg,
         showEwm,

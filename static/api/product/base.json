@@ -6,27 +6,11 @@
       "name": "",
       "price": 0,
       "type": 0,
+      "abstract": "",
+      "coverImg": "",
       "code": "123456",
-      "customs": [
-        {
-          "id": 1,
-          "value": "客户一"
-        },
-        {
-          "id": 2,
-          "value": "客户二"
-        }
-      ],
-      "products": [
-        {
-          "id": 1,
-          "value": "产品一"
-        },
-        {
-          "id": 2,
-          "value": "产品二"
-        }
-      ]
+      "customs": [1,2],
+      "products": [1,2]
     }
   },
   "mess": ""
