@@ -14,6 +14,7 @@
             <el-input
               class="input-box"
               placeholder="请输入内容"
+              :disabled="true"
               v-model="base.code">
             </el-input>
         </section>

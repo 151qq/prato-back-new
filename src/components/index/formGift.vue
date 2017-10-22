@@ -1,6 +1,21 @@
 <template>
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
+          <!-- 产品管理 -->
+          <el-collapse-item class="formStylePro" title="产品管理" name="0">
+            <section class="status-box">
+              <div class="left">
+                <a class="xj-box" @click="changeOp('down')">产品下架</a>
+                <a class="pl-box" @click="changeOp('clear')">产品清仓</a>
+                <a class="cg-box" @click="changeOp('least')">产品缺货</a>
+              </div>
+              <div class="right">
+                产品状态
+                <span>{{status[code]}}</span>
+              </div>
+              </section>
+          </el-collapse-item>
+          <div class="line-bold"></div>
           <!-- 基本信息 -->
           <el-collapse-item class="formStylePro" title="基本信息" name="1">
             <form-product-base ref="productBase"></form-product-base>
@@ -37,7 +52,7 @@
           </el-collapse-item>
           
           <!-- 编辑独有 -->
-          <template>
+          <template v-if="type !== 'add'">
             <div class="line-bold"></div>
             <!-- 二维码 -->
             <el-collapse-item class="formStylePro" title="二维码" name="6">
@@ -70,6 +85,12 @@ export default {
     data () {
         return {
             id: 0,
+            code: 'down',
+            status: {
+              down: '下架',
+              clear: '清仓',
+              least: '缺货'
+            },
             ewm: '',
             logs: [],
             isEwm: {
@@ -89,14 +110,21 @@ export default {
         }
     },
     mounted () {
-        var houseColl = localStorage.getItem("houseColl")
-        if (houseColl) {
-            this.activeNames = houseColl.split(',')
+        this.type = this.$route.params.type
+        if (this.type !== 'add') {
+            var houseColl = localStorage.getItem("houseColl")
+            if (houseColl) {
+                this.activeNames = houseColl.split(',')
+            }
+            this.getAllData()
         }
     },
     methods: {
         showBigEwm () {
           this.isEwm.value = true
+        },
+        changeOp (type) {
+          this.code = type
         },
         getAllData () {
           this.getInfo()
