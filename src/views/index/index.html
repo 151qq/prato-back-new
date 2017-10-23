@@ -8,11 +8,7 @@
 
 <body>
 <div id="app" v-cloak>
-    <web-header @savedata="saveData"></web-header>
-    <section class="body-box">
-        <router-view ref="showBox"></router-view>
-    </section>
-    <web-footer></web-footer>
+    <router-view ref="showBox"></router-view>
 </div>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=UsP2qpOAjTVnGWuxuQmBF4SwVpbOoRP4" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8" src="/static/plugin/ueditor/ueditor.config.js"></script>

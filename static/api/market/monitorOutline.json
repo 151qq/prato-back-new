@@ -10,6 +10,12 @@
     "hostNum": 21,
     "mayNum": 23,
     "muchNum": 3,
+    "comeNum": 1,
+    "newNum": 2,
+    "totalNum": 3,
+    "newTotalNum": 4,
+    "comMidNum": 5,
+    "newMidNum": 6,
     "echartsData": {
       "title": "城市订单量",
       "legend": ["订单"],

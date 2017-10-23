@@ -226,65 +226,6 @@ export default {
     }
 }
 
-.status-box {
-    overflow: hidden;
-
-    .left {
-      float: left;
-      width: 500px;
-
-      a {
-        float: left;
-        width: 100px; 
-        height: 28px;
-        font-size: 14px;
-        color: #ffffff;
-        border-radius: 4px;
-        box-sizing: border-box;
-        padding-left: 34px;
-        line-height: 28px;
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      .xj-box {
-        background: url(../../assets/images/xj-icon.png) 11px center no-repeat;
-        background-color: #20A0FF;
-      }
-
-      .pl-box {
-        background: url(../../assets/images/pl-icon.png) 11px center no-repeat;
-        background-color: #20A0FF;
-      }
-
-      .cg-box {
-        background: url(../../assets/images/cg-icon.png) 11px center no-repeat;
-        background-color: #20A0FF;
-      }
-    }
-
-    .right {
-      float: right;
-      height: 28px;
-      text-align: right;
-      font-size: 14px;
-      line-height: 28px;
-      color: #475669;
-
-      span {
-        float: right;
-        height: 20px;
-        padding: 0 8px;
-        background: #7790B1;
-        font-size: 12px;
-        color: #ffffff;
-        line-height: 20px;
-        margin: 4px 0 0 8px;
-        border-radius: 3px;
-      }
-    }
-}
-
 .clear {
     clear: both;
 }

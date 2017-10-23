@@ -1,19 +1,8 @@
 <template>
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
-          <el-collapse-item class="formStylePro" title="营销活动管理" name="0">
-            <section class="status-box">
-                <div class="left">
-                  <a class="stop-box" @click="changeOp('stop')">终止活动</a>
-                  <a class="time-box" @click="changeOp('time')">延长活动</a>
-                  <a class="clone-box" @click="changeOp('clone')">克隆活动</a>
-                  <a class="del-box" @click="changeOp('del')">草稿删除</a>
-                </div>
-                <div class="right">
-                  产品状态
-                  <span>{{status[code]}}</span>
-                </div>
-            </section>
+          <el-collapse-item class="formStylePro" title="营销活动基本信息" name="0">
+            <form-market-base></form-market-base>
           </el-collapse-item>
           <div class="line-bold"></div>
 
@@ -32,11 +21,11 @@
           </el-collapse-item>
           <div class="line-bold"></div>
 
-          <el-collapse-item class="formStylePro" title="营销活动激励" name="4">
-            <from-reward></from-reward>
+          <el-collapse-item class="formStylePro editShow" title="传播奖励" name="4">
+            <form-activity></form-activity>
           </el-collapse-item>
 
-          <template v-if="type !== 'add'">
+          <template>
             <div class="line-bold"></div>
 
             <el-collapse-item class="formStylePro" title="营销活动监控" name="5">
@@ -64,10 +53,10 @@
 </template>
 <script>
 import util from '../../assets/common/util'
+import formMarketBase from '../../components/form/formMarketBase'
 import formDateClick from '../../components/form/formDateClick'
 import formEdit from '../../components/form/formEdit'
 import formActivity from '../../components/form/formActivity'
-import fromReward from '../../components/form/fromReward'
 import listMonitor from '../../components/list/listMonitor'
 import listPeopleStar from '../../components/list/listPeopleStar'
 import listArticle from '../../components/list/listArticle'
@@ -80,13 +69,6 @@ export default {
     data () {
         return {
             id: 0,
-            code: 'down',
-            status: {
-              stop: '终止',
-              time: '延时',
-              clone: '克隆',
-              del: '草稿'
-            },
             activeNames: ['1'],
             index: 0,
             articleinfo: [],
@@ -95,22 +77,12 @@ export default {
         }
     },
     mounted () {
-        this.type = this.$route.params.type
-        if (this.type !== 'add') {
-            var houseColl = localStorage.getItem("houseColl")
-            if (houseColl) {
-                this.activeNames = houseColl.split(',')
-            }
-            // this.getAllData()
+        var houseColl = localStorage.getItem("houseColl")
+        if (houseColl) {
+            this.activeNames = houseColl.split(',')
         }
     },
     methods: {
-        changeOp (type) {
-          this.code = type
-        },
-        handleClose (datas, item) {
-          datas.splice(datas.indexOf(item), 1)
-        },
         getAllData () {
           // this.$refs.formEdit.getArticle('articleHouse')
         },
@@ -120,9 +92,9 @@ export default {
         // 线下
     },
     components: {
+        formMarketBase,
         formDateClick,
         formActivity,
-        fromReward,
         formEdit,
         listMonitor,
         listPeopleStar,

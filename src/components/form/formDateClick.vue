@@ -1,17 +1,17 @@
 <template>
     <section class="date-click-box">
-      <date-pq
+      <section class="date-b-left">
+        <date-pq
           :year="dateLeft.year"
           :month="dateLeft.month"
-          :no-right="dateLeft.noRight"
           :select-data="activeDate"></date-pq>
-
-      <date-pq
+      </section>
+      <section class="date-b-right">
+        <date-pq
           :year="dateRight.year"
           :month="dateRight.month"
-          :no-right="dateRight.noLeft"
           :select-data="activeDate"></date-pq>
-      
+      </section>
       <div class="clear"></div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
         @click="saveData('base')">保存</el-button>
@@ -36,7 +36,7 @@ export default {
           activeDate: [
             {
               date: '2017-10-20',
-              isHold: 0
+              isHold: 1
             },
             {
               date: '2017-10-19',
@@ -61,5 +61,27 @@ export default {
 <style lang="scss">
 .date-click-box {
   overflow: hidden;
+  border: 1px solid #D3DCE6;
+  position: relative;
+
+  .date-b-left {
+    width: 319px;
+    padding: 30px 0;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    border-right: 1px solid #D3DCE6;
+  }
+
+  .date-b-right {
+    width: 320px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 30px 0;
+    text-align: center;
+    box-sizing: border-box;
+    border-left: 1px solid #D3DCE6;
+  }
 }
 </style>

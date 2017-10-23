@@ -7,6 +7,7 @@
       <router-link :to="{ name: 'spread'}">推广文章</router-link>
       <router-link :to="{ name: 'product'}">产品中心</router-link>
       <router-link :to="{ name: 'gift'}">礼品中心</router-link>
+      <router-link :to="{ name: 'company'}">企业信息</router-link>
       <router-link :to="{ name: 'source'}">素材库</router-link>
     </div>
 

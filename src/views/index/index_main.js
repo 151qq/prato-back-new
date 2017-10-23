@@ -7,9 +7,6 @@ import 'element-ui/lib/theme-default/index.css'
 import '../../assets/scss/common.scss'
 import './scss/index.scss'
 
-import webHeader from '../../components/common/header.vue'
-import webFooter from '../../components/common/footer.vue'
-
 Vue.use(VueHtml5Editor, {
     showModuleName: true,
     language: "zh-cn",
@@ -53,23 +50,14 @@ router.beforeEach((to, from, next) => {
   // 滚动置顶
   window.scrollTo && window.scrollTo(0, 0)
 
+  if (to.name == 'home') {
+    next({ path: '/market' })
+    return false
+  }
   next()
-  // if (!Cookies.get('uid') && to.name !== 'login') {
-  //   next({ path: '/login' })
-  //   return false
-  // }
 })
 
 new Vue({
     el: '#app',
-    methods: {
-      saveData () {
-        this.$refs.showBox.$refs.editBox.saveData()
-      }
-    },
-    router,
-    components: {
-      webHeader,
-      webFooter
-    }
+    router
 })

@@ -163,7 +163,7 @@
                     data: data
                 }).then((res) => {
                     if (res.result.success != '0') {
-                        window.location.href = 'index.html#/';
+                        window.location.href = '/';
                     } else {
                         this.$message.error(res.result.message)
                     }
@@ -193,15 +193,149 @@
                     userPhone: this.userPhone
                 }
 
-                util.request({
-                    method: 'post',
-                    interface: 'authentication',
-                    data: data
-                }).then((res) => {
-                    window.location.href = 'index.html#/';
-                });
-
+                // util.request({
+                //     method: 'post',
+                //     interface: 'authentication',
+                //     data: data
+                // }).then((res) => {
+                //     window.location.href = '/';
+                // });
+                
+                sessionStorage.setItem('companyName', this.enterpriseCname)
+                sessionStorage.setItem('userCname', this.userCname)
+                sessionStorage.setItem('userPhone', this.userPhone)
+                window.location.href = '/#/company'
             }
         }
     }
 </script>
+<style lang="scss">
+html, body {
+    height: 100%;
+
+    #app {
+        height: 100%;
+    }
+}
+
+.wrap {
+  background: #383a4c;
+  height: 100%;
+  overflow: hidden;
+
+  .swiper-container .swiper-wrapper .swiper-slide img {
+      display: block;
+      width: 100%;
+    }
+
+    .loginBox {
+      width: 1160px;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 125px 0 0;
+      background: #383a4c;
+      margin: auto;
+
+      .l {
+        width: 756px;
+        overflow: hidden;
+        float: left;
+
+        .swiper-pagination {
+          position: static;
+          display: block;
+          margin-top: 20px;
+          text-align: center;
+
+          .swiper-pagination-bullet {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 6px;
+            background: #7d7f8a;
+            box-shadow: 0 1px 1px 0 #000000 inset;
+            cursor: pointer;
+          }
+
+          .swiper-pagination-bullet-active {
+            background: #64a0d7;
+            box-shadow: 0 1px 1px 0 #f0f0f0 inset;
+          }
+        }
+      }
+
+      .r {
+        width: 360px;
+        background-color: #424458;
+        float: right;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 30px 24px 20px;
+        box-shadow: 0 0 10px 1px #1f1e1e;
+
+        .el-form-item__label {
+          color: #ffffff;
+        }
+
+        .el-form-item {
+          margin-bottom: 10px;
+        }
+
+        .el-button--primary {
+          width: 100%;
+        }
+
+        .dased-border {
+          width: 120%;
+          height: 1px;
+          border-top: 1px dashed #999999;
+          margin: 20px 0 20px -40px;
+        }
+
+        .forget-p {
+          font-size: 12px;
+          color: #a1a3a0;
+          text-align: right;
+          cursor: pointer;
+          line-height: 20px;
+          margin-top: 8px;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .message-box {
+          font-size: 12px;
+          color: #75778d;
+          line-height: 20px;
+          margin-top: 8px;
+        }
+      }
+    }
+
+    .form-b {
+      section {
+        position: relative;
+        height: 36px;
+        padding-left: 60px;
+        margin-bottom: 15px;
+
+        &>span {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 60px;
+          height: 40px;
+          line-height: 36px;
+        }
+      }
+
+      .code-b {
+        cursor: pointer;
+      }
+    }
+}
+
+
+</style>

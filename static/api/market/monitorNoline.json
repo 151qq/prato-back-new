@@ -2,9 +2,9 @@
   "statusCode": 0,
   "result": {
     "name": "什么什么",
-    "day": 23,
+    "outboundNum": 12,
     "totalNum": 21,
-    "successNum": 23,
+    "outboundPer": 23,
     "addNum": 3,
     "addCallNum": 4,
     "echartsData": {

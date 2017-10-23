@@ -1,7 +1,7 @@
 <template>
     <section class="gifts-box">
       <section class="search-input">
-          <span>试用商品</span>
+          <span>礼品</span>
           <el-autocomplete
             id="giftB"
             class="inline-input"
@@ -13,8 +13,8 @@
             size="small"
           >
             <template slot="append">
-              <el-button type="primary" size="small" icon="search"
-                  @click="searchFocus('giftB')">搜索</el-button>
+              <el-button type="primary" size="small" icon="plus"
+                  @click="searchFocus('giftB')">添加</el-button>
             </template>
           </el-autocomplete>
           <div class="tag-box">

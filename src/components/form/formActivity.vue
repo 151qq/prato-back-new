@@ -54,17 +54,29 @@
               <span>券封面</span>
               <div class="table-right">
                 <img class="bg-box" src="../../assets/images/activity-bg.jpg">
-                <input type="file" name="" class="hidden-input">
-                <div class="black-bg"></div>
-                <input type="text" class="title-input" v-model="activity.quanTitle" placeholder="编辑标题">
+                <label for="activity-img" class="input-click"></label>
+                <input type="file" id="activity-img" name="" class="hidden-input">
               </div>
             </section>
 
-            <section class="basetable">
-              <span>券封面</span>
-              <div class="table-right">
-                <textarea class="t-box">{{activity.quan.des}}</textarea>
-              </div>
+            <section class="baseInput bigB">
+                <span>封面标题</span>
+                <el-input
+                  class="input-box"
+                  placeholder="请输入内容"
+                  v-model="activity.quanTitle">
+                </el-input>
+            </section>
+
+            <section class="baseInput bigB">
+              <span>券使用</span>
+              <el-input
+                type="textarea"
+                class="input-box"
+                :autosize="{ minRows: 3, maxRows: 6}"
+                placeholder="请输入内容"
+                v-model="activity.quan.des">
+              </el-input>
             </section>
 
             <section class="baseInput">
@@ -241,12 +253,16 @@ export default {
         }
 
         .hidden-input {
+          display: none;
+        }
+
+        .input-click {
           position: absolute;
           width: 100%;
           height: 285px;
           left: 0;
           top: 0;
-          opacity: 0.01;
+          cursor: pointer;
         }
 
         .black-bg {
