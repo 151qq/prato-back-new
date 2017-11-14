@@ -48,7 +48,7 @@
 
           </section>
           <div class="btn-box">
-            <el-button type="primary" icon="delete2" size="small" @click="addSpec">删除</el-button>
+            <el-button type="primary" icon="delete2" size="small">删除</el-button>
           </div>
         </div>
       </section>

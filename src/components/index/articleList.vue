@@ -1,108 +1,78 @@
 <template>
   <div class="allBoxA">
-    <el-input
-      class="search-title"
-      placeholder="输入关键字进行过滤"
-      v-model="filterText">
-    </el-input>
+    <section class="head-part">
+        <span class="add-dir" @click="setOneData">添加文章</span>
+    </section>
 
-    <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
-      <el-submenu 
-          v-for="(item1, index1) in treeData"
-          :index="index1 + ''">
+    <el-menu :default-active="activeName" class="el-menu-vertical-demo">
+        <el-menu-item
+            class="one-list"
+            v-for="(item, index) in treeData"
+            :index="index + ''">
+            <div class="lists-box"
+                @click="getInfo(item.nodeCode)">
 
-        <template slot="title">{{item1.label}}</template>
+                <img class="img-box" :src="item.imgUrl">
 
-        <el-submenu class="two-box"
-            v-for="(item2, index2) in item1.children"
-            :index="index1 + '-' + index2">
-          <template slot="title">
-            {{item2.label}}
-            <span @click.stop="setData(item1.nodeCode, item2.nodeCode)" class="add-box">
-            +
-            </span>
-          </template>
+                <div class="p-box">
 
-          <el-menu-item
-              v-for="(item3, index3) in item2.children"
-              :index="index1 + '-' + index2 + '-' + index3">
-
-                <div class="lists-box"
-                    :data-index="index1 + '-' + index2 + '-' + index3"
-                    :id="'tree' + item3.nodeCode"
-                    @click="getInfo(item3.nodeCode, item2.nodeCode)">
-
-                  <img class="img-box" :src="item3.imgUrl">
-
-                  <div class="p-box">
-
-                    <span class="title">{{item3.label}}</span>
+                    <span class="title">{{item.label}}</span>
 
                     <div>
-                      <img v-if="!item3.status"
-                          @click.stop="submitItem(item3.nodeCode)"
-                          src="../../assets/images/yfb.png">
+                        <i class="el-icon-document del-icon"
+                            v-if="!item.status"
+                            @click.stop="delItem(item.nodeCode)"></i>
 
-                      <img v-if="!item3.status"
-                          @click.stop="delItem(item3.nodeCode)"
-                          src="../../assets/images/delete-icon.png">
+                        <i class="el-icon-delete del-icon"
+                            v-if="!item.status"
+                            @click.stop="delItem(item.nodeCode)"></i>
                     </div>
-                  </div>
                 </div>
-          </el-menu-item>
-        </el-submenu>
-      </el-submenu>
+            </div>
+        </el-menu-item>
     </el-menu>
 
-    <el-dialog title="订阅客户" :visible.sync="dialogFormVisible">
-
-      <section class="checkBox">
-        <el-checkbox-group v-model="checkedRoles">
-          <el-checkbox v-for="(role, index) in roleList"
-                        :label="role.enterpriseCode"
-                        :key="index">{{role.enterpriseCname}}</el-checkbox>
-        </el-checkbox-group>
-      </section>
-
-      <el-pagination
-            layout="prev, pager, next"
-            :page-size="pageSize"
-            @current-change="changePage"
-            :total="total">
-      </el-pagination>
-
+    <el-dialog title="添加机构" :visible.sync="isAddTreeOne">
+      <el-form :label-position="'left'" :model="addFormOne" label-width="80px">
+        <el-form-item label="标题">
+            <el-input v-model="addFormOne.title" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmSub">确 定</el-button>
+            <el-button @click="isAddTreeOne = false">取 消</el-button>
+            <el-button type="primary" @click="isAddTreeOne = false">确 定</el-button>
       </div>
     </el-dialog>
-
-    <add-article :is-add="isAdd" :add-data="addData" @addSucess="reLoadList"></add-article>
-
   </div>
 </template>
 <script>
   import util from '../../assets/common/util'
-  import addArticle from './addArticle'
   import $ from 'Jquery'
   export default{
     data(){
       return {
-        isAdd: {
-          value: false
-        },
         filterText: '',
-        treeData: [],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-        activeName: '0-0-0',
-        openeds: ['0', '0-0'],
+        treeData: [
+          {
+            nodeCode: 0,
+            label: '第一企业文章',
+            imgUrl: '/static/images/bench1.png'
+          },
+          {
+            nodeCode: 1,
+            label: '第二企业文章',
+            imgUrl: '/static/images/bench1.png'
+          }
+        ],
+        activeName: '',
+        openeds: [],
         addData: {},
         roleList: [],
         checkedRoles: [],
-        dialogFormVisible: false,
+        isAddTreeOne: false,
+        addFormOne: {
+            title: ''
+        },
         currentData: {},
         pageSize: 21,
         pageNumber: 1,
@@ -110,112 +80,58 @@
       }
     },
     mounted(){
-      this.loadList()
-    },
-    watch: {
-      filterText (value) {
-        var opens = []
-        if (value === '') {
-          let arrs = this.activeName.split('-')
-          opens = [arrs[0], arrs[0] + '-' + arrs[1]]
-          this.openeds = opens
-          return false
-        }
-        if (!this.treeData[0].children || !this.treeData[0].children.length) {
-          return false
-        }
-        this.treeData.forEach((item1, index1) => {
-          // 外层有，打开
-          if (item1.label.indexOf(value) > -1) {
-            opens.push(String(index1))
-          }
-
-          if (!item1.children || !item1.children.length) {
-            return false
-          }
-          // 外层没有，内层有，也要打开外层
-          item1.children.forEach((item2, index2) => {
-            if (item2.label.indexOf(value) > -1) {
-              opens.push(String(index1))
-              opens.push(String(index1 + '-' + index2))
-            }
-
-            if (!item2.children || !item2.children.length) {
-              return false
-            }
-
-            item2.children.forEach((item3, index3) => {
-              if (item3.label.indexOf(value)> -1) {
-                opens.push(String(index1))
-                opens.push(String(index1 + '-' + index2))
-              }
-            })
-          })
-        })
-        this.openeds = opens
-      }
+      // this.loadList()
+      this.$emit('getInfo')
     },
     methods: {
       loadList(){
         util.request({
           method: 'get',
-          interface: 'spreadTree',
+          interface: 'productTree',
           data: {}
         }).then(res => {
-          this.treeData = this.filterData(res.result.result)
-
-          //存在第一课树且没有params时，及初始化时
-          if (this.treeData[0].children.length && this.treeData[0].children[0].children.length && !this.$route.params.code) {
-
-            var data = {
-              code: this.treeData[0].children[0].children[0].nodeCode
-            }
-            localStorage.setItem('code', data.code)
-            localStorage.setItem('dirCode', this.treeData[0].children[0].nodeCode)
-            this.$emit('getInfo', data)
+          this.treeData = res.result.result
+          if (!this.treeData.length) {
+            return
           }
+
+          var data = {
+            code: this.treeData[0].nodeCode
+          }
+          setTimeout(() => {
+              localStorage.setItem('id', data.code)
+              this.$emit('getInfo', data)
+          }, 0)
         })
       },
       reLoadList (data) {
         util.request({
           method: 'get',
-          interface: 'spreadTree',
+          interface: 'productTree',
           data: {}
         }).then(res => {
-          this.treeData = this.filterData(res.result.result)
+          this.treeData = res.result.result
+
+          for (var i = 0, len = this.treeData.length; i < len; i++) {
+            if (data.code == this.treeData[i].nodeCode) {
+              this.activeName = i
+              break
+            }
+          }
 
           setTimeout(() => {
-            this.activeName = document.getElementById('tree' + data.code).getAttribute('data-index')
-            var treeList = this.activeName.split('-')
-            this.openeds = [treeList[0], treeList[0] + '-' + treeList[1]]
-
-            localStorage.setItem('code', data.code)
-            localStorage.setItem('dirCode', this.treeData[treeList[0]].children[treeList[1]].nodeCode)
             this.$emit('getInfo', data)
           }, 0)
         })
       },
-      filterData (datas) {
-        var opDatas = datas.concat([])
-        opDatas = opDatas.filter((item1, index1) => {
-          return item1.children && item1.children.length
-        })
-
-        return opDatas
+      setOneData () {
+        this.isAddTreeOne = true
       },
-      setData (code1, code2) {
-        this.addData = {
-          code1: code1,
-          code2: code2
-        }
-        this.isAdd.value = true
-      },
-      getInfo (code, dirCode) {
+      getInfo (code) {
         var data = {
           code: code
         }
-        localStorage.setItem('code', data.code)
-        localStorage.setItem('dirCode', dirCode)
+        localStorage.setItem('id', code)
         this.$emit('getInfo', data)
       },
       delItem (id) {
@@ -230,47 +146,6 @@
             type: 'info',
             message: '已取消删除'
           })
-        })
-      },
-      confirmSub () {
-        util.request({
-          method: 'post',
-          interface: 'sendSubscriberArticle',
-          data: {
-            articleCode: this.currentData.id,
-            subscriber: this.checkedRoles.join(',')
-          }
-        }).then(res => {
-          this.treeData[this.currentData.index1].children[this.currentData.index2].children[this.currentData.index3].status = res.result.result
-          this.$message({
-            type: 'success',
-            message: '发布成功!'
-          })
-          this.dialogFormVisible = false
-        })
-      },
-      changePage (size) {
-        $('.allBox .el-dialog__body .el-checkbox-group').scrollTop(252 * (size - 1))
-      },
-      submitItem (id, index1, index2, index3) {
-        this.checkedRoles = []
-        this.currentData = {
-          id: id,
-          index1: index1,
-          index2: index2,
-          index3: index3
-        }
-        
-        util.request({
-          method: 'get',
-          interface: 'enterpriseList',
-          data: {
-            key: 'value'
-          }
-        }).then(res => {
-          this.roleList = res.result.result
-          this.total = this.roleList.length
-          this.dialogFormVisible = true
         })
       },
       deleteArticleById (id) {
@@ -288,9 +163,6 @@
           })
         })
       }
-    },
-    components: {
-      addArticle
     }
   }
 </script>
@@ -325,11 +197,31 @@
       width: 640px;
     }
 
-    .search-title {
-      margin: 10px 0;
-      padding: 0 10px;
-      box-sizing: border-box;
+    .head-part {
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+
+        .search-title {
+          flex: 1;
+        }
+
+        .add-dir {
+            display: block;
+            width: 100%;
+            height: 36px;
+            font-size: 16px;
+            color: #000000;
+            text-align: center;
+            background: #ffffff;
+            line-height: 36px;
+            cursor: pointer;
+            border: 1px solid #E0E0E0;
+            border-radius: 5px;
+        }
     }
+
+    
 
     .el-submenu {
       .el-submenu__title {
@@ -344,30 +236,32 @@
       }
     }
 
-    .two-box {
-      background: #F9F9F9;
-
-      .add-box {
+    .right-btn {
         float: right;
-        font-size: 30px;
-        margin-right: 30px;
-        line-height: 56px;
-        margin-top: -4px;
-        color: #000000;
-      }
+        margin: 18px 30px 0 3px;
+        font-size: 17px;
+    }
+
+    .del-btn {
+        float: right;
+        margin-top: 18px;
+        font-size: 17px;
+    }
   
-      .el-submenu__title {
-        font-size: 14px;
-        color: #000000;
-        background: #F9F9F9;
-        border-bottom: 1px solid #E0E0E0;
+    .two-list {
+        .el-submenu__title {
+            font-size: 14px;
+            color: #000000;
+            background: #F9F9F9;
+            border-bottom: 1px solid #E0E0E0;
 
-        &:hover {
-          background: #EFF2F7;
+            &:hover {
+              background: #EFF2F7;
+            }
         }
-      }
+    }
 
-      .el-menu-item {
+    .el-menu-item {
         height: 60px;
         background: #F9F9F9;
         border-bottom: 1px solid #E0E0E0;
@@ -412,11 +306,13 @@
               height: 16px;
               cursor: pointer;
 
-              img {
+              i {
                 float: right;
                 width: 16px;
                 height: 16px;
-                margin-left: 8px;
+                margin-left: 3px;
+                font-size: 16px;
+                color: #000000;
 
                 &:hover {
                   opacity: 0.8;
@@ -437,7 +333,10 @@
             display: block;
           }
         }
-      }
+    }
+
+    .one-list {
+        padding-right: 45px !important;
     }
   }
 </style>

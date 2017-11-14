@@ -1,92 +1,31 @@
 <template>
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
-          <el-collapse-item class="formStylePro" title="营销活动管理" name="0">
+          <el-collapse-item class="formStylePro" title="基本信息" name="0">
             <form-article-base ref="fromBase" :base-data="baseData" @saveData="saveForm"></form-article-base>
           </el-collapse-item>
-          <div class="line-bold"></div>
-
-          <el-collapse-item class="formStylePro" title="文章封面" name="1">
-            <upLoad :path="baseData.coverImg"
-                :no-del="true"
-                :bg-path="true"
-                :is-btn="true"
-                @changeImg="changeImg"
-                @saveImg="saveForm"></upLoad>
-          </el-collapse-item>
 
           <div class="line-bold"></div>
 
-          <el-collapse-item class="formStylePro editShow" title="文章" name="3">
+          <el-collapse-item class="formStylePro editShow" title="文章正文" name="1">
             <form-edit ref="formEdit"></form-edit>
           </el-collapse-item>
-          <div class="line-bold"></div>
+          <!-- <div class="line-bold"></div> -->
 
-          <el-collapse-item class="formStylePro editShow" title="相关文章" name="4">
+          <!-- <el-collapse-item class="formStylePro editShow" title="相关文章" name="2">
             <form-article ref="formArticle" @saveData="setArticles"></form-article>
-          </el-collapse-item>
+          </el-collapse-item> -->
           
           <template>
             <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="文章统计" name="5">
-              <section class="pie-box">
-                <div class="left">
-                  <echart-pie :id-name="'reedUser'"
-                      :echarts-date="echartData.reedUser"
-                      ref="reedUser"></echart-pie>
-                </div>
-                <div class="right">
-                  <echart-pie :id-name="'reedNum'"
-                      :echarts-date="echartData.reedNum"
-                      ref="reedNum"></echart-pie>
-                </div>
-              </section>
-
-              <section class="tar-box">
-                <div class="left">
-                  <echart-tar :id-name="'reedTop'"
-                      :echarts-date="echartData.reedTop"
-                      ref="reedTop"></echart-tar>
-                </div>
-                <div class="right">
-                  <echart-tar :id-name="'shareTop'"
-                      :echarts-date="echartData.shareTop"
-                      ref="shareTop"></echart-tar>
-                </div>
-              </section>
-
-              <section class="pie-box">
-                <div class="left">
-                  <echart-pie :id-name="'shareStatisticsPublic'"
-                      :echarts-date="echartData.shareStatisticsPublic"
-                      ref="shareStatisticsPublic"></echart-pie>
-                </div>
-                <div class="right">
-                  <echart-pie :id-name="'shareStatisticsPravite'"
-                      :echarts-date="echartData.shareStatisticsPravite"
-                      ref="shareStatisticsPravite"></echart-pie>
-                </div>
-              </section>
-
-              <section class="pie-box">
-                <div class="left">
-                  <echart-pie :id-name="'comentStatistics'"
-                      :echarts-date="echartData.comentStatistics"
-                      ref="comentStatistics"></echart-pie>
-                </div>
-                <div class="right">
-                  <echart-pie :id-name="'askStatistics'"
-                      :echarts-date="echartData.askStatistics"
-                      ref="askStatistics"></echart-pie>
-                </div>
-              </section>
-
+            <el-collapse-item class="formStylePro" title="文章统计" name="3">
+              <list-statistics></list-statistics>
             </el-collapse-item>
 
             <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="文章传播" name="6">
+            <el-collapse-item class="formStylePro" title="传播路径" name="4">
               <section class="graph-box">
                 <echart-graph :id-name="'spreadGraph'"
                       :echarts-date="echartData.spreadGraph"
@@ -95,7 +34,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
 
-            <el-collapse-item class="formStylePro" title="文章评论" name="7">
+            <el-collapse-item class="formStylePro" title="文章评论" name="5">
               <list-comment :comments="comments"></list-comment>
             </el-collapse-item>
           </template>
@@ -108,8 +47,7 @@ import formEdit from '../../components/form/formEdit'
 import formArticleBase from '../../components/form/formArticleBase'
 import formArticle from '../../components/form/formArticle'
 import upLoad from '../../components/common/upLoad'
-import echartPie from '../../components/common/echart-pie'
-import echartTar from '../../components/common/echart-tar'
+import listStatistics from '../../components/list/listStatistics'
 import echartGraph from '../../components/common/echart-graph'
 import listComment from '../../components/list/listComment'
 
@@ -129,7 +67,8 @@ export default {
             coverImg: '',
             articleId: '',
             echartData: {},
-            comments: []
+            comments: [],
+            isFirst: true
         }
     },
     mounted () {
@@ -142,11 +81,14 @@ export default {
         getAllData () {
           this.getArticle()
           this.$refs.fromBase.initData()
-          this.$refs.formArticle.getData()
-          this.getEhartData()
+          // this.$refs.formArticle.getData()
         },
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
+            if (this.activeNames.indexOf('4') > -1 && this.isFirst) {
+              this.getEhartData()
+              this.isFirst = false
+            }
         },
         getArticle () {
           util.request({
@@ -190,14 +132,6 @@ export default {
           }).then(res => {
               this.echartData = res.result.result
               setTimeout(() => {
-                this.$refs.reedUser.setEcharts()
-                this.$refs.reedNum.setEcharts()
-                this.$refs.reedTop.setEcharts()
-                this.$refs.shareTop.setEcharts()
-                this.$refs.shareStatisticsPublic.setEcharts()
-                this.$refs.shareStatisticsPravite.setEcharts()
-                this.$refs.comentStatistics.setEcharts()
-                this.$refs.askStatistics.setEcharts()
                 this.$refs.spreadGraph.setEcharts()
               }, 0) 
           })
@@ -247,8 +181,7 @@ export default {
         formArticleBase,
         formArticle,
         upLoad,
-        echartPie,
-        echartTar,
+        listStatistics,
         echartGraph,
         listComment
     }

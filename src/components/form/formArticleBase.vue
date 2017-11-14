@@ -2,7 +2,7 @@
     <section class="article-base-box">
       <div class="form-box">
         <section class="baseInput bigB">
-            <span>报告标题</span>
+            <span>文章标题</span>
             <el-input
                     :maxlength="25"
                     class="input-box"
@@ -12,29 +12,51 @@
             </el-input>
             <div class="abstract-num">剩余<span>{{titleNum}}</span>个字</div>
         </section>
-        <section class="baseInput">
-            <span>投资顾问</span>
-            <el-select class="input-box" v-model="baseData.investor" placeholder="请选择">
-                <el-option
-                v-for="item in investors"
+        <section class="baseInput bigB">
+            <span>读者标签</span>
+            <el-select
+              class="input-box"
+              v-model="baseData.customs"
+              multiple
+              filterable
+              allow-create
+              placeholder="请选择目标客户">
+              <el-option
+                v-for="item in customList"
                 :key="item.id"
-                :label="item.userLoginName"
-                :value="item.userCode">
+                :label="item.value"
+                :value="item.id">
               </el-option>
             </el-select>
         </section>
-        <section class="baseInput rightF">
-            <span>创作时间</span>
-            <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="baseData.createTime"
-                    :disabled="true">
-            </el-input>
+        <section class="baseInput bigB">
+            <span>文风特点</span>
+            <el-select
+              class="input-box"
+              v-model="baseData.products"
+              multiple
+              filterable
+              allow-create
+              placeholder="请选择目标客户">
+              <el-option
+                v-for="item in productList"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id">
+              </el-option>
+            </el-select>
+        </section>
+        <section class="baseInput bigB">
+          <span>标准图片</span>
+          <div class="input-box">
+            <upLoad :path="baseData.coverImg"
+                :bg-path="true"
+                @changeImg="changeImg"></upLoad>
+          </div>
         </section>
 
         <section class="baseInput bigB">
-            <span>报告摘要</span>
+            <span>文章摘要</span>
             <el-input
               type="textarea"
               :rows="4"
@@ -56,18 +78,25 @@
 <script>
 import './common/form.scss'
 import util from '../../assets/common/util'
+import upLoad from '../../components/common/upLoad'
+
 export default {
     props: ['baseData'],
     data () {
         return {
             investors: [],
             abstractNum: 70,
-            titleNum: 25
+            titleNum: 25,
+            customList: [],
+            productList: []
         }
     },
     methods: {
         initData () {
-          this.getInvestors()
+          // this.getInvestors()
+        },
+        changeImg (data) {
+          this.baseData.coverImg = data.url
         },
         getInvestors () {
             util.request({
@@ -89,6 +118,9 @@ export default {
         saveForm () {
           this.$emit('saveData')
         }
+    },
+    components: {
+      upLoad
     }
 }
 </script>
