@@ -1,40 +1,52 @@
 <template>
     <section>
-      <div class="jsons-box">
+      <div class="jsons-box jsons-big">
         <section class="t-cont">
-            <span class="one">阅读总数</span>
+            <span class="one">阅读领券/阅读总数</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">潜客阅读</span>
+            <span class="one">分享领券/阅读总数</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">会员总数</span>
+            <span class="one">新增潜客/阅读总数</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">分享总数</span>
+            <span class="one">外呼机会/微信新增潜客</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">分享朋友圈</span>
+            <span class="one">新增预约/微信新增潜客</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">分享朋友</span>
+            <span class="one">预约接待/微信新增潜客</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">评论总数</span>
+            <span class="one">外呼机会/地推新增潜客</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">正面评论</span>
+            <span class="one">新增预约/地推新增潜客</span>
             <div class="two">1</div>
         </section>
         <section class="t-cont">
-            <span class="one">负面评论</span>
+            <span class="one">预约接待/地推新增潜客</span>
+            <div class="two">1</div>
+        </section>
+        <section class="t-cont">
+            <span class="one">实际外呼/新增外呼机会</span>
+            <div class="two">1</div>
+        </section>
+        <section class="t-cont">
+            <span class="one">新增预约/实际外呼</span>
+            <div class="two">1</div>
+        </section>
+        <section class="t-cont">
+            <span class="one">预约接待/新增预约</span>
             <div class="two">1</div>
         </section>
       </div>

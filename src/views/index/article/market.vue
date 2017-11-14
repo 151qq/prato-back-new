@@ -6,18 +6,14 @@
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <form-market-online v-if="marketType === 'online'" ref="editBox" @updateTree="updateTree"></form-market-online>
-            <form-market-outline v-if="marketType === 'outline'" ref="editBox" @updateTree="updateTree"></form-market-outline>
-            <form-market-noline v-if="marketType === 'noline'" ref="editBox" @updateTree="updateTree"></form-market-noline>
+            <form-market ref="editBox" @updateTree="updateTree"></form-market>
         </div>
     </div>
     
 </template>
 <script>
 import marketList from '../../../components/index/marketList.vue'
-import formMarketOnline from '../../../components/index/formMarketOnline'
-import formMarketOutline from '../../../components/index/formMarketOutline'
-import formMarketNoline from '../../../components/index/formMarketNoline'
+import formMarket from '../../../components/index/formMarket'
 import util from '../../../assets/common/util'
 
 export default {
@@ -28,15 +24,8 @@ export default {
     },
     methods: {
         getInfo (data) {
-            console.log(data)
-            if (data.type) {
-                this.marketType = data.type
-            }
-            
             // 编辑区域获取初始数据
-            setTimeout(() => {
-                this.$refs.editBox.getAllData()
-            }, 0)
+            this.$refs.editBox.getAllData()
         },
         updateTree (data) {
             this.$refs.listBox.reLoadList(data.code)
@@ -44,9 +33,7 @@ export default {
     },
     components: {
         marketList,
-        formMarketOnline,
-        formMarketOutline,
-        formMarketNoline
+        formMarket
     }
 }
 </script>

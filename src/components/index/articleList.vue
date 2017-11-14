@@ -32,7 +32,7 @@
         </el-menu-item>
     </el-menu>
 
-    <el-dialog title="添加机构" :visible.sync="isAddTreeOne">
+    <el-dialog title="添加文章" :visible.sync="isAddTreeOne">
       <el-form :label-position="'left'" :model="addFormOne" label-width="80px">
         <el-form-item label="标题">
             <el-input v-model="addFormOne.title" auto-complete="off"></el-input>

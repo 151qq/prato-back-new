@@ -1,4 +1,5 @@
 <template>
+  <section class="date-outer-box">
     <section class="date-click-box">
       <section class="date-b-left">
         <date-pq
@@ -13,9 +14,11 @@
           :select-data="activeDate"></date-pq>
       </section>
       <div class="clear"></div>
-      <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-        @click="saveData('base')">保存</el-button>
     </section>
+    <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+        @click="saveData('base')">保存</el-button>
+    <div class="clear"></div>
+  </section>
 </template>
 <script>
 import datePq from '../common/date-pq'
