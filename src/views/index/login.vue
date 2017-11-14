@@ -154,7 +154,8 @@
                     userLoginAccount: this.userLoginAccount,
                     userPassword: this.userPassword,
                     corpId: this.corpId,
-                    wechatName: this.wechatName
+                    wechatName: this.wechatName,
+                    code: 'ref'
                 }
 
                 util.request({
@@ -162,7 +163,8 @@
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    if (res.result.success != '0') {
+                    console.log(res, 'res')
+                    if (res.result.success == '1') {
                         window.location.href = '/';
                     } else {
                         this.$message.error(res.result.message)
@@ -188,23 +190,26 @@
 
                 var data = {
                     enterpriseCname: this.enterpriseCname,
-                    enterpriseIndustry: this.enterpriseIndustry,
                     userCname: this.userCname,
                     userPhone: this.userPhone
                 }
 
-                // util.request({
-                //     method: 'post',
-                //     interface: 'authentication',
-                //     data: data
-                // }).then((res) => {
-                //     window.location.href = '/';
-                // });
+                util.request({
+                    method: 'get',
+                    interface: 'authentication',
+                    data: data
+                }).then((res) => {
+                    if (res.result.success == '1') {
+                        sessionStorage.setItem('companyData', JSON.stringify(res.result.result))
+                        sessionStorage.setItem('userCname', this.userCname)
+                        sessionStorage.setItem('userPhone', this.userPhone)
+                        window.location.href = '/#/company?form=login'
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                });
                 
-                sessionStorage.setItem('companyName', this.enterpriseCname)
-                sessionStorage.setItem('userCname', this.userCname)
-                sessionStorage.setItem('userPhone', this.userPhone)
-                window.location.href = '/#/company'
+                
             }
         }
     }

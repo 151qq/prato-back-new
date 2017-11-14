@@ -1,9 +1,7 @@
 /**
  * Created by zhangbin on 2017/7/6.
  */
-let wc = window.location;
-//const platform =wc.protocol+'//'+wc.host+'/';
-const platform = "/esocial/";
+const platform = "/esocial/"
 export default {
     interfaces: {
         "authentication": platform + "authentication.json",     //登录
@@ -188,6 +186,8 @@ export default {
         * 文章统计 get
         * ids 文章报告id eg: [1,2,3]
         */
-        articleEchart: '/static/api/article/articleEchart.json'
+        articleEchart: '/static/api/article/articleEchart.json',
+
+        cityData: '/static/api/common/city.json'
     }
 }
