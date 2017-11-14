@@ -1,44 +1,41 @@
 <template>
     <section class="coments-box">
-      <section class="comment-b" v-for="(item, index) in comments">
-        <div class="avatar-box"> <img :src="item.userAvatar"></div>
+      <section class="comment-b" v-for="(item, index) in commentDatas">
+        <div class="avatar-box"> <img :src="item.author.avatar"></div>
         <div class="right-box">
-          <p class="user-name">
-            <span>{{index + 1}}楼</span>
-            {{item.userName}}
-          </p>
+          <div class="user-name">
+            <span>
+              {{index + 1}}楼 &nbsp;&nbsp;
+              <span class="time-box">{{item.submitTime | strDate}}</span>
+            </span>
+            {{item.author.name}}
+          </div>
           <div class="content-box">
-            <section v-if="item.commentCon.text" class="text-box">{{item.commentCon.text}}</section>
-            <section v-if="item.commentCon.imgList && item.commentCon.imgList.length" class="imgs-box">
+            <section v-if="item.commentContent" class="text-box">{{item.commentContent}}</section>
+            <section v-if="item.commentImgs && item.commentImgs.length" class="imgList-box">
               <div>
-                <img :src="urlC" v-for="(urlC, indexC) in item.commentCon.imgList" :key="indexC">
+                <img :src="urlC" v-for="(urlC, indexC) in item.commentImgs" :key="indexC">
               </div>
             </section>
-            <section v-if="item.commentCon.articleContent && item.commentCon.articleContent.length"
-                class="articles-box">
-                <a class="link-arc" v-for="(articleC, indexAC) in item.commentCon.articleContent" :key="indexAC">
-                  <img :src="articleC.imgUrl" class="arc-img">
-                  <div class="con-arc">
-                    <p class="title-a">{{articleC.title}}</p>
-                    <p class="content-a">{{articleC.des}}</p>
-                  </div>
-                </a>
-            </section>
-            <section class="com-time">{{item.commentCon.commentTime | strDate}}</section>
           </div>
 
-          <section class="author-box" v-if="item.authorAnswer">
-            <p class="des-title">作者回复:</p>
+          <section class="author-box" v-if="item.responseComment">
+            <p class="des-title">
+              作者回复:
+              <section class="com-time">{{item.responseComment.submitTime | strDate}}</section>
+            </p>
             <div class="content-box art-content-box">
-              <section v-if="item.authorAnswer.text" class="text-box">{{item.authorAnswer.text}}</section>
-              <section v-if="item.authorAnswer.imgList && item.authorAnswer.imgList.length" class="imgs-box">
+              <section v-if="item.responseComment.commentContent"
+                      class="text-box">{{item.responseComment.commentContent}}</section>
+              <section v-if="item.responseComment.commentImgs && item.responseComment.commentImgs.length"
+                      class="imgList-box">
                 <div>
-                  <img :src="urlA" v-for="(urlA, indexA) in item.authorAnswer.imgList" :key="indexA">
+                  <img :src="urlA" v-for="(urlA, indexA) in item.responseComment.commentImgs" :key="indexA">
                 </div>
               </section>
-              <section v-if="item.authorAnswer.articleContent && item.authorAnswer.articleContent.length"
-                  class="articles-box">
-                  <a class="link-arc" v-for="(articleA, indexAA) in item.authorAnswer.articleContent"
+              <section v-if="item.responseComment.commentArticles && item.responseComment.commentArticles.length"
+                      class="articles-box">
+                  <a class="link-arc" v-for="(articleA, indexAA) in item.responseComment.commentArticles"
                       :key="indexAA">
                     <img :src="articleA.imgUrl" class="arc-img">
                     <div class="con-arc">
@@ -48,10 +45,11 @@
                   </a>
               </section>
             </div>
-            <section class="com-time">{{item.authorAnswer.anwerTime | strDate}}</section>
 
           </section>
-
+          <div class="btn-box">
+            <el-button type="primary" icon="delete2" size="small" @click="addSpec">删除</el-button>
+          </div>
         </div>
       </section>
     </section>
@@ -63,6 +61,58 @@ export default {
     props: ['comments'],
     data () {
       return {
+        commentDatas: [
+            {
+                id: 0,
+                author: {
+                    name: '大家好，我是ms',
+                    avatar: '/static/images/bench1.png'
+                },
+                zanNum: 11,
+                hateNum: 12,
+                commentContent: '其实吧，没什么想说的，哎，都不容呀！',
+                commentImgs: [
+                    '/static/images/bench1.png',
+                    '/static/images/bench1.png',
+                    '/static/images/bench1.png',
+                    '/static/images/bench1.png',
+                    '/static/images/bench1.png'
+                ],
+                submitTime: '2017-11-20',
+                responseComment: {
+                    id: 1,
+                    author: {
+                        name: '大家好，我是ms',
+                        avatar: '/static/images/detail1.png'
+                    },
+                    commentContent: '其实吧，没什么想说的，哎，都不容呀！',
+                    commentImgs: [
+                        '/static/images/bench1.png',
+                        '/static/images/bench1.png',
+                        '/static/images/bench1.png',
+                        '/static/images/bench1.png',
+                        '/static/images/bench1.png'
+                    ],
+                    commentArticles: [
+                        {
+                            id: 0,
+                            title: '咋啦，妹砸，被煮啦！',
+                            imgUrl: '/static/images/bench1.png',
+                            des: '我不活了我啊。。。。',
+                            href: ''
+                        },
+                        {
+                            id: 1,
+                            title: '论妹砸被煮二三事！',
+                            imgUrl: '/static/images/bench1.png',
+                            des: '什么事啊这是。。。',
+                            href: ''
+                        }
+                    ],
+                    submitTime: '2017-12-21'
+                }
+            }
+        ]
       }
     },
     filters: {
@@ -96,6 +146,10 @@ export default {
       float: right;
       width: 560px;
 
+      .btn-box {
+        text-align: right;
+      }
+
       .user-name {
         font-size: 16px;
         color: #000000;
@@ -106,6 +160,10 @@ export default {
         span {
           float: right;
           font-size: 14px;
+
+          .time-box {
+            color: #5E6D82;
+          }
         }
       }
 
@@ -117,7 +175,7 @@ export default {
           margin-bottom: 10px;
         }
 
-        .imgs-box {
+        .imgList-box {
           div {
             width: 110%;
             overflow: hidden;
@@ -169,18 +227,19 @@ export default {
         }
       }
 
-      .com-time {
-        text-align: right;
-        font-size: 14px;
-        color: #5E6D82;
-        margin-bottom: 10px;
-      }
-
       .des-title {
         font-size: 14px;
         color: #20A0FF;
         line-height: 30px;
         margin: 10px 0;
+
+        .com-time {
+          float: right;
+          text-align: right;
+          font-size: 14px;
+          line-height: 30px;
+          color: #5E6D82;
+        }
       }
 
       .art-content-box {
@@ -188,7 +247,7 @@ export default {
         background: #F9F9F9;
         margin-bottom: 10px;
 
-        .imgs-box div img {
+        .imgList-box div img {
           margin-right: 8px;
         }
       }

@@ -619,6 +619,9 @@
                 </template>
               </el-table-column>
             </el-table>
+            <div class="clear"></div>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+            @click="saveBase">保存</el-button>
           </el-collapse-item>
         </el-collapse>
     </div>

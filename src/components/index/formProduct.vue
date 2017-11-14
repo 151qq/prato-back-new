@@ -7,12 +7,12 @@
           </el-collapse-item>
           <div class="line-bold"></div>
           <!-- 介绍文章 -->
-          <el-collapse-item class="formStylePro editShow" title="介绍文章" name="2">
+          <el-collapse-item class="formStylePro editShow" title="产品详情" name="2">
             <form-edit ref="formEdit"></form-edit>
           </el-collapse-item>
           <div class="line-bold"></div>
           <!-- 详细规格 -->
-          <el-collapse-item class="formStylePro editShow" title="详细规格" name="3">
+          <el-collapse-item class="formStylePro editShow" title="产品规格" name="3">
             <form-product-spec ref="productSpec"></form-product-spec>
           </el-collapse-item>
           <div class="line-bold"></div>
@@ -24,35 +24,18 @@
                 @click="saveData('productImgs')">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
-          <div class="line-bold"></div>
-          <!-- 宣传推广图片 -->
-          <el-collapse-item class="formStylePro" title="宣传推广图片" name="5">
-
-            <upload-list :img-lists="publishImgs" @showimg="showImg"></upload-list>
-            <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('publishImgs')">保存</el-button>
-            <div class="clear"></div>
-
-          </el-collapse-item>
           
           <!-- 编辑独有 -->
           <template>
             <div class="line-bold"></div>
-            <!-- 二维码 -->
-            <el-collapse-item class="formStylePro" title="二维码" name="6">
-              <img class="ewm-b" :src="ewm" @click="showBigEwm">
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <!-- 更新日志 -->
-            <el-collapse-item class="formStylePro" title="更新日志" name="7">
-              <list-logs :logs="logs"></list-logs>
+            <!-- 产品评论 -->
+            <el-collapse-item class="formStylePro" title="产品评论" name="5">
+              <list-comment></list-comment>
             </el-collapse-item>
           </template>
         </el-collapse>
   
         <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
-        <show-ewm :dialog-visible="isEwm" :path="ewm"></show-ewm>
     </div>
 </template>
 <script>
@@ -63,7 +46,7 @@ import formEdit from '../../components/form/formEdit'
 import uploadList from '../../components/index/upload-list'
 import swiperImg from '../../components/common/swiper-img.vue'
 import showEwm from '../../components/common/show-ewm'
-import listLogs from '../../components/list/listLogs'
+import listComment from '../../components/list/listComment.vue'
 import $ from 'Jquery'
 
 export default {
@@ -199,7 +182,7 @@ export default {
         uploadList,
         swiperImg,
         showEwm,
-        listLogs
+        listComment
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <section class="product-base-box">
       <div class="form-box">
-        <section class="baseInput">
+        <section class="baseInput bigB">
             <span>产品名称</span>
             <el-input
               class="input-box"
@@ -9,7 +9,7 @@
               v-model="base.name">
             </el-input>
         </section>
-        <section class="baseInput rightF">
+        <section class="baseInput">
             <span>产品编码</span>
             <el-input
               class="input-box"
@@ -18,17 +18,6 @@
               v-model="base.code">
             </el-input>
         </section>
-        <section class="baseInput">
-            <span>上代产品</span>
-            <el-select class="input-box" v-model="base.type" placeholder="请选择">
-                <el-option
-                  v-for="item in types"
-                  :key="item.id"
-                  :label="item.text"
-                  :value="item.id">
-                </el-option>
-            </el-select>
-        </section>
         <section class="baseInput rightF">
             <span>产品价格</span>
             <el-input-number class="input-box" size="small" :min="0"
@@ -36,7 +25,7 @@
         </section>
         
         <section class="baseInput bigB">
-            <span>目标客户</span>
+            <span>产品标签</span>
             <el-select
               class="input-box"
               v-model="base.customs"
@@ -70,16 +59,6 @@
             </el-select>
         </section>
         <section class="baseInput bigB">
-            <span>产品摘要</span>
-            <el-input
-              type="textarea"
-              :rows="4"
-              :maxlength="70"
-              placeholder="请输入内容"
-              v-model="base.abstract">
-            </el-input>
-        </section>
-        <section class="baseInput bigB">
           <span>标准图片</span>
           <div class="input-box">
             <upLoad :path="base.coverImg"
@@ -88,10 +67,14 @@
           </div>
         </section>
         <section class="baseInput bigB">
-            <span>产品优惠</span>
-            <div class="input-box">
-              
-            </div>
+            <span>产品摘要</span>
+            <el-input
+              type="textarea"
+              :rows="4"
+              :maxlength="70"
+              placeholder="请输入内容"
+              v-model="base.abstract">
+            </el-input>
         </section>
       </div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
