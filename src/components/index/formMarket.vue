@@ -16,8 +16,9 @@
           </el-collapse-item>
           <div class="line-bold"></div> -->
 
-          <el-collapse-item class="formStylePro editShow" title="优惠活动" name="3">
-            <form-activity></form-activity>
+          <el-collapse-item class="formStylePro editShow" title="活动优惠" name="3">
+            <form-discount></form-discount>
+
           </el-collapse-item>
           <div class="line-bold"></div>
 
@@ -212,7 +213,7 @@ import util from '../../assets/common/util'
 import formMarketBase from '../../components/form/formMarketBase'
 import formDateClick from '../../components/form/formDateClick'
 import formEdit from '../../components/form/formEdit'
-import formActivity from '../../components/form/formActivity'
+import formDiscount from '../../components/form/formDiscount'
 import listArticle from '../../components/list/listArticle'
 import listMid from '../../components/list/listMid'
 import listRate from '../../components/list/listRate'
@@ -325,12 +326,11 @@ export default {
         collChange () {
             localStorage.setItem("houseColl", this.activeNames)
         }
-        // 线下
     },
     components: {
         formMarketBase,
         formDateClick,
-        formActivity,
+        formDiscount,
         formEdit,
         listArticle,
         listMid,
