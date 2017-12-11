@@ -1,7 +1,7 @@
 /**
  * Created by zhangbin on 2017/7/6.
  */
-const platform = "/esocial/"
+const platform = "/E2-Platform/"
 export default {
     interfaces: {
         "authentication": platform + "authentication.json",     //登录
@@ -23,6 +23,16 @@ export default {
         "changePassword": platform + "changePassword.json",         //修改密码
         "resetPassword": platform + "resetPassword.json",  // 重置密码
         "imageUpload": platform + 'houses/image/upload.json',
+
+        /**
+        * 企业 get
+        */
+        showAllEnt: platform + 'enterprise/showAllEnt.json',
+        showEnterpriseInfo: platform + 'enterprise/showEnterpriseInfo.json',
+        manageEnterpriseInfo: platform + 'enterprise/manageEnterpriseInfo.json',
+        removeEnterpriseInfo: platform + 'enterprise/removeEnterpriseInfo.json',
+        disOfEnterpriseInfo: platform + 'enterprise/disOfEnterpriseInfo.json',
+
         /**
         * 我的素材库 get
         */
@@ -188,6 +198,6 @@ export default {
         */
         articleEchart: '/static/api/article/articleEchart.json',
 
-        cityData: '/static/api/common/city.json'
+        getCitys: '/static/api/common/city.json'
     }
 }

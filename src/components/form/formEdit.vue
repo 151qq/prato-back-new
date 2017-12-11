@@ -7,7 +7,7 @@
                         :data-id="index"> 
                     <div class="show-box" v-if="item.type === 'upload'">
                         <div v-if="disabled">
-                            <upload 
+                            <upload
                                 :path="item.imgUrl"
                                 :num="index" 
                                 :idx="item.id"

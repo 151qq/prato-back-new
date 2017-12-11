@@ -217,7 +217,6 @@ import formDiscount from '../../components/form/formDiscount'
 import listArticle from '../../components/list/listArticle'
 import listMid from '../../components/list/listMid'
 import listRate from '../../components/list/listRate'
-import upLoad from '../../components/common/upLoad'
 import datePq from '../../components/common/date-pq'
 
 import $ from 'Jquery'

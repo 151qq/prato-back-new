@@ -1,76 +1,108 @@
 <template>
     <section class="edit-box">
         <section class='bodyMain'>
-            <div id="articleArea" name="content" class="list-group">
+            <div name="content" class="list-group">
                 <div class="list-group-item"
                         v-for="(item, index) in articleList"
                         :data-id="index"> 
-                    <div class="show-box" v-if="item.type === 'upload'">
-                        <div v-if="disabled">
-                            <upload 
+                    
+                    <template v-if="!isLook">
+                        <div class="show-box" v-if="item.type === 'upload'">
+                            <upload
                                 :path="item.imgUrl"
                                 :num="index" 
                                 :idx="item.id"
+                                :id-name="'edit-img' + index"
                                 :no-save="true"
-                                :is-btn.sync="disabled"
                                 @delImg="delImg"
                                 @changeImg="changeImg"
                                 @saveImg="saveData('upload', index)"></upload>
                         </div>
-                        <img @click.prevent="preHandl"
-                                v-if="!disabled && item.imgUrl"
-                                :src="item.imgUrl"
-                                :style="imgStyle">
-                        <img @click.prevent="preHandl"
-                                v-if="!disabled && !item.imgUrl"
-                                src="../../assets/images/img-default.jpg"
-                                :style="imgStyle">
-                    </div>
 
-                    <div class="show-box btn-show" v-if="item.type === 'text'">
-                        <ueditor v-if="disabled"
-                                :editor-id="'editor' + index"
-                                :index="index"
-                                :content="item.content"
-                                @setContent="setContent"></ueditor>
-                        <div v-show="!disabled && item.content"
-                                v-html="item.content"></div>
-                        <div v-show="!disabled && !item.content">编辑中的文本样式</div>
-                        <div class="btn-hover" v-if="disabled">
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
-                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
+                        <div class="show-box" v-if="item.type === 'text'">
+                            <ueditor :editor-id="'editorText' + index"
+                                        :editor-type="'text'"
+                                        :index="index"
+                                        :content="item.content"
+                                        @setContent="setContent"></ueditor>
                         </div>
-                    </div>
 
-                    <div class="show-box btn-show overflow-box" v-if="item.type === 'title'">
-                        <input v-if="disabled && item.style"
-                                type="text"
-                                v-model="item.title"
-                                @blur="titleBlur(item, index)"
-                                :style="item.style"
-                                placeholder="编辑中的内标题样式">
-                        <div v-if="!disabled && item.title"
-                                :style="item.style">{{item.title}}</div>
-                        <div v-if="!disabled && !item.title"
-                                :style="item.style">编辑中的内标题样式</div>
-                        <img v-if="!item.style && disabled"
-                                class="img-default"
-                                @click.prevent="setStyle(index, item.style)"
-                                src="../../assets/images/title-default.jpg">
-                        <div class="btn-hover" v-if="disabled">
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
-                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="setting"
-                                    @click="setStyle(index, item.style)">配置</el-button>
+                        <div class="show-box btn-show" v-if="item.type === 'table'">
+                            <ueditor :editor-id="'editorTable' + index"
+                                        :editor-type="'table'"
+                                        :index="index"
+                                        :content="item.content"
+                                        @setContent="setContent"></ueditor>
                         </div>
-                    </div>
+
+                        <div class="show-box" v-if="item.type === 'map'">
+                            <div v-html="item.content"></div>
+                        </div>
+
+                        <div class="show-box overflow-box" v-if="item.type === 'title'">
+                            <input v-if="item.style"
+                                    type="text"
+                                    v-model="item.title"
+                                    @blur="titleBlur(item, index)"
+                                    :style="item.style"
+                                    placeholder="编辑中的内标题样式">
+                            <img v-if="!item.style"
+                                    class="img-default"
+                                    @click.prevent="setStyle(index, item.style)"
+                                    src="../../assets/images/title-default.jpg">
+                        </div>
+                    </template>
+
+                    <div v-if="isLook" v-html="item.content"></div>
+
+                    <section v-if="!isLook" class="btn-show">
+                        <div class="btn-hover">
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small"
+                                    :icon="btnShowIndex === index ? 'caret-left' : 'caret-right'"
+                                    @click="showHiddenBtn(index)">操作</el-button>
+
+                            <template v-if="btnShowIndex === index">
+                                <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small"icon="delete"
+                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        v-if="item.type == 'title'"
+                                        :plain="true" size="small" icon="setting"
+                                        @click="setStyle(index, item.style)">配置</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        v-if="item.type == 'map'"
+                                        :plain="true" size="small" icon="setting"
+                                        @click="changeMap(index)">更改</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        :plain="true" size="small" icon="caret-bottom"
+                                        @click="downMove(index)">下移</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        :plain="true" size="small" icon="caret-top"
+                                        @click="upMove(index)">上移</el-button>
+                                <div class="sort-box">
+                                    编号：{{index}} &nbsp;&nbsp;
+                                    移动至
+                                    <el-input
+                                        class="sortInput"
+                                        size="small"
+                                        min="0"
+                                        placeholder="编号"
+                                        v-model="sortNum">
+                                        <el-button slot="append" @click="moveArea(index)">go</el-button>
+                                    </el-input>
+                                </div>
+                            </template>
+                        </div>
+                    </section>
                 </div>
             </div>
         </section>
         <div class="edit-btn">
+            <div @click="addTem('look')">
+                <img class="gray-box" src="../../assets/images/add-look-icon.png">
+                <img class="now-box" src="../../assets/images/look-icon.png">
+            </div>
             <div @click="addTem('upload')">
                 <img class="gray-box" src="../../assets/images/add-img-icon.png">
                 <img class="now-box" src="../../assets/images/img-now.png">
@@ -79,14 +111,17 @@
                 <img class="gray-box" src="../../assets/images/add-text-icon.png">
                 <img class="now-box" src="../../assets/images/text-now.png">
             </div>
+            <div @click="addTem('table')">
+                <img class="gray-box" src="../../assets/images/add-table-icon.png">
+                <img class="now-box" src="../../assets/images/table-now.png">
+            </div>
+            <div @click="addTem('map')">
+                <img class="gray-box" src="../../assets/images/add-map-icon.png">
+                <img class="now-box" src="../../assets/images/map-now.png">
+            </div>
             <div class="title-box" @click="addTem('title')">
                 <img class="gray-box" src="../../assets/images/add-title-icon.png">
                 <img class="now-box" src="../../assets/images/title-now.png">
-            </div>
-            <div @click="addTem('change')">
-                <img v-if="disabled" class="gray-box" src="../../assets/images/change-model-icon.png">
-                <img v-if="disabled" class="now-box" src="../../assets/images/change-now.png">
-                <img v-if="!disabled" src="../../assets/images/change-now.png">
             </div>
             <div class="save-box" @click="saveAll">
                 <img class="gray-box" src="../../assets/images/save-all-data.png">
@@ -105,6 +140,15 @@
                 <el-button type="primary" @click="confirmSelect">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- <el-dialog title="选择内标题样式" :visible.sync="isLook">
+            <div class=""
+                    v-for="(item, index) in articleList"
+                    v-html="item.content">
+            </div>
+        </el-dialog> -->
+
+        <search-map :is-add="isMapBox" :map-data="mapData" ref="searchMap" @setMap="setMap"></search-map>
     </section>
 </template>
 <script>
@@ -114,6 +158,7 @@ import upload from '../../components/common/upload'
 import ueditor from '../../components/common/ueditor'
 import $ from 'Jquery'
 import sortable from 'sortablejs'
+import searchMap from '../../components/common/searchMap'
 
 export default {
     props: ['isSave'],
@@ -132,38 +177,39 @@ export default {
             titleLists: [
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; font-size: 16px; color: #000000; line-height: 30px;"
                 },
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px;"
                 },
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px;"
                 }
             ],
-            config: {
-                initialFrameWidth: null,
-                initialFrameHeight: null,
-                zIndex: 0,
-                toolbars: [[
-                    'undo', 'redo', '|',
-                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-                    'fontfamily', 'fontsize', '|',
-                    'indent', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-                    'emotion', 'map', 'pagebreak', '|',
-                    'horizontal', 'date', 'time', 'spechars', '|',
-                    'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts'
-
-                ]]
-            },
             templateList: [],
             selectTemplate: {},
             articleId: '',
-            html5PageCode: ''
+            html5PageCode: '',
+            isMapBox: {
+                value: false
+            },
+            mapData: {
+                address: '',
+                point: '',
+                content: ''
+            },
+            sortNum: '',
+            btnShowIndex: '',
+            isLook: false,
+            areaCodes: {
+                text: '001',
+                table: '002',
+                map: '003',
+                title: '004',
+                upload: '005'
+            }
         }
     },
     methods:{
@@ -193,6 +239,26 @@ export default {
                             }
                             arrData.push(data)
                             break
+                        case 'table':
+                            var data = {
+                                type: 'table',
+                                content: item.areaTxt,
+                                fileCode: item.fileCode,
+                                id: item.id
+                            }
+                            arrData.push(data)
+                            break
+                        case 'map':
+                            var data = {
+                                type: 'map',
+                                content: item.areaTxt,
+                                fileCode: item.fileCode,
+                                id: item.id,
+                            }
+                            data = Object.assign(data, this.getMapData(item.areaTxt))
+
+                            arrData.push(data)
+                            break
                         case 'title':
                             var data = {
                                 type: 'title',
@@ -210,22 +276,99 @@ export default {
             this.articleList = arrData
             this.backgroundImg = data.bgImg ? 'url(' + data.bgImg + ') center top no-repeat' : '#f0f0f0'
             setTimeout(() => {
-                this.setSortable()
                 $('.bodyMain').css('background', this.backgroundImg)
             }, 0)
-            this.disabled = true
-            if (this.sortable) {
-                this.sortable.option('disabled', true)
+        },
+        getMapData (el) {
+            var url = $(el).attr('src')
+            var queryArr = url.split('&')
+            var len = queryArr.length
+            return {
+                address: queryArr[len - 1].split('=')[1],
+                point: queryArr[len - 2].split('=')[1]
             }
         },
-        saveArticle (data, cb) {
+        showHiddenBtn (index) {
+            if (this.btnShowIndex === index) {
+                this.sortNum = ''
+                this.btnShowIndex = ''
+                return false
+            }
+            this.btnShowIndex = index
+        },
+        upMove (index) {
+            this.moveTo(index, index - 1)
+        },
+        downMove (index) {
+            this.moveTo(index, index + 1)
+        },
+        moveArea (index) {
+            if (this.sortNum === '') {
+                return
+            }
+            this.moveTo(index, Math.floor(this.sortNum))
+        },
+        moveTo (oldIndex, newIndex) {
+            var toIndex = ''
+            if (newIndex < 0) {
+                toIndex = 0
+            } else if (newIndex > this.articleList.length - 1) {
+                toIndex = this.articleList.length - 1
+            } else {
+                toIndex = newIndex
+            }
+
+            var obj = this.articleList[oldIndex]
+            
+            if (oldIndex > toIndex) {
+                // 上移 先移除，后添加
+                this.articleList.splice(oldIndex, 1)
+                this.articleList.splice(toIndex, 0, obj)
+            } else if (oldIndex < toIndex) {
+                // 下移 先添加，后移除
+                this.articleList.splice(toIndex, 0, obj)
+                this.articleList.splice(oldIndex, 1)
+            }
+
+            this.btnShowIndex = toIndex
+            this.sortNum = ''
+
+            if (oldIndex === toIndex) {
+                return
+            }
+
+            var data = this.articleList.concat([])
+            this.articleList = []
+            setTimeout(() => {
+                this.articleList = data.concat([])
+            }, 0)
+        },
+        saveArticle (data) {
             var formData = {
                 type: this.$route.name,
                 areaTxt: '',
-                html5TemplateCode: 'tpl_0003'
+                html5TemplateCode: this.$route.name == 'house' ? 'tpl_001' : 'tpl_002'
             }
 
-            formData =  Object.assign(data)
+            if (data) {
+                if (data.title) {
+                    formData.html5PageTitle = data.title
+                }
+                if (data.investor) {
+                    formData.editorCode = data.investor
+                }
+                if (data.abstract) {
+                    formData.html5Summary = data.abstract
+                }
+                if (data.pageImg) {
+                    formData.html5PageindexImg = data.pageImg
+                }
+                if (data.html5PageCode) {
+                    formData.html5PageCode = data.html5PageCode
+                }
+                formData.id = data.id
+                formData.html5CatalogCode = data.html5CatalogCode
+            }
             
             util.request({
                 method: 'post',
@@ -243,8 +386,8 @@ export default {
                 this.html5PageCode = resData.html5PageCode
                 this.articleId = resData.id
 
-                if (cb) {
-                    cb()
+                if (!data.isHouse) {
+                    this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
                 }
             })
         },
@@ -254,9 +397,10 @@ export default {
                 interface: 'saveArticleArea',
                 data: {
                     areaType: type,
+                    areaCode: this.areaCodes[type],
                     html5TemplateCode: this.html5TemplateCode,
                     areaTxt: this.articleList[index].content,
-                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("htmlHouseCode"),
+                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("id"),
                     id: this.articleList[index].id ? this.articleList[index].id : '',
                     sequence: index + 20
                 }
@@ -268,30 +412,44 @@ export default {
             this.articleList.forEach((item, index) => {
                 this.saveData(item.type, index)
             })
-        },
-        setSortable () {
-            var _this = this
 
-            var articleArea = document.getElementById('articleArea')
-            this.sortable = sortable.create(articleArea, {
-                handle: ".list-group-item",
-                animation: 100,
-                group: {name: "articleArea", pull: false, put: false},
-                filter: '.filter',
-                sort: true,
-                disabled: true,
-                onUpdate ({oldIndex, newIndex}) {
-                    let preData = _this.articleList[newIndex]
-                    _this.articleList[newIndex] = _this.articleList[oldIndex]
-                    _this.articleList[oldIndex] = preData
-                }
+            if (this.$route.name == 'house') {
+                setTimeout(() => {
+                    this.submitArticle()
+                }, 3000)
+            }
+        },
+        submitArticle () {
+            util.request({
+              method: 'post',
+              interface: 'publishArticle',
+              data: {
+                html5PageCode: localStorage.getItem('htmlHouseCode')
+              }
+            }).then(res => {
             })
         },
+        // setSortable () {
+        //     var _this = this
+
+        //     var articleArea = document.getElementById('articleArea')
+        //     this.sortable = sortable.create(articleArea, {
+        //         handle: ".list-group-item",
+        //         animation: 100,
+        //         group: {name: "articleArea", pull: false, put: false},
+        //         filter: '.filter',
+        //         sort: true,
+        //         disabled: true,
+        //         onUpdate ({oldIndex, newIndex}) {
+        //             let preData = _this.articleList[newIndex]
+        //             _this.articleList[newIndex] = _this.articleList[oldIndex]
+        //             _this.articleList[oldIndex] = preData
+        //         }
+        //     })
+        // },
         addTem (type) {
             switch (type) {
                 case 'upload':
-                    this.disabled = true
-                    this.sortable.option('disabled', true)
                     var data = {
                         type: 'upload',
                         imgUrl: '',
@@ -300,17 +458,32 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'text':
-                    this.disabled = true
-                    this.sortable.option('disabled', true)
                     var data = {
                         type: 'text',
                         content: ''
                     }
                     this.articleList.push(data)
                     break
+                case 'table':
+                    var data = {
+                        type: 'table',
+                        content: ''
+                    }
+                    this.articleList.push(data)
+                    break
+                case 'map':
+                    this.mapData = {
+                        type: 'map',
+                        address: '',
+                        point: '',
+                        content: ''
+                    }
+                    this.isMapBox.value = true
+                    setTimeout(() => {
+                        this.$refs.searchMap.initMap()
+                    }, 0)
+                    break
                 case 'title':
-                    this.disabled = true
-                    this.sortable.option('disabled', true)
                     var data = {
                         type: 'title',
                         title: '',
@@ -320,19 +493,35 @@ export default {
                     this.articleList.push(data)
                     this.selectStyle(0)
                     break
-                case 'change':
-                    this.sortable.option('disabled', !this.sortable.option('disabled'))
-                    this.disabled = !this.disabled
-                    
-                    if (this.sortable.option('disabled')) {
-                        this.articleSave = this.articleList.concat([])
-                        this.articleList = []
-                        setTimeout(() => {
-                            this.articleList = this.articleSave
-                        }, 0)
-                    }
+                case 'look':
+                    this.isLook = !this.isLook
                     break
             }
+        },
+        setMap (data) {
+            if (data.index === '') {
+                var obj = {
+                    type: 'map',
+                    point: data.point,
+                    content: data.content,
+                    address: data.address
+                }
+                this.articleList.push(obj)
+            } else {
+                var obj = this.articleList[data.index]
+                obj.point = data.point
+                obj.content = data.content
+                obj.address = data.address
+            }
+
+            this.isMapBox.value = false
+        },
+        changeMap (index) {
+            this.mapData = Object.assign({}, this.articleList[index])
+            this.isMapBox.value = true
+            setTimeout(() => {
+                this.$refs.searchMap.initMap(index)
+            }, 0)
         },
         delImg (data) {
             this.deleteArticleArea(this.articleList[data.index].id, data.index)
@@ -408,20 +597,20 @@ export default {
         titleBlur (item, index) {
             this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
             this.articleList[index].style = item.style            
-        },
-        preHandl () {}
+        }
     },
     components: {
         draggable,
         upload,
-        ueditor
+        ueditor,
+        searchMap
     }
 }
 </script>
 <style lang="scss">
 .edit-box {
     position: relative;
-    min-height: 300px;
+    min-height: 500px;
 
     .bodyMain {
         padding: 30px 20px 20px;
@@ -438,8 +627,8 @@ export default {
         cursor: pointer;
     }
 
-    #articleArea {
-        min-height: 300px;
+    .list-group {
+        min-height: 500px;
     }
 
     .show-box {
@@ -458,10 +647,29 @@ export default {
     }
 
     .btn-show {
+        margin-bottom: 10px;
+
         .btn-hover {
             display: block;
             margin-top: 10px;
             overflow: hidden;
+
+            .sort-box {
+                float: left;
+
+                .sortInput {
+                    width: 80px;
+                    height: 28px;
+
+                    .el-input__inner {
+                        height: 28px;
+                    }
+
+                    .el-input-group__append {
+                        padding: 0;
+                    }
+                }
+            }
         }
 
         .btns {

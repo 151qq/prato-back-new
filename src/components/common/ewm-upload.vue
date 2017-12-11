@@ -1,40 +1,61 @@
 <template>
   <div class="ewm-upload-box" :style="{width:width}">
-    <label for="ewm-upload">
+    <label :for="idName">
       <img v-if="!curPath" class="img-big"
           src="../../assets/images/img-default.jpg">
       <img v-else class="img-big" :src="curPath">    
     </label>
-    <input class="input-u" id="ewm-upload" type="file" name="" @change="postImg">
+    <input v-if="isOperate" class="input-u" :id="idName" type="file" name="" @change="postImg">
 
-    <div>{{titleName}}</div>
+    <div class="title-box">{{titleName}}</div>
   </div>
 </template>
 <script>
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'titleName', 'width'],
+    props: ['path', 'titleName', 'idName', 'width', 'isOperate'],
     data() {
       return {
-        curPath: ''
+        curPath: '',
+        curTitle: ''
       }
     },
     mounted () {
       this.curPath = this.path
+      this.curTitle = this.titleName
     },
     watch: {
       path () {
         this.curPath = this.path
+        this.curTitle = this.titleName
       }
     },
     methods: {
+      changeTitle () {
+        var data = {
+          url: this.curPath,
+          title: this.curTitle
+        }
+
+        this.$emit('changeImg', data)
+      },
       postImg (e) {
-        util.upFile(e).then(res => {
+        var opotion = {
+          url: 'uploadArticleAreaImage',
+          event: e,
+          data: {
+            fileCode: localStorage.getItem('id'),
+            deleteUrl: this.curPath
+          }
+        }
+
+        util.uploadFile(opotion).then(res => {
           let imgUrl = res.result.result[0]
           this.curPath = imgUrl
           var data = {
             url: this.curPath,
+            title: this.curTitle
           }
           this.$emit('changeImg', data)
         })
@@ -53,19 +74,23 @@ export default {
   .img-big {
     display: block;
     width: 100%;
-    height: 200px;
+    height: 160px;
   }
 
   .input-u {
     display: none;
   }
 
-  div {
+  .title-box {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    border-top: 1px solid #f5f5f5;
     display: block;
     font-size: 14px;
     text-align: center;
     line-height: 36px;
-    border-top: 1px solid #f5f5f5;
   }
 
   .op-btn {

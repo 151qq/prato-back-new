@@ -67,6 +67,26 @@ const routers = [
             resolve(require('./source/source.vue'))
           })
         }
+      },
+      {
+        // 企业信息
+        path: '/enterpriseList',
+        name: 'enterprise-list',
+        component (resolve) {
+          require.ensure(['./enterprise/enterpriseList.vue'], () => {
+            resolve(require('./enterprise/enterpriseList.vue'))
+          })
+        }
+      },
+      {
+        // 企业信息详情
+        path: '/enterpriseDetail',
+        name: 'enterprise-detail',
+        component (resolve) {
+          require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
+            resolve(require('./enterprise/enterpriseDetail.vue'))
+          })
+        }
       }
     ]
   },

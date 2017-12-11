@@ -46,7 +46,6 @@ import util from '../../assets/common/util'
 import formEdit from '../../components/form/formEdit'
 import formArticleBase from '../../components/form/formArticleBase'
 import formArticle from '../../components/form/formArticle'
-import upLoad from '../../components/common/upLoad'
 import listStatistics from '../../components/list/listStatistics'
 import echartGraph from '../../components/common/echart-graph'
 import listComment from '../../components/list/listComment'
@@ -180,7 +179,6 @@ export default {
         formEdit,
         formArticleBase,
         formArticle,
-        upLoad,
         listStatistics,
         echartGraph,
         listComment

@@ -1,9 +1,7 @@
 <template>
     <section>
         <web-header></web-header>
-        <section class="body-box">
-            <router-view ref="showBox"></router-view>
-        </section>
+        <router-view></router-view>
         <web-footer></web-footer>
     </section>
 </template>
@@ -18,17 +16,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-html, body {
-    height: auto;
-
-    #app {
-        height: auto;
-    }
-}
-
-.body-box {
-  padding: 50px 0 0;
-  min-height: 600px;
-}
-</style>

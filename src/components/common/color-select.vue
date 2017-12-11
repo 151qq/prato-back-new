@@ -1,7 +1,7 @@
 <template>
   <div class="color-select-box" :style="{width:width}">
     <div class="color-box">
-      <el-color-picker v-model="color"></el-color-picker>
+      <el-color-picker @change="colorChange" v-model="color"></el-color-picker>
     </div>
 
     <div class="title-box">{{titleName}}</div>
@@ -17,15 +17,11 @@ export default {
       }
     },
     methods: {
-      postImg (e) {
-        util.upFile(e).then(res => {
-          let imgUrl = res.result.result[0]
-          this.curPath = imgUrl
-          var data = {
-            url: this.curPath,
-          }
-          this.$emit('changeImg', data)
-        })
+      colorChange () {
+        var data = {
+          color: this.color,
+        }
+        this.$emit('colorChange', data)
       }
     }
 }
@@ -41,7 +37,7 @@ export default {
   .color-box {
     display: block;
     width: 100%;
-    height: 200px;
+    height: 160px;
   }
 
   .el-color-picker {
@@ -50,7 +46,7 @@ export default {
 
     .el-color-picker__trigger {
       width: 100%;
-      height: 200px;
+      height: 160px;
       border: none;
       border-radius: 0;
       padding: 0;
@@ -62,13 +58,13 @@ export default {
       .el-color-picker__color {
         border: none;
         width: 100%;
-        height: 200px;
+        height: 160px;
 
         .el-icon-close {
           width: 100%;
           text-align: center;
           font-size: 18px;
-          line-height: 198px;
+          line-height: 158px;
           top: 0;
           left: 0;
         }
