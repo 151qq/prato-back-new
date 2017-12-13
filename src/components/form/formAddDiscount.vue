@@ -64,9 +64,9 @@
             <section class="formBox bigF">
               <span>券封面</span>
               <div class="input-box">
-                <upLoad :path="quanData.coverImg"
+                <upload :path="quanData.coverImg"
                     :bg-path="true"
-                    @changeImg="changeImg"></upLoad>
+                    @changeImg="changeImg"></upload>
               </div>
             </section>
             <section class="formBox bigF">
@@ -208,7 +208,7 @@
 </template>
 <script>
 import util from '../../assets/common/util'
-import upLoad from '../../components/common/upLoad'
+import upload from '../../components/common/upload'
 
 export default {
     props: ['isShow'],
@@ -305,7 +305,7 @@ export default {
         }
     },
     components: {
-      upLoad
+      upload
     }
 }
 </script>

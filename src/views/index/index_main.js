@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
   window.scrollTo && window.scrollTo(0, 0)
 
   if (to.name == 'home') {
-    next({ path: '/market' })
+    next({ name: 'market-list' })
     return false
   }
   next()

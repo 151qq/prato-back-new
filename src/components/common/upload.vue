@@ -9,30 +9,6 @@
         <img v-else class="img-big" :src="curPath">
       </label>
       <input type="file" v-if="isOperate" class="ben-input" :id="idFor" @change="postImg($event)">
-      <section v-if="isBtn">
-        <el-button v-if="!noSave"
-            class="op-btn"
-            type="info"
-            :plain="true"
-            size="small"
-            icon="document"
-            @click="savePath">保存</el-button>
-        <el-button v-if="!noDel"
-            class="op-btn"
-            type="danger"
-            :plain="true"
-            size="small"
-            icon="delete"
-            @click="deleImg">删除</el-button>
-
-        <el-button v-if="!noDel"
-            class="op-btn"
-            type="danger"
-            :plain="true"
-            size="small"
-            icon="delete"
-            @click="deleImg">移动</el-button>
-      </section>
     </section>
   </div>
 </template>
@@ -41,10 +17,9 @@ import $ from 'Jquery'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave', 'idName', 'isHouseId', 'isOperate'],
+    props: ['path', 'bgPath', 'idName', 'isOperate'],
     data() {
       return {
-        isShow: false,
         curPath: '',
         idFor: ''
       }
@@ -62,23 +37,14 @@ export default {
       }
     },
     methods: {
-      deleImg () {
-        var data = {
-          index: this.num,
-          id: this.idx
-        }
-        this.$emit('delImg', data)
-      },
       postImg (e) {
         var opotion = {
           url: 'uploadArticleAreaImage',
-          event: e
-        }
-
-        if (this.isHouseId) {
-          opotion.data = {}
-          opotion.data.fileCode = localStorage.getItem('id')
-          opotion.data.deleteUrl = this.curPath
+          event: e,
+          data: {
+            fileCode: '',
+            deleteUrl: this.curPath
+          }
         }
 
         util.uploadFile(opotion).then(res => {
@@ -91,18 +57,6 @@ export default {
           }
           this.$emit('changeImg', data)
         })
-      },
-      resetPath () {
-        this.curPath = ''
-        var data = {
-          index: this.num,
-          url: '',
-          id: this.idx
-        }
-        this.$emit('changeImg', data)
-      },
-      savePath () {
-        this.$emit('saveImg')
       }
     }
 }

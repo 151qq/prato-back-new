@@ -61,7 +61,7 @@ import listMonitor from '../../components/list/listMonitor'
 import listPeopleStar from '../../components/list/listPeopleStar'
 import listArticle from '../../components/list/listArticle'
 import listActivityArticle from '../../components/list/listActivityArticle'
-import upLoad from '../../components/common/upLoad'
+import upload from '../../components/common/upload'
 
 import $ from 'Jquery'
 

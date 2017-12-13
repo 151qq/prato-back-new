@@ -15,8 +15,8 @@
             label="券标题">
           </el-table-column>
           <el-table-column
-            prop="couponScenario"
-            width="110"
+            prop="couponScenarioName"
+            width="240"
             label="券使用场景">
           </el-table-column>
           <el-table-column
@@ -43,8 +43,8 @@
                     <el-option
                       v-for="(item, index) in couponTypes"
                       :key="index"
-                      :label="item.label"
-                      :value="item.type">
+                      :label="item.coupunTypeName"
+                      :value="item.coupunType">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -81,21 +81,13 @@ export default {
             couponType: '',
             couponScenario: ''
           },
-          couponTypes: [
-              {
-                type: 'giftCoupon',
-                label: '礼品券'
-              },
-              {
-                type: 'cashCoupon',
-                label: '代金券'
-              }
-            ],
+          couponTypes: [],
         }
     },
     mounted () {
       this.getList()
       this.getTypes()
+      this.getCouponTypes()
     },
     watch: {
       $route () {
@@ -124,6 +116,19 @@ export default {
           }).then(res => {
               if (res.result.success == '1') {
                   this.useSceneList = res.result.result.coupon_scenario
+              } else {
+                  this.$message.error(res.result.message)
+              }
+          })
+      },
+      getCouponTypes () {
+          util.request({
+              method: 'get',
+              interface: 'getCouponType',
+              data: {}
+          }).then(res => {
+              if (res.result.success == '1') {
+                  this.couponTypes = res.result.result
               } else {
                   this.$message.error(res.result.message)
               }

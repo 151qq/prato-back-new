@@ -88,9 +88,9 @@
             <section class="formBox bigF">
               <span>券封面</span>
               <div class="input-box">
-                <upLoad :path="quanData.couponCover"
+                <upload :path="quanData.couponCover"
                     :bg-path="true"
-                    @changeImg="changeImg"></upLoad>
+                    @changeImg="changeImg"></upload>
               </div>
             </section>
             <section class="formBox">
@@ -150,10 +150,6 @@
                 <span>礼品</span>
                 <el-select class="input-box" v-model="couponGifeRule.giftCode" placeholder="请选择">
                     <el-option
-                      :label="'无'"
-                      :value="''">
-                    </el-option>
-                    <el-option
                       v-for="(item, index) in giftLists"
                       :key="index"
                       :label="item.label"
@@ -172,7 +168,7 @@
 </template>
 <script>
 import util from '../../../assets/common/util'
-import upLoad from '../../../components/common/upLoad'
+import upload from '../../../components/common/upload'
 
 export default {
     data () {
@@ -200,16 +196,7 @@ export default {
               giftCode: ''
             },
             useSceneList: [],
-            couponTypes: [
-              {
-                type: 'giftCoupon',
-                label: '礼品券'
-              },
-              {
-                type: 'cashCoupon',
-                label: '代金券'
-              }
-            ],
+            couponTypes: [],
             products: [
               {
                 id: 0,
@@ -243,6 +230,7 @@ export default {
     mounted () {
       this.getBase()
       this.getTypes()
+      this.getCouponTypes()
     },
     methods: {
         getBase () {
@@ -283,6 +271,19 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     this.useSceneList = res.result.result.coupon_scenario
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
+        },
+        getCouponTypes () {
+            util.request({
+                method: 'get',
+                interface: 'getCouponType',
+                data: {}
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.couponTypes = res.result.result
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -375,7 +376,7 @@ export default {
         }
     },
     components: {
-      upLoad
+      upload
     }
 }
 </script>

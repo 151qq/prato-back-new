@@ -175,8 +175,8 @@
 
         var formData = {
             enterpriseCode: this.$route.query.enterpriseCode,
-            eventTitle: this.addItemForm.title,
-            eventCover: this.addItemForm.url
+            eventPlanTitle: this.addItemForm.title,
+            eventPlanCover: this.addItemForm.url
         }
 
         util.request({

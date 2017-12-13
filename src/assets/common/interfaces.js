@@ -23,6 +23,7 @@ export default {
         "changePassword": platform + "changePassword.json",         //修改密码
         "resetPassword": platform + "resetPassword.json",  // 重置密码
         "imageUpload": platform + 'houses/image/upload.json',
+        uploadFile: platform + 'platformFile/uploadFile.json',
 
         /**
         * 企业 get
@@ -44,7 +45,10 @@ export default {
         /**
         * 我的素材库 get
         */
-        getSource: '/static/api/source/getSource.json',
+        listPage: platform + 'material/listPage.json',
+        materialFolderInsert: platform + 'material/materialFolderInsert.json',
+        materialFolderDelete: platform + 'material/materialFolderDelete.json',
+        materialFolderUpdate: platform + 'material/materialFolderUpdate.json',
         /**
         * 我的素材库大图 get
         * id 素材分类id
@@ -160,6 +164,7 @@ export default {
         couponInfoGet: platform + 'coupon/couponInfoGet.json',
         couponInfoUpdate: platform + 'coupon/couponInfoUpdate.json',
         couponInfoChangeStatus: platform + 'coupon/couponInfoChangeStatus.json',
+        getCouponType: platform + 'coupon/getCouponType.json',
 
 
 

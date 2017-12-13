@@ -42,9 +42,9 @@
         <section class="baseInput bigB">
           <span>标准照片</span>
           <div class="input-box">
-            <upLoad :path="base.coverImg"
+            <upload :path="base.coverImg"
                 :bg-path="true"
-                @changeImg="changeImg"></upLoad>
+                @changeImg="changeImg"></upload>
           </div>
         </section>
         <section class="baseInput bigB">
@@ -102,7 +102,7 @@
 <script>
 import './common/form.scss'
 import util from '../../assets/common/util'
-import upLoad from '../../components/common/upLoad'
+import upload from '../../components/common/upload'
 import selectBox from '../../components/common/select-box'
 export default {
     data () {
@@ -282,7 +282,7 @@ export default {
         }
     },
     components: {
-      upLoad,
+      upload,
       selectBox
     }
 }

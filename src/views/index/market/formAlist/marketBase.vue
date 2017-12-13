@@ -55,9 +55,9 @@
         <section class="baseInput bigB">
           <span>标准照片</span>
           <div class="input-box">
-            <upLoad :path="base.eventPlanCover"
+            <upload :path="base.eventPlanCover"
                 :bg-path="true"
-                @changeImg="changeImg"></upLoad>
+                @changeImg="changeImg"></upload>
           </div>
         </section>
         <!-- <section class="baseInput bigB">
@@ -114,7 +114,7 @@
 </template>
 <script>
 import util from '../../../../assets/common/util'
-import upLoad from '../../../../components/common/upLoad'
+import upload from '../../../../components/common/upload'
 import selectBox from '../../../../components/common/select-box'
 export default {
     data () {
@@ -177,7 +177,7 @@ export default {
         }
     },
     components: {
-      upLoad,
+      upload,
       selectBox
     }
 }

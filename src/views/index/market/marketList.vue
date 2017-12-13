@@ -6,7 +6,7 @@
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <item-list></item-list>
+            <item-list ref="contentBox"></item-list>
         </div>
     </div>
 </template>

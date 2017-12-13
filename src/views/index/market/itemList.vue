@@ -38,7 +38,7 @@ export default {
       }
     },
     methods: {
-        getList () {
+        getList (type) {
             var formData = {
                 enterpriseCode: this.$route.query.type,
                 pageSize: this.pageSize,
@@ -60,7 +60,11 @@ export default {
                 }
 
                 this.total = res.result.total
-                this.marketList = this.marketList.concat(res.result.result)
+                if (type) {
+                    this.marketList = res.result.result
+                } else {
+                    this.marketList = this.marketList.concat(res.result.result)
+                }
             })
         },
         loadMore () {

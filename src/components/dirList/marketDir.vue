@@ -18,7 +18,6 @@
 
                     <div  class="btn-box">
                         <i class="el-icon-plus btn-icon"
-                            v-if="!item.status"
                             @click.stop="addItem(item.enterpriseCode)"></i>
                     </div>
                 </div>
@@ -160,15 +159,15 @@
           return
         }
 
-        if (!this.addItemForm.url) {
-          this.$message.error('方案封面不能为空！')
-          return
-        }
+        // if (!this.addItemForm.url) {
+        //   this.$message.error('方案封面不能为空！')
+        //   return
+        // }
 
         var formData = {
             enterpriseCode: this.addCode,
-            eventTitle: this.addItemForm.title,
-            eventCover: this.addItemForm.url
+            eventPlanTitle: this.addItemForm.title,
+            eventPlanCover: this.addItemForm.url
         }
 
         util.request({
@@ -179,7 +178,10 @@
             if (res.result.success == '1') {
               this.isAddItem = false
               this.pageNumber = 1
-              this.loadList()
+              this.loadList('reload')
+
+              this.$parent.$refs.contentBox.pageNumber = 1
+              this.$parent.$refs.contentBox.getList('reload')
             } else {
               this.$message.error(res.result.message)
             }
