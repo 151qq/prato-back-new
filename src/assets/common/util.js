@@ -15,11 +15,19 @@ export default {
         var second = date.getSeconds()
         return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
     },
+    formDataDate (str) {
+        var dateStr = new Date(str)
+        var year = dateStr.getFullYear()
+        var monthStr = dateStr.getMonth() + 1
+        var dayStr = dateStr.getDate()
+        var month = monthStr < 10 ? '0' + monthStr : monthStr
+        var day = dayStr < 10 ? '0' + dayStr : dayStr
+        return year + '-' + month + '-' + day
+    },
     range: function (n) {
         n = n.toString()
         return n[1] ? n : '0' + n
     },
-
     request: (option) => {
         let method = option.method ? option.method : 'get';
 

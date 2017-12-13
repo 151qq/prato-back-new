@@ -33,6 +33,14 @@ export default {
         removeEnterpriseInfo: platform + 'enterprise/removeEnterpriseInfo.json',
         disOfEnterpriseInfo: platform + 'enterprise/disOfEnterpriseInfo.json',
 
+
+        /**
+        * 客服 get
+        */
+        insertCallCenterConfig: platform + 'callCenterConfig/insertCallCenterConfig.json',
+        updateCallCenterConfig: platform + 'callCenterConfig/updateCallCenterConfig.json',
+        findCallCenterConfig: platform + 'callCenterConfig/findCallCenterConfig.json',
+
         /**
         * 我的素材库 get
         */
@@ -138,32 +146,20 @@ export default {
         /**
         * 营销树 get
         */
-        marketTree: '/static/api/market/marketTree.json',
-        /**
-        * 营销监控表线上 get
-        * id 营销方案序列标识
-        */
-        monitorData: '/static/api/market/monitorData.json',
-        /**
-        * 营销监控表线下 get
-        * id 营销方案序列标识
-        */
-        monitorOutline: '/static/api/market/monitorOutline.json',
-        /**
-        * 营销监控表外呼 get
-        * id 营销方案序列标识
-        */
-        monitorNoline: '/static/api/market/monitorNoline.json',
-        /**
-        * 营销监控表外呼 get
-        * id 营销方案序列标识
-        */
-        nolineInfo: '/static/api/market/nolineInfo.json',
-        /**
-        * 线下活动图片 get
-        * id 营销方案序列标识
-        */
-        activityImg: '/static/api/market/activityImg.json',
+        eventInfoList: platform + 'event/eventInfoList.json',
+        eventInfoDelete: platform + 'event/eventInfoDelete.json',
+        eventInfoGet: platform + 'event/eventInfoGet.json',
+        eventInfoInsert: platform + 'event/eventInfoInsert.json',
+        eventInfoUpdate: platform + 'event/eventInfoUpdate.json',
+        eventInfoChangeStatus: platform + 'event/eventInfoChangeStatus.json',
+
+
+        couponInfoList: platform + 'coupon/couponInfoList.json',
+        couponInfoDelete: platform + 'coupon/couponInfoDelete.json',
+        couponInfoInsert: platform + 'coupon/couponInfoInsert.json',
+        couponInfoGet: platform + 'coupon/couponInfoGet.json',
+        couponInfoUpdate: platform + 'coupon/couponInfoUpdate.json',
+        couponInfoChangeStatus: platform + 'coupon/couponInfoChangeStatus.json',
 
 
 

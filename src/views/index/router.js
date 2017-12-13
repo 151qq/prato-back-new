@@ -9,16 +9,6 @@ const routers = [
     },
     children: [
       {
-        // 营销计划
-        path: '/market',
-        name: 'market',
-        component (resolve) {
-          require.ensure(['./article/market.vue'], () => {
-            resolve(require('./article/market.vue'))
-          })
-        }
-      },
-      {
         // 推广文章
         path: '/spread',
         name: 'spread',
@@ -49,16 +39,6 @@ const routers = [
         }
       },
       {
-        // 企业注册
-        path: '/company',
-        name: 'company',
-        component (resolve) {
-          require.ensure(['./company/company.vue'], () => {
-            resolve(require('./company/company.vue'))
-          })
-        }
-      },
-      {
         // 素材库
         path: '/source',
         name: 'source',
@@ -85,6 +65,46 @@ const routers = [
         component (resolve) {
           require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
             resolve(require('./enterprise/enterpriseDetail.vue'))
+          })
+        }
+      },
+      {
+        // 客服配置
+        path: '/callcenter',
+        name: 'callcenter',
+        component (resolve) {
+          require.ensure(['./callcenter/callcenter.vue'], () => {
+            resolve(require('./callcenter/callcenter.vue'))
+          })
+        }
+      },
+      {
+        // 营销方案
+        path: '/marketList',
+        name: 'market-list',
+        component (resolve) {
+          require.ensure(['./market/marketList.vue'], () => {
+            resolve(require('./market/marketList.vue'))
+          })
+        }
+      },
+      {
+        // 营销方案详情
+        path: '/marketDetail',
+        name: 'market-detail',
+        component (resolve) {
+          require.ensure(['./market/marketDetail.vue'], () => {
+            resolve(require('./market/marketDetail.vue'))
+          })
+        }
+      },
+      {
+        // 营销方案
+        path: '/coupon',
+        name: 'coupon',
+        component (resolve) {
+          require.ensure(['./coupon/coupon.vue'], () => {
+            resolve(require('./coupon/coupon.vue'))
           })
         }
       }

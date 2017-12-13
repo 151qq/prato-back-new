@@ -476,7 +476,8 @@ export default {
     .source-box {
         position: relative;
         width: 1160px;
-        margin: 40px auto;
+        min-height: 600px;
+        margin: 80px auto 40px;
 
         .el-dialog--small {
             width: 490px;

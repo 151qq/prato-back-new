@@ -2,17 +2,17 @@
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
         <section class="leftBox">
-            <enterprise-dir ref="listBox" :path-name="'enterprise-list'"></enterprise-dir>
+            <market-dir ref="listBox" :path-name="'market-list'"></market-dir>
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
-            <enterprise-form></enterprise-form>
+            <item-list></item-list>
         </div>
     </div>
 </template>
 <script>
-import enterpriseDir from '../../../components/dirList/enterpriseDir'
-import enterpriseForm from './enterpriseForm.vue'
+import marketDir from '../../../components/dirList/marketDir'
+import itemList from './itemList.vue'
 import util from '../../../assets/common/util'
 
 export default {
@@ -20,8 +20,8 @@ export default {
         return {}
     },
     components: {
-        enterpriseDir,
-        enterpriseForm
+        marketDir,
+        itemList
     }
 }
 </script>

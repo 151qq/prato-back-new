@@ -21,15 +21,15 @@
 
                     <div  class="btn-box">
                         <i class="el-icon-circle-close btn-icon"
-                            v-if="!item.status"
                             @click.stop="deleteItem(item.enterpriseCode, index)"></i>
                     </div>
                 </div>
             </router-link>
         </el-menu-item>
     </el-menu>
-    <section class="head-part" v-if="treeData.length < total">
-        <span class="more-load" @click="loadMore">加载更多...</span>
+    <section class="page-box">
+      <span v-if="pageNumber > 1" class="page-up" @click="loadUp">上一页</span>
+      <span v-if="pageNumber < maxPage" class="page-down" @click="loadDown">下一页</span>
     </section>
 
     <el-dialog title="添加企业" :visible.sync="isAddEnterprise">
@@ -65,6 +65,7 @@
         },
         pageSize: 20,
         pageNumber: 1,
+        maxPage: 1,
         total: 0
       }
     },
@@ -85,14 +86,6 @@
           pageNumber: this.pageNumber
         }
 
-        // 不改变已加载刷新
-        if (type != 'addMore') {
-          formData = {
-            pageNumber: 1,
-            pageSize: this.pageNumber * this.pageSize
-          }
-        }
-
         util.request({
           method: 'get',
           interface: 'showAllEnt',
@@ -104,13 +97,8 @@
           }
 
           this.total = res.result.total
-
-          // 不改变已加载刷新
-          if (type != 'addMore') {
-            this.treeData = res.result.result
-          } else {
-            this.treeData = this.treeData.concat(res.result.result)
-          }
+          this.maxPage = this.total / this.pageSize
+          this.treeData = res.result.result
 
           // 无类型或需要重新加载目录时
           if (!this.treeData.length) {
@@ -118,7 +106,7 @@
           }
 
           // 删除非当前选中或刷新页面，保留当前
-          if (this.$route.query.type && type != 'reloadTop') {
+          if (type) {
             setTimeout(() => {
               this.activeName = String(this.$route.query.index)
             }, 0)
@@ -139,8 +127,21 @@
           this.$router.push(pathObj)
         })
       },
-      loadMore () {
-        this.loadList('addMore')
+      loadDown () {
+        this.pageNumber++
+        if (this.pageNumber > this.maxPage) {
+          this.pageNumber = this.maxPage
+          return
+        }
+        this.loadList()
+      },
+      loadUp () {
+        this.pageNumber--
+        if (this.pageNumber < 1) {
+          this.pageNumber = 1
+          return
+        }
+        this.loadList()
       },
       addItem () {
         this.isAddEnterprise = true
@@ -168,7 +169,8 @@
         }).then(res => {
             if (res.result.success == '1') {
               this.isAddEnterprise = false
-              this.loadList('reloadTop')
+              this.pageNumber = 1
+              this.loadList()
             } else {
               this.$message.error(res.result.message)
             }
@@ -197,11 +199,7 @@
           }
         }).then(res => {
           if (res.result.success == '1') {
-            if (this.$route.query.index == index) {
-              this.loadList('reloadTop')
-            } else {
-              this.loadList('reload')
-            }
+            this.loadList()
 
             this.$message({
               type: 'success',
