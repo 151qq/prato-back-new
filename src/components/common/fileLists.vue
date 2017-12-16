@@ -1,12 +1,36 @@
 <template>
-    <el-dialog title="素材库" :visible.sync="seData.isShow">
+    <el-dialog title="素材库" :visible.sync="selectData.isShow">
       <div class="picBox">
-        <div class="piclist">
-            <div class="iBox" v-for="(item, index) in lists" :class="curIndex === index ? 'active' : ''">
-                <img :src="'http://'+item.link" @click="selPic(item.link, index)">
-            </div>
-        </div>
-        <div class="more" @click="tplNextPage">加载更多</div>
+        <section v-for="(item, index) in mediaList"
+                    v-if="mediaList.length"
+                    class="check-box">
+
+            <section class="sou-box"
+                      :class="curIndex === index ? 'active' : ''"
+                      @click="selPic(item, index)">
+                <div class="cover-box">
+                    <img :src="docType == 'pic' ? item.fileCode : item.docCover">
+                </div>
+                <div class="title-box">
+                    <div class="title" v-text="item.docTitle"></div>
+                    <span class="time">
+                        {{item.docCreateTime}}
+                    </span>
+                </div>
+            </section>
+        </section>
+        <section v-else class="no-img">
+            暂无数据，请到素材库上传！！！
+        </section>
+        
+        <div class="clear"></div>
+        <el-pagination
+            v-if="total"
+            class="page-box"
+            @current-change="itemPageChange"
+            layout="prev, pager, next"
+            :total="total">
+        </el-pagination>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="selectData.isShow = false">取 消</el-button>
@@ -18,48 +42,86 @@
 import util from '../../assets/common/util';
 
 export default{
-    props: ['selectData'],
+    props: ['selectData', 'docType'],
     data(){
         return {
-          lists: [],
+          mediaList: [],
           pageNumber: 1,
-          pageSize: 10,
+          pageSize: 9,
+          total: 0,
           curIndex: '',
+          curCode: '',
           curPath: '',
-          seData: {}
+          curFile: ''
         }
     },
     mounted (){
-      this.seData = this.selectData
-      this.getList()
+      if (this.docType) {
+        this.getMediaList(this.docType)
+      }
+    },
+    watch: {
+      docType () {
+        this.getMediaList('intePage')
+      }
     },
     methods: {
-        selPic(link, index){
+        selPic(item, index){
           this.curIndex = index
-          this.curPath = 'http://' + link
+          if (this.docType == 'pic') {
+            this.curFile = ''
+            this.curPath = item.fileCode
+            this.curCode = item.docCode
+          } else if (this.docType == 'media') {
+            this.curPath = item.docCover
+            this.curFile = item.fileCode
+            this.curCode = item.docCode
+          } else {
+            this.curFile = ''
+            this.curPath = item.fileCode
+            this.curCode = item.docCode
+          }
+          
         },
         confirmH () {
-          this.seData = {
-              isShow: false,
-              url: this.curPath
-          },
-          this.$emit('suSelect', this.seData)
+          var data = {
+              url: this.curPath,
+              file: this.curFile,
+              code: this.curCode
+          }
+          this.$emit('suSelect', data)
         },
-        tplNextPage(){
-            this.pageNumber++
-            this.getList()
+        itemPageChange (size) {
+            this.pageNumber = size
+            this.getMediaList()
         },
-        getList () {
+        getMediaList (type) {
+          if (this.type) {
+            this.pageNumber = 1
+          }
+
           util.request({
               method: 'get',
-              interface: 'mediaList',
+              interface: 'listPage',
               data: {
-                  pageSize: this.pageSize,
-                  pageNumber: this.pageNumber
+                  enterpriseCode: this.$route.query.enterpriseCode,
+                  docType: this.docType,
+                  pageNumber: this.pageNumber,
+                  pageSize: this.pageSize
               }
-          }).then((res) => {
-              this.lists = this.pageNumber > 1 ? this.lists.concat(res.result.result) : res.result.result
-          })
+          }).then(res => {
+              if (res.result.success == '1') {
+                  this.total = Number(res.result.totalPages)
+
+                  res.result.result.forEach((item) => {
+                      item.docCreateTime = item.docCreateTime.split(' ')[0]
+                  })
+
+                  this.mediaList = res.result.result
+              } else {
+                  this.$message.error(res.result.message)
+              }
+          })       
         }
     }
 }
@@ -68,50 +130,63 @@ export default{
 .picBox {
   max-height: 360px;
   overflow: scroll;
-}
 
-.piclist {
-  height: auto;
-  overflow: hidden;
-  text-align: center;
-
-  .iBox {
-    width: 169px;
-    height: 169px;
-    overflow: hidden;
-    margin-top: 10px;
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
-    padding: 10px;
-
-    &.active {
-      background: #f0f0f0;
-      border-radius: 5px;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      vertical-align: top;
-      &:hover, &:active {
-        border: 2px solid #3c3c3c;
-        cursor: pointer;
-      }
-    }
+  .el-dialog--small {
+    width: 640px;
   }
 
-}
+  .sou-box {
+      float: left;
+      width: 170px;
+      margin: 0 5px 15px;
+      border: 1px solid #D3DCE6;
+      border-radius: 3px;
 
-.more {
-  height: 30px;
-  overflow: hidden;
-  font: 14px;
-  line-height: 30px;
-  background: #eeeeee;
-  color: #3c3c3c;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 20px;
+      &.active {
+        border-color: #20A0FF;
+      }
+
+      .cover-box {
+          height: 170px;
+          overflow: hidden;
+          cursor: pointer;
+          
+          img {
+              display: block;
+              width: 100%;
+              min-height: 170px;
+          }
+      }
+
+      .title-box {
+          padding: 5px 10px;
+          border-top: 1px solid #D3DCE6;
+          
+          .title {
+              display: block;
+              font-size: 14px;
+              line-height: 20px;
+              border: none;
+              color: #000000;
+          }
+
+          .time {
+              display: block;
+              font-size: 12px;
+              line-height: 20px;
+              color: #999999;
+          }
+
+          .btn-box {
+             float: right;
+             font-size: 14px;
+             color: #333333;
+
+             i, label {
+                  cursor: pointer;
+             }
+          }
+      }
+  }
 }
 </style>

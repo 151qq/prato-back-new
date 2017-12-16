@@ -3,7 +3,7 @@
         <section class="item-list-out">
             <router-link class="item-list-box"
                          v-for="(item, index) in marketList"
-                         :to="{name: 'market-detail', query: {index: index, type: item.eventCode, enterprise: item.enterpriseCode, page: pageNumber}}">
+                         :to="{name: 'market-detail', query: {index: index, type: item.eventCode, enterpriseCode: item.enterpriseCode}}">
                 <img class="item-img" :src="item.eventPlanCover">
                 <div class="item-title">{{item.eventPlanTitle}}</div>
             </router-link>
@@ -26,7 +26,7 @@ export default {
         }
     },
     mounted () {
-        if (this.$route.query.type) {
+        if (this.$route.query.enterpriseCode) {
             this.getList()
         }
     },
@@ -40,7 +40,7 @@ export default {
     methods: {
         getList (type) {
             var formData = {
-                enterpriseCode: this.$route.query.type,
+                enterpriseCode: this.$route.query.enterpriseCode,
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber
             }
@@ -48,11 +48,7 @@ export default {
             util.request({
                 method: 'get',
                 interface: 'eventInfoList',
-                data: {
-                    enterpriseCode: this.$route.query.type,
-                    pageSize: this.pageSize,
-                    pageNumber: this.pageNumber
-                }
+                data: formData
             }).then(res => {
                 if (res.result.success == '0') {
                     this.$message.error(res.result.message)

@@ -17,7 +17,7 @@ import $ from 'Jquery'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'bgPath', 'idName', 'isOperate', 'fileCode', 'fileType', 'enterpriseCode'],
+    props: ['path', 'bgPath', 'idName', 'isOperate'],
     data() {
       return {
         curPath: '',
@@ -42,19 +42,16 @@ export default {
           url: 'uploadFile',
           event: e,
           data: {
-            fileCode: '',
-            enterpriseCode: this.enterpriseCode,
-            fileType: this.fileType,
-            oldFileCode: this.fileCode,
-            deleteUrl: this.curPath
+            enterpriseCode: this.$route.query.enterpriseCode,
+            fileType: 'pic',
+            oldFilePath: this.curPath
           }
         }
 
         util.uploadFile(opotion).then(res => {
           let result = res.result.result
-          this.curPath = result.ossPath
+          this.curPath = result.filePath
           var data = {
-            fileCode: result.fileCode,
             url: this.curPath
           }
           this.$emit('changeImg', data)

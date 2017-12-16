@@ -2,6 +2,7 @@ const routers = [
   {
     path: '/',
     name: 'home',
+    redirect: '/marketList',
     component (resolve) {
       require.ensure(['./main.vue'], () => {
         resolve(require('./main.vue'))
@@ -10,7 +11,7 @@ const routers = [
     children: [
       {
         // 推广文章
-        path: '/spread',
+        path: 'spread',
         name: 'spread',
         component (resolve) {
           require.ensure(['./article/spread.vue'], () => {
@@ -20,17 +21,27 @@ const routers = [
       },
       {
         // 产品中心
-        path: '/product',
-        name: 'product',
+        path: 'productList',
+        name: 'product-list',
         component (resolve) {
-          require.ensure(['./article/product.vue'], () => {
-            resolve(require('./article/product.vue'))
+          require.ensure(['./product/productList.vue'], () => {
+            resolve(require('./product/productList.vue'))
+          })
+        }
+      },
+      {
+        // 产品中心
+        path: 'productDetail',
+        name: 'product-detail',
+        component (resolve) {
+          require.ensure(['./product/productDetail.vue'], () => {
+            resolve(require('./product/productDetail.vue'))
           })
         }
       },
       {
         // 礼品中心
-        path: '/gift',
+        path: 'gift',
         name: 'gift',
         component (resolve) {
           require.ensure(['./article/gift.vue'], () => {
@@ -40,7 +51,7 @@ const routers = [
       },
       {
         // 素材库
-        path: '/source',
+        path: 'source',
         name: 'source',
         component (resolve) {
           require.ensure(['./source/source.vue'], () => {
@@ -50,7 +61,7 @@ const routers = [
       },
       {
         // 企业信息
-        path: '/enterpriseList',
+        path: 'enterpriseList',
         name: 'enterprise-list',
         component (resolve) {
           require.ensure(['./enterprise/enterpriseList.vue'], () => {
@@ -60,7 +71,7 @@ const routers = [
       },
       {
         // 企业信息详情
-        path: '/enterpriseDetail',
+        path: 'enterpriseDetail',
         name: 'enterprise-detail',
         component (resolve) {
           require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
@@ -70,7 +81,7 @@ const routers = [
       },
       {
         // 客服配置
-        path: '/callcenter',
+        path: 'callcenter',
         name: 'callcenter',
         component (resolve) {
           require.ensure(['./callcenter/callcenter.vue'], () => {
@@ -80,7 +91,7 @@ const routers = [
       },
       {
         // 营销方案
-        path: '/marketList',
+        path: 'marketList',
         name: 'market-list',
         component (resolve) {
           require.ensure(['./market/marketList.vue'], () => {
@@ -90,7 +101,7 @@ const routers = [
       },
       {
         // 营销方案详情
-        path: '/marketDetail',
+        path: 'marketDetail',
         name: 'market-detail',
         component (resolve) {
           require.ensure(['./market/marketDetail.vue'], () => {
@@ -100,7 +111,7 @@ const routers = [
       },
       {
         // 营销方案
-        path: '/coupon',
+        path: 'coupon',
         name: 'coupon',
         component (resolve) {
           require.ensure(['./coupon/coupon.vue'], () => {

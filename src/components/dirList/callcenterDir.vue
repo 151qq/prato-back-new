@@ -7,7 +7,7 @@
             :index="index + ''">
             <router-link
                 class="lists-box"
-                :to="{name: pathName, query: {index: index, type: item.enterpriseCode}}">
+                :to="{name: pathName, query: {index: index, enterpriseCode: item.enterpriseCode}}">
                 
                 <div class="img-box">
                   <img v-if="item.enterpriseLogoUrl" :src="item.enterpriseLogoUrl">
@@ -90,7 +90,7 @@
             name: this.pathName,
             query: {
               index: 0,
-              type: this.treeData[0].enterpriseCode
+              enterpriseCode: this.treeData[0].enterpriseCode
             }
           }
 

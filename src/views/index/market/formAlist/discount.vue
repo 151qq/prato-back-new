@@ -26,7 +26,7 @@
               <i class="el-icon-delete2" @click="deleteDiscount(scope.row)"></i>
 
               <router-link class="el-icon-document black" target="_blank"
-                            :to="{name: 'coupon', query: {index: $route.query.index,enterprise: $route.query.enterprise, market: $route.query.type, page: $route.query.page, code: scope.row.couponCode}}">
+                            :to="{name: 'coupon', query: {index: $route.query.index, enterpriseCode: $route.query.enterpriseCode, market: $route.query.type, page: $route.query.page, code: scope.row.couponCode}}">
               </router-link>
               
             </template>
@@ -168,7 +168,7 @@ export default {
           return false
         }
 
-        this.quanData.enterpriseCode = this.$route.query.enterprise
+        this.quanData.enterpriseCode = this.$route.query.enterpriseCode
         this.quanData.eventCode = this.$route.query.type
 
         this.insertQuan()
@@ -184,7 +184,7 @@ export default {
                 name: 'coupon',
                 query: {
                   index: this.$route.query.index,
-                  enterprise: this.$route.query.enterprise,
+                  enterprise: this.$route.query.enterpriseCode,
                   market: this.$route.query.type,
                   page: this.$route.query.page,
                   code: res.result.result

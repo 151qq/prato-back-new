@@ -1,6 +1,6 @@
 <template>
     <div class="form-discount">
-        <section class="float-box">
+        <section class="float-form-box">
           <!-- 基本信息 -->
           <div class="formDiscount">
             <section class="formBox">
@@ -160,9 +160,10 @@
           </template>
 
           <div class="clear"></div>
-          <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-          @click="saveQuan">保存</el-button>
         </div>
+        <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+            @click="saveQuan">保存</el-button>
+        <div class="clear"></div>
       </section>
     </div>
 </template>
@@ -326,7 +327,7 @@ export default {
           }
 
           var codeData = {
-            enterpriseCode: this.$route.query.enterprise,
+            enterpriseCode: this.$route.query.enterpriseCode,
             eventCode: this.$route.query.market
           }
 
@@ -362,7 +363,7 @@ export default {
                   name: 'market-detail',
                   query: {
                     index: this.$route.query.index,
-                    enterprise: this.$route.query.enterprise,
+                    enterprise: this.$route.query.enterpriseCode,
                     type: this.$route.query.market,
                     page: this.$route.query.page
                   }
@@ -380,90 +381,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-.form-discount {
-    min-height: 600px;
-    padding-top: 30px;
-
-    .float-box {
-        width: 1000px;
-        margin: auto;
-
-        .line-bold {
-            width: 200%;
-            height: 9px;
-            border-top: 1px solid #99A9BF;
-            background: #F9F9F9;
-            margin: 30px 0 30px -30%;
-        }
-    }
-
-    .clear {
-        clear: both;
-    }
-}
-
-.formDiscount {
-    position: relative;
-    width: 110%;
-    overflow: hidden;
-
-    .formBox {
-        float: left;
-        margin: 0 20px 20px 0;
-
-        &>span {
-            float: left;
-            width: 100px;
-            font-size: 14px;
-            color: #1F2D3D;
-            line-height: 30px;
-            height: 30px;
-        }
-
-        .btn-a {
-          height: 30px;
-        }
-
-        .input-box {
-            float: left;
-            width: 220px;
-
-            input {
-                height: 30px;
-            }
-        }
-    }
-
-    .bigF {
-        .input-box {
-            width: 900px;
-
-            .el-select {
-                width: 900px;
-            }
-        }
-
-        .el-textarea {
-          width: 900px;
-        }
-    }
-
-    .save-btn {
-        float: right;
-        margin-top: 10px;
-        margin-left: 15px;
-        margin-right: 100px;
-    }
-
-    .back-btn {
-      float: right;
-      margin-top: 10px;
-      margin-left: 15px;
-    }
-
-    &:last-child {
-        margin-bottom: 30px;
-    }
-}
-</style>

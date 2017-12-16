@@ -1,7 +1,10 @@
 <template>
     <section>
         <web-header></web-header>
-        <router-view></router-view>
+        <section class="mid-body-box">
+            <router-view></router-view>
+        </section>
+        
         <web-footer></web-footer>
     </section>
 </template>
@@ -16,3 +19,8 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+.mid-body-box {
+    min-height: 500px;
+}
+</style>

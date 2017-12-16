@@ -49,11 +49,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // 滚动置顶
   window.scrollTo && window.scrollTo(0, 0)
-
-  if (to.name == 'home') {
-    next({ name: 'market-list' })
-    return false
-  }
   next()
 })
 

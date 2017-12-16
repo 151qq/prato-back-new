@@ -56,8 +56,9 @@
           <span>标准照片</span>
           <div class="input-box">
             <upload :path="base.eventPlanCover"
-                :bg-path="true"
-                @changeImg="changeImg"></upload>
+                    :bg-path="true"
+                    :is-operate="isOperate"
+                    @changeImg="changeImg"></upload>
           </div>
         </section>
         <!-- <section class="baseInput bigB">

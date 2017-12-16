@@ -17,7 +17,7 @@
 </template>
 <script>
 import util from '../../assets/common/util'
-import swiperImg from '../../components/common/swiper-img.vue'
+import swiperImg from './swiper-img.vue'
 
 export default {
     props: ['imgLists', 'idName'],
@@ -95,15 +95,15 @@ export default {
       }
     }
 
+    .img-input {
+      display: none;
+    }
+
     &:hover {
       .delete-box {
         display: block;
       }
     }
-  }
-
-  .img-input {
-    display: none;
   }
 }
 </style>

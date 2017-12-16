@@ -152,10 +152,9 @@
     </section>
 </template>
 <script>
-import draggable from 'vuedraggable'
 import util from '../../assets/common/util'
-import upload from '../../components/common/upload'
-import ueditor from '../../components/common/ueditor'
+import upload from './upload'
+import ueditor from './ueditor'
 import $ from 'Jquery'
 import sortable from 'sortablejs'
 import searchMap from '../../components/common/searchMap'
@@ -600,7 +599,6 @@ export default {
         }
     },
     components: {
-        draggable,
         upload,
         ueditor,
         searchMap

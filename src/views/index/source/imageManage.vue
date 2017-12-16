@@ -3,14 +3,14 @@
         <section class="btns-op">
             <img v-show="!isCheck" src="../../../assets/images/select-icon.png" @click="setCheck">
             <img v-show="isCheck" src="../../../assets/images/select-now.png" @click="setCheck">
-            <span></span>
+            <span v-if="showType != 'dir'"></span>
             <img :class="isCheck ? '' : 'disable'"
                     src="../../../assets/images/import-icon.png"
                     v-if="showType != 'dir'"
                     @click="setImport">
             <span></span>
             <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/delete-icon-n.png"
-                    @click="deleteImgs">
+                    @click="deleteOpt">
             <span></span>
             <div v-if="showType == 'dir'" class="up-box">
                 <img @click="addDir" src="../../../assets/images/adds-icon.png">
@@ -31,8 +31,8 @@
                         class="select-box"
                         :class="selectDirList.indexOf(item.docCode) > -1 ? 'active' : ''"></section>
                 <section class="sou-box">
-                    <div class="cover-box" @click="showItems(item)">
-                        <img :src="item.filePath">
+                    <div class="cover-box" @click="showItems(item, index)">
+                        <img :src="item.docCover">
                     </div>
                     <div class="title-box">
                         <div class="title" v-text="item.docTitle"></div>
@@ -46,7 +46,7 @@
                     </div>
                 </section>
             </section>
-            <section v-else class="no-img">
+            <section v-if="!dirDatas.length" class="no-img">
                 当前暂无目录，请添加目录！！！
             </section>
             <div class="clear"></div>
@@ -72,8 +72,8 @@
                             class="select-box"
                             :class="selectItemList.indexOf(item.docCode) > -1 ? 'active' : ''"></section>
                 <section class="sou-box">
-                    <div class="cover-box">
-                        <img :src="item.filePath">
+                    <div class="cover-box" @click.stop="showBigImg(item)">
+                        <img :src="item.fileCode">
                     </div>
                     <div class="title-box">
                         <div class="title" v-text="item.docTitle"></div>
@@ -87,7 +87,7 @@
                     </div>
                 </section>
             </section>
-            <section v-else class="no-img">
+            <section v-if="!sourceDatas.length" class="no-img">
                 当前无图，请上传图片！！！
             </section>
             
@@ -105,14 +105,11 @@
         <el-dialog title="目录" :visible.sync="isAddDir">
           <el-form :label-position="'left'" :model="addDirForm" label-width="80px">
             <el-form-item label="目录封面">
-                <uploadFile :path="addDirForm.filePath"
+                <upload-file :path="addDirForm.docCover"
                         :is-operate="true"
                         :bg-path="true"
                         :id-name="'dirCover' + fileType"
-                        :file-type="'dir'"
-                        :file-code="addDirForm.docCover"
-                        :enterprise-code="$route.query.type"
-                        @changeImg="changeDirImg"></uploadFile>
+                        @changeImg="changeDirImg"></upload-file>
             </el-form-item>
             <el-form-item label="目录名称">
                 <el-input v-model="addDirForm.docTitle" placeholder="请输入内容"></el-input>
@@ -122,7 +119,7 @@
                     type="textarea"
                     :rows="3"
                     placeholder="请输入内容"
-                    v-model="addDirForm.desc">
+                    v-model="addDirForm.docDesc">
                 </el-input>
             </el-form-item>
             
@@ -136,14 +133,11 @@
         <el-dialog title="图片" :visible.sync="isAddItem">
           <el-form :label-position="'left'" :model="addItemForm" label-width="80px">
             <el-form-item v-if="!isNotImg" label="图片">
-                <uploadFile :path="addDirForm.docCover"
+                <upload-file :path="addItemForm.fileCode"
                         :is-operate="true"
                         :bg-path="true"
-                        :file-type="'pic'"
                         :id-name="'itemCover' + fileType"
-                        :file-code="addDirForm.fileCode"
-                        :enterprise-code="$route.query.type"
-                        @changeImg="changeItemImg"></uploadFile>
+                        @changeImg="changeItemImg"></upload-file>
             </el-form-item>
             <el-form-item label="图片标题">
                 <el-input v-model="addItemForm.docTitle" placeholder="请输入内容"></el-input>
@@ -182,12 +176,16 @@
                 <el-button type="primary" @click="selectConfirm">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- 大图 -->
+        <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
     </div>
 </template>
 <script>
 import $ from 'Jquery'
 import sortable from 'sortablejs'
 import uploadFile from '../../../components/common/uploadFile.vue'
+import swiperImg from '../../../components/common/swiper-img.vue'
 import util from '../../../assets/common/util'
 
 export default {
@@ -195,23 +193,7 @@ export default {
     data() {
         return {
             dirDatas: [],
-            sourceDatas: [
-                {   
-                    docCode: 'sdfsdfsdfsdf',
-                    docTitle: '第一图片',
-                    docCreateTime: '2017-09-29',
-                    filePath: '/static/images/bench1.png',
-                    docType: 'pic',
-                    docFolder: ''
-                },
-                {   
-                    docCode: 'sdfsdfsdfsdf',
-                    docTitle: '第一图片',
-                    docCreateTime: '2017-09-29',
-                    filePath: '/static/images/bench1.png',
-                    docType: 'dir'
-                }
-            ],
+            sourceDatas: [],
             isCheck: false,
             showType: 'dir',
             isAddDir: false,
@@ -220,7 +202,8 @@ export default {
                 docTitle: '',
                 docCover: '',
                 docDesc: '',
-                filePath: ''
+                fileCode: '',
+                docFolder: ''
             },
             isNotImg: false,
             isAddItem: false,
@@ -229,10 +212,12 @@ export default {
                 docTitle: '',
                 fileCode: '',
                 docDesc: '',
-                filePath: ''
+                docCover: '',
+                docFolder: ''
             },
             checkedLabels: [],
             isselectVisible: false,
+            nowDir: {},
             // 选中的图片
             selectDirList: [],
             selectItemList: [],
@@ -242,10 +227,18 @@ export default {
             dirTotal: 0,
             itemPageNumber: 1,
             itemPageSize: 12,
-            itemTotal: 0
+            itemTotal: 0,
+            isShow: {
+              value: false
+            },
+            index: 0
         }
     },
     mounted () {
+        if (this.$route.query.docCode) {
+            this.showType = 'pic'
+            this.getItems(this.$route.query.docCode)
+        }
         this.getDirs()
     },
     methods: {
@@ -256,9 +249,12 @@ export default {
         },
         addDir () {
             this.addDirForm = {
+                docType: 'dir',
                 docTitle: '',
                 docCover: '',
-                docDesc: ''
+                docDesc: '',
+                fileCode: '',
+                docFolder: this.fileType
             }
 
             this.isAddDir = true
@@ -266,9 +262,12 @@ export default {
         addItem () {
             this.isNotImg = false
             this.addItemForm = {
+                docType: 'pic',
                 docTitle: '',
+                fileCode: '',
+                docDesc: '',
                 docCover: '',
-                docDesc: ''
+                docFolder: this.nowDir.docCode
             }
 
             this.isAddItem = true
@@ -283,12 +282,10 @@ export default {
             this.isAddItem = true
         },
         changeDirImg (data) {
-            this.addDirForm.filePath = data.url
-            this.addDirForm.docCover = data.fileCode
+            this.addDirForm.docCover = data.url
         },
         changeItemImg (data) {
-            this.addItemForm.filePath = data.url
-            this.addItemForm.fileCode = data.fileCode
+            this.addItemForm.fileCode = data.url
         },
         confirmDir () {
             if (!this.addDirForm.docTitle) {
@@ -299,7 +296,7 @@ export default {
                 return false
             }
 
-            if (!this.addDirForm.filePath) {
+            if (!this.addDirForm.docCover) {
                 this.$message({
                     message: '请添加目录封面！',
                     type: 'warning'
@@ -307,8 +304,13 @@ export default {
                 return false
             }
 
-            this.addDirForm.enterpriseCode = this.$route.query.type
-            this.insterDir()
+            this.addDirForm.enterpriseCode = this.$route.query.enterpriseCode
+
+            if (this.addDirForm.docCode) {
+                this.updateDir()
+            } else {
+                this.insterDir()
+            }
         },
         confirmItem () {
             if (!this.addItemForm.docTitle) {
@@ -319,16 +321,21 @@ export default {
                 return false
             }
 
-            if (!this.addItemForm.filePath) {
+            if (!this.addItemForm.fileCode) {
                 this.$message({
-                    message: '请添加图片面！',
+                    message: '请添加图片封面！',
                     type: 'warning'
                 })
                 return false
             }
 
-            this.addItemForm.enterpriseCode = this.$route.query.type
-            this.insterItem()
+            this.addItemForm.enterpriseCode = this.$route.query.enterpriseCode
+
+            if (this.addItemForm.docCode) {
+                this.updateItem()
+            } else {
+                this.insterItem()
+            }
         },
         selectDir (item) {
             var index = this.selectDirList.indexOf(item.docCode)
@@ -346,10 +353,25 @@ export default {
                 this.selectItemList.push(item.docCode)
             }
         },
+        showBigImg (item, index) {
+            if (this.isCheck) {
+                this.selectItem(item)
+                return false
+            }
+
+            this.index = index
+            this.isShow.value = true
+        },
         showItems (item) {
+            if (this.isCheck) {
+                this.selectDir(item)
+                return false
+            }
+
             this.isCheck = false
             this.showType = 'pic'
-            this.getItems(item.docCode)
+            this.nowDir = item
+            this.getItems()
         },
         showDir () {
             this.isCheck = false
@@ -359,22 +381,27 @@ export default {
             this.itemPageNumber = size
             this.getItems()
         },
-        getItems (parentCode) {
+        getItems (docCode) {
             util.request({
                 method: 'get',
                 interface: 'listPage',
                 data: {
-                    enterpriseCode: this.$route.query.type,
-                    docType: this.fileType,
+                    enterpriseCode: this.$route.query.enterpriseCode,
+                    docFolder: docCode ? docCode : this.nowDir.docCode,
                     pageNumber: this.itemPageNumber,
                     pageSize: this.itemPageSize
                 }
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.itemTotal = res.result.total
+                    this.bigImgs = []
+                    var arrs = []
+                    this.itemTotal = Number(res.result.total)
                     res.result.result.forEach((item) => {
                         item.docCreateTime = item.docCreateTime.split(' ')[0]
+                        arrs.push(item.fileCode)
                     })
+
+                    this.bigImgs = arrs
 
                     this.sourceDatas = res.result.result
                 } else {
@@ -386,16 +413,12 @@ export default {
             util.request({
                 method: 'post',
                 interface: 'materialFolderInsert',
-                data: {
-                    enterpriseCode: this.$route.query.type,
-                    docType: this.fileType,
-                    pageNumber: this.pageNumber,
-                    pageSize: this.pageSize
-                }
+                data: this.addItemForm
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.dirPageNumber = 1
-                    this.getDirs()
+                    this.itemPageNumber = 1
+                    this.getItems()
+                    this.isAddItem = false
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -405,15 +428,11 @@ export default {
             util.request({
                 method: 'post',
                 interface: 'materialFolderUpdate',
-                data: {
-                    enterpriseCode: this.$route.query.type,
-                    docType: this.fileType,
-                    pageNumber: this.pageNumber,
-                    pageSize: this.pageSize
-                }
+                data: this.addItemForm
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.getDirs()
+                    this.getItems()
+                    this.isAddItem = false
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -424,14 +443,13 @@ export default {
                 method: 'post',
                 interface: 'materialFolderDelete',
                 data: {
-                    enterpriseCode: this.$route.query.type,
-                    docType: this.fileType,
-                    pageNumber: this.pageNumber,
-                    pageSize: this.pageSize
+                    docType: 'pic',
+                    docCodes: this.selectItemList
                 }
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.getDirs()
+                    this.getItems()
+                    this.isCheck = false
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -446,7 +464,7 @@ export default {
                 method: 'get',
                 interface: 'listPage',
                 data: {
-                    enterpriseCode: this.$route.query.type,
+                    enterpriseCode: this.$route.query.enterpriseCode,
                     docFolder: this.fileType,
                     pageNumber: this.dirPageNumber,
                     pageSize: this.dirPageSize
@@ -474,6 +492,7 @@ export default {
                 if (res.result.success == '1') {
                     this.dirPageNumber = 1
                     this.getDirs()
+                    this.isAddDir = false
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -487,6 +506,7 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     this.getDirs()
+                    this.isAddDir = false
                 } else {
                     this.$message.error(res.result.message)
                 }
@@ -496,43 +516,40 @@ export default {
             util.request({
                 method: 'post',
                 interface: 'materialFolderDelete',
-                data: this.selectDirList
+                data: {
+                    docType: 'dir',
+                    docCodes: this.selectDirList
+                }
             }).then(res => {
                 if (res.result.success == '1') {
+                    if (res.result.result.length) {
+                        this.$message({
+                            message: '部分目录下有文件存在，未能删除！',
+                            type: 'warning'
+                        })
+                    }
                     this.getDirs()
+                    this.isCheck = false
                 } else {
                     this.$message.error(res.result.message)
                 }
             })       
         },
-        setImport () {
-            if (!this.isCheck || this.showType == 'dir') {
-                return false
-            }
-            this.isselectVisible = true
-            this.checkedLabels = []
-        },
-        deleteImgs () {
+        deleteOpt () {
             if (!this.isCheck) {
                 return false
             }
 
-            this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+            this.$confirm('确定执行该删除操作?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                util.request({
-                    method: 'post',
-                    interface: 'deleteImgs',
-                    data: data
-                }).then(res => {
-                    this.getImgs()
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    })
-                })
+                if (this.showType == 'dir') {
+                    this.deleteDirs()
+                } else {
+                    this.deleteItems()
+                }
                 
             }).catch(() => {
                 this.$message({
@@ -541,12 +558,56 @@ export default {
                 })     
             })
         },
+        setImport () {
+            if (!this.isCheck || this.showType == 'dir') {
+                return false
+            }
+            this.checkedLabels = []
+            this.isselectVisible = true
+        },
         selectConfirm () {
-            this.isselectVisible = false
+            this.removeItem()
+        },
+        removeItem () {
+            util.request({
+                method: 'post',
+                interface: 'materialMove',
+                data: {
+                    files: this.selectItemList,
+                    dirs: this.checkedLabels
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.getItems()
+                    this.isselectVisible = false
+                    this.isCheck = false
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
+        },
+        copyItem () {
+            util.request({
+                method: 'post',
+                interface: 'materialCopy',
+                data: {
+                    files: this.selectItemList,
+                    dirs: this.checkedLabels
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.getItems()
+                    this.isselectVisible = false
+                    this.isCheck = false
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
         }
     },
     components: {
-        uploadFile
+        uploadFile,
+        swiperImg
     }
 }
 </script>
@@ -564,9 +625,9 @@ export default {
 
     .go-back {
         height: 30px;
-        position: absolute;
-        right: -30px;
-        top: -38px;
+        position: fixed;
+        right: 10px;
+        top: 100px;
         padding: 0 15px;
     }
 

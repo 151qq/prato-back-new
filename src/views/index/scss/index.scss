@@ -36,6 +36,33 @@
   position: static;
 }
 
+.el-collapse, .el-collapse-item__header, .el-collapse-item__wrap {
+    background: #ffffff;
+    border: none;
+}
+
+.el-collapse-item__wrap {
+    padding-top: 20px;
+    overflow: visible;
+}
+
+.el-collapse-item__content {
+    padding: 0;
+}
+
+.el-collapse-item__header {
+    padding: 0;
+}
+
+.el-collapse-item__header {
+  font-size: 20px;
+  color: #000000;
+}
+
+.clear {
+    clear: both;
+}
+
 .alertBox {
   width: 100%;
   height: 100%;
@@ -54,11 +81,6 @@
   width: 400px;
   min-height: 100%;
   background: #F0F0F0;
-}
-
-.el-collapse-item__header {
-  font-size: 20px;
-  color: #000000;
 }
 
 .leftBox {
@@ -271,8 +293,6 @@
         }
       }
 
-      
-
       &.is-active {
         background: #EFF2F7;
       }
@@ -293,28 +313,69 @@
 
 .form-b {
     margin-top: 30px;
-}
 
-.formStylePro {
-    position: relative;
-    width: 640px;
-    margin: 0 auto;
+    .formStylePro {
+        position: relative;
+        width: 640px;
+        margin: 0 auto;
 
-    .ewm-b {
-      display: block;
-      width: 200px;
-      height: 200px;
-      margin: auto;
-      cursor: pointer;
+        .ewm-b {
+          display: block;
+          width: 200px;
+          height: 200px;
+          margin: auto;
+          cursor: pointer;
+        }
+
+        &:last-child {
+            margin-bottom: 30px;
+        }
     }
 
-    &:last-child {
-        margin-bottom: 30px;
-    }
-}
+    .baseInput {
+        float: left;
+        margin-bottom: 20px;
 
-.clear {
-    clear: both;
+        &>span {
+            float: left;
+            width: 100px;
+            font-size: 14px;
+            color: #1F2D3D;
+            line-height: 30px;
+        }
+
+        .input-box {
+            float: left;
+            width: 200px;
+
+            input {
+                height: 30px;
+            }
+        }
+    }
+
+    .bigB {
+        .input-box {
+            width: 540px;
+
+            .el-select {
+                width: 540px;
+            }
+        }
+
+        .el-textarea {
+          width: 540px;
+        }
+    }
+
+    .rightF {
+        float: right;
+    }
+
+    .width-box {
+      width: 110%;
+      overflow: hidden;
+    }
 }
 
 .line-bold {
@@ -322,105 +383,6 @@
     border-top: 1px solid #99A9BF;
     background: #F9F9F9;
     margin: 30px 0;
-}
-
-.el-collapse, .el-collapse-item__header, .el-collapse-item__wrap {
-    background: #ffffff;
-    border: none;
-}
-
-.el-collapse-item__wrap {
-    padding-top: 20px;
-    overflow: visible;
-}
-
-.el-collapse-item__content {
-    padding: 0;
-}
-
-.el-collapse-item__header {
-    padding: 0;
-}
-
-#container {
-    width: 640px;
-    height: 140px;
-    margin: 15px 0;
-}
-
-.width-box {
-  width: 110%;
-  overflow: hidden;
-}
-
-.baseInput {
-    float: left;
-    margin-bottom: 20px;
-
-    &>span {
-        float: left;
-        width: 100px;
-        font-size: 14px;
-        color: #1F2D3D;
-        line-height: 30px;
-    }
-
-    .input-box {
-        float: left;
-        width: 200px;
-
-        input {
-            height: 30px;
-        }
-    }
-}
-
-.bigB {
-    .input-box {
-        width: 540px;
-
-        .el-select {
-            width: 540px;
-        }
-    }
-
-    .el-textarea {
-      width: 540px;
-    }
-}
-
-.rightF {
-    float: right;
-}
-
-.clear {
-    clear: both;
-}
-
-.add-btn {
-    position: absolute;
-    right: 0;
-    top: 7px;
-}
-
-.save-btn {
-  float: right;
-  margin-top: 10px;
-  margin-left: 15px;
-}
-
-.abstract-num {
-  float: right;
-  span {
-    color: red;
-  }
-}
-
-.null-box {
-  font-size: 20px;
-  color: #333333;
-  line-height: 200px;
-  text-align: center;
 }
 
 .search-input {
@@ -518,4 +480,106 @@
   .el-select {
     width: 100%;
   }
+}
+
+.form-discount {
+    min-height: 600px;
+    padding: 80px 0 30px;
+
+    .float-form-box {
+        position: relative;
+        width: 1000px;
+        margin: auto;
+
+        .line-bold {
+            width: 200%;
+            height: 9px;
+            border-top: 1px solid #99A9BF;
+            background: #F9F9F9;
+            margin: 30px 0 30px -30%;
+        }
+    }
+
+    .formDiscount {
+        position: relative;
+        width: 110%;
+        overflow: hidden;
+
+        .formBox {
+            float: left;
+            margin: 0 20px 20px 0;
+
+            &>span {
+                float: left;
+                width: 100px;
+                font-size: 14px;
+                color: #1F2D3D;
+                line-height: 30px;
+                height: 30px;
+            }
+
+            .btn-a {
+              height: 30px;
+            }
+
+            .input-box {
+                float: left;
+                width: 220px;
+
+                input {
+                    height: 30px;
+                }
+            }
+        }
+
+        .bigF {
+            .input-box {
+                width: 900px;
+
+                .el-select {
+                    width: 900px;
+                }
+            }
+
+            .el-textarea {
+              width: 900px;
+            }
+        }
+
+        .back-btn {
+          float: right;
+          margin-top: 10px;
+          margin-left: 15px;
+        }
+
+        &:last-child {
+            margin-bottom: 30px;
+        }
+    }
+}
+
+.add-btn {
+    position: absolute;
+    right: 0;
+    top: 7px;
+}
+
+.save-btn {
+  float: right;
+  margin-top: 10px;
+  margin-left: 15px;
+}
+
+.abstract-num {
+  float: right;
+  span {
+    color: red;
+  }
+}
+
+.null-box {
+  font-size: 20px;
+  color: #333333;
+  line-height: 200px;
+  text-align: center;
 }

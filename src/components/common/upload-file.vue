@@ -40,13 +40,19 @@ export default {
     }
   },
   methods: {
-    fileChange (event) {
-      var data = {
+    fileChange (e) {
+      var opotion = {
         url: 'headImage',
-        event: event
+        event: e,
+        data: {
+          enterpriseCode: this.$route.query.enterpriseCode,
+          fileType: 'pic',
+          oldFilePath: this.imgPath
+        }
       }
-      util.uploadFile(data).then(res => {
-        this.imgPath = res.result.result.headImg
+
+      util.uploadFile(opotion).then(res => {
+        this.imgPath = res.result.result.filePath
         this.$message({
           showClose: true,
           message: '恭喜你，修改成功'

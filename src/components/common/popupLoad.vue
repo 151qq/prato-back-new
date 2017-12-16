@@ -1,23 +1,13 @@
 <template>
   <div>
-    <section class="upload-box">
-      <div class="img-big" @click="showMedia">
-        <img v-if="!curPath && !bgPath"
-            src="../../assets/images/img-default.jpg">
-        <img v-if="!curPath && bgPath"
-            src="../../assets/images/page-img.jpg">
-        <img v-else class="img-big" :src="curPath">
-      </div>
-    </section>
-
     <el-dialog
       title="上传"
-      class="upload-dia"
-      :visible.sync="dialogVisible"
+      class="upload-dia-img"
+      :visible.sync="isUpload.value"
       size="tiny">
       <section>
         <label class="input-label" :for="idFor">本地上传</label>
-        <input type="file" v-if="isOperate" class="ben-input" :id="idFor" @change="postImg($event)">
+        <input type="file" class="ben-input" :id="idFor" @change="postImg($event)">
 
         <el-button @click="getMediaList('pic')" class="upload-btn" type="primary">图片素材</el-button>
         <el-button v-if="isMedia" @click="getMediaList('media')" class="upload-btn" type="primary">媒体素材</el-button>
@@ -34,17 +24,13 @@ import util from '../../assets/common/util'
 import fileLists from './fileLists'
 
 export default {
-    props: ['path', 'bgPath', 'idName', 'isOperate', 'isMedia'],
+    props: ['path', 'bgPath', 'idName', 'isMedia', 'isUpload'],
     data() {
       return {
         curPath: '',
         curCode: '',
         idFor: '',
-        dialogVisible: false,
         mediaList: [],
-        pageNumber: 1,
-        pageSize: 9,
-        total: 0,
         enterprise: '',
         docType: '',
         selectData: {
@@ -65,10 +51,6 @@ export default {
       }
     },
     methods: {
-      showMedia () {
-        this.pageNumber = 1
-        this.dialogVisible = true
-      },
       getMediaList (type) {
         this.docType = type
         this.selectData.isShow = true
@@ -80,7 +62,7 @@ export default {
           file: imgData.file
         }
         this.selectData.isShow = false
-        this.dialogVisible = false
+        this.isUpload.value = false
         this.$emit('changeImg', data)
       },
       postImg (e) {
@@ -100,7 +82,7 @@ export default {
           var data = {
             url: this.curPath
           }
-          this.dialogVisible = false
+          this.isUpload.value = false
           this.$emit('changeImg', data)
         })
       }
@@ -112,26 +94,7 @@ export default {
 </script>
 
 <style lang="scss">
-.upload-box {
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-
-  .img-big {
-    display: block;
-    width: 100%;
-    height: auto;
-    cursor: pointer;
-
-    img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-  }
-}
-
-.upload-dia {
+.upload-dia-img {
   .input-label {
     display: block;
     width: 100%;

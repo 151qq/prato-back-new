@@ -122,9 +122,7 @@
                         <div class="input-box">
                             <upload :path="base.enterpriseLogoUrl"
                                     :is-operate="isOperate"
-                                    :no-del="true"
                                     :bg-path="true"
-                                    :is-house-id="true"
                                     @changeImg="changeImg"></upload>
                         </div>
                     </section>
@@ -144,6 +142,8 @@
                               :title-name="'微信公众号LOGO'"
                               :id-name="'wxPulicLogo'"
                               :is-operate="isOperate"
+                              :enterprise-code="base.enterpriseCode"
+                              :file-code="''"
                               @changeImg='wxPulicLogo'
                               :width="'160px'"></ewm-upload>
 
@@ -152,6 +152,8 @@
                               :title-name="'微信公众号二维码'"
                               :id-name="'wxPulicImg'"
                               :is-operate="isOperate"
+                              :enterprise-code="base.enterpriseCode"
+                              :file-code="''"
                               @changeImg='wxPulicImg'
                               :width="'160px'"></ewm-upload>
 
@@ -160,6 +162,8 @@
                               :title-name="'微信券LOGO'"
                               :id-name="'wxQuanLogo'"
                               :is-operate="isOperate"
+                              :enterprise-code="base.enterpriseCode"
+                              :file-code="''"
                               @changeImg='wxQuanLogo'
                               :width="'160px'"></ewm-upload>
 
@@ -798,7 +802,7 @@ export default {
                 method: 'get',
                 interface: 'showEnterpriseInfo',
                 data: {
-                    enterpriseCode: this.$route.query.type
+                    enterpriseCode: this.$route.query.enterpriseCode
                 }
             }).then(res => {
                 if (res.result.success == '0') {

@@ -96,7 +96,7 @@ export default {
                 method: 'get',
                 interface: 'findCallCenterConfig',
                 data: {
-                    enterpriseCode: this.$route.query.type
+                    enterpriseCode: this.$route.query.enterpriseCode
                 }
             }).then(res => {
                 if (res.result.success == '0') {
@@ -136,7 +136,7 @@ export default {
           if (this.callcenterData.enterpriseCode) {
             this.updateCallCenter()
           } else {
-            this.callcenterData.enterpriseCode = this.$route.query.type
+            this.callcenterData.enterpriseCode = this.$route.query.enterpriseCode
             this.insertCallCenter()
           }
           

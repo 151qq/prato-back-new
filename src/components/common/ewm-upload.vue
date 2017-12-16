@@ -42,20 +42,20 @@ export default {
       },
       postImg (e) {
         var opotion = {
-          url: 'uploadArticleAreaImage',
+          url: 'uploadFile',
           event: e,
           data: {
-            fileCode: localStorage.getItem('id'),
-            deleteUrl: this.curPath
+            enterpriseCode: this.$route.query.enterpriseCode,
+            fileType: 'pic',
+            oldFilePath: this.curPath
           }
         }
 
         util.uploadFile(opotion).then(res => {
-          let imgUrl = res.result.result[0]
-          this.curPath = imgUrl
+          let result = res.result.result
+          this.curPath = result.filePath
           var data = {
-            url: this.curPath,
-            title: this.curTitle
+            url: this.curPath
           }
           this.$emit('changeImg', data)
         })

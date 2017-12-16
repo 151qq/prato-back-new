@@ -46,9 +46,11 @@ export default {
         * 我的素材库 get
         */
         listPage: platform + 'material/listPage.json',
-        materialFolderInsert: platform + 'material/materialFolderInsert.json',
-        materialFolderDelete: platform + 'material/materialFolderDelete.json',
-        materialFolderUpdate: platform + 'material/materialFolderUpdate.json',
+        materialFolderInsert: platform + 'material/save.json',
+        materialFolderDelete: platform + 'material/delete.json',
+        materialFolderUpdate: platform + 'material/update.json',
+        materialCopy: platform + 'material/copy.json',
+        materialMove: platform + 'material/move.json',
         /**
         * 我的素材库大图 get
         * id 素材分类id
@@ -109,43 +111,24 @@ export default {
         /**
         * 产品树 get
         */
-        productTree: '/static/api/product/productTree.json',
-        /**
-        * 产品基础信息 get
-        * id 产品序列标识
-        */
-        proinfo: '/static/api/product/info.json',
-        /**
-        * 产品信息 get
-        * id 产品序列标识
-        */
-        probase: '/static/api/product/base.json',
-        /**
-        * 产品类型 get
-        * id 产品序列标识
-        */
-        protype: '/static/api/product/type.json',
-        /**
-        * 规格 get
-        * id 楼盘序列标识
-        */
-        prospec: '/static/api/product/prospec.json',
-        /**
-        * 产品介绍 get
-        * id 产品序列标识
-        */
-        proarticle: '/static/api/product/article.json',
-        /**
-        * 产品图片图片 get
-        * id 产品序列标识
-        */
-        proimgs: '/static/api/product/proimgs.json',
-        /**
-        * 物业外观图片 get
-        * id 楼盘序列标识
-        */
-        pubimgs: '/static/api/product/pubimgs.json',
-
+        pruductCatalogList: platform + 'product/productCatalogList.json',
+        deleteProductCatalog: platform + 'product/deleteProductCatalog.json',
+        saveProductCatalog: platform + 'product/saveProductCatalog.json',
+        productInfoGet: platform + 'product/productInfoGet.json',
+        productInfoSave: platform + 'product/productInfoSave.json',
+        productInfoDelete: platform + 'product/productInfoDelete.json',
+        productScenarioList: platform + 'product/productScenarioList.json',
+        getProductScenario: platform + 'product/getProductScenario.json',
+        productScenarioSave: platform + 'product/productScenarioSave.json',
+        productScenarioDelete: platform + 'product/productScenarioDelete.json',
+        productParameterList: platform + 'product/productParameterList.json',
+        deleteProductParameter: platform + 'product/deleteProductParameter.json',
+        productParameterSave: platform + 'product/productParameterSave.json',
+        productParameterDelete: platform + 'product/productParameterDelete.json',
+        productAlbumList: platform + 'product/productAlbumList.json',
+        deleteProductAlbum: platform + 'product/deleteProductAlbum.json',
+        productAlbumSave: platform + 'product/productAlbumSave.json',
+        productAlbumDelete: platform + 'product/productAlbumDelete.json',
 
         /**
         * 营销树 get
