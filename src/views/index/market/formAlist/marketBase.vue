@@ -1,7 +1,7 @@
 <template>
     <section class="product-base-box">
-      <div class="form-box">
-        <section class="baseInput bigB">
+      <div class="formDiscount">
+        <section class="formBox bigF">
             <span>方案名称</span>
             <el-input
               class="input-box"
@@ -9,7 +9,7 @@
               v-model="base.eventPlanTitle">
             </el-input>
         </section>
-        <section class="baseInput">
+        <!-- <section class="formBox">
             <span>方案状态</span>
             <el-select class="input-box"
                        v-model="base.eventPlanStatus"
@@ -26,23 +26,23 @@
                         :value="item.id">
                 </el-option>
             </el-select>
-        </section>
-        <section class="baseInput rightF">
+        </section> -->
+        <section class="formBox">
             <span>新增潜客</span>
             <el-input type="number" class="input-box" size="small" :min="0"
                 v-model="base.eventLeads"></el-input>
         </section>
-        <section class="baseInput">
+        <section class="formBox">
             <span>新增预约</span>
             <el-input type="number" class="input-box" size="small" :min="0"
                 v-model="base.eventHotLeads"></el-input>
         </section>
-        <section class="baseInput rightF">
+        <section class="formBox rightF">
             <span>新增销售</span>
             <el-input type="number" class="input-box" size="small" :min="0"
                 v-model="base.eventSalesOpp"></el-input>
         </section>
-        <section class="baseInput bigB">
+        <section class="formBox bigF">
             <span>活动方案</span>
             <el-input
               type="textarea"
@@ -52,7 +52,7 @@
               v-model="base.eventPlanDesc">
             </el-input>
         </section>
-        <section class="baseInput bigB">
+        <section class="formBox bigF">
           <span>标准照片</span>
           <div class="input-box">
             <upload :path="base.eventPlanCover"
@@ -129,7 +129,8 @@ export default {
               eventPlanDesc: '',
               eventPlanCover: ''
             },
-            statusTypes: []
+            statusTypes: [],
+            isOperate: true
         }
     },
     mounted () {
@@ -146,7 +147,7 @@ export default {
               method: 'get',
               interface: 'eventInfoGet',
               data: {
-                eventCode: this.$route.query.type
+                eventCode: this.$route.query.eventCode
               }
           }).then(res => {
               this.base = res.result.result
@@ -170,7 +171,12 @@ export default {
                 data: this.base
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.$parent.$parent.$refs.listBox.loadList('reload')
+                    this.getBase()
+
+                    this.$message({
+                      type: 'success',
+                      message: '保存成功!'
+                    })
                 } else {
                     this.$message.error(res.result.message)
                 }

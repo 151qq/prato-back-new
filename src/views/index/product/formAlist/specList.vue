@@ -94,7 +94,7 @@ export default {
 
         this.isAddOEdit = true
       },
-      confirmQuan () {
+      confirmItem () {
         if (!this.itemData.productParameterKey) {
           this.$message({
               message: '请填写规格名称！',
@@ -124,7 +124,7 @@ export default {
             method: 'post',
             interface: 'productParameterDelete',
             data: {
-              productParemeterCode: row.productParemeterCode
+              parameterCode: row.productParemeterCode
             }
         }).then(res => {
           if (res.result.success == '1') {

@@ -26,7 +26,7 @@
               <i class="el-icon-delete2" @click="deleteDiscount(scope.row)"></i>
 
               <router-link class="el-icon-document black" target="_blank"
-                            :to="{name: 'coupon', query: {index: $route.query.index, enterpriseCode: $route.query.enterpriseCode, market: $route.query.type, page: $route.query.page, code: scope.row.couponCode}}">
+                            :to="{name: 'coupon', query: {enterpriseCode: $route.query.enterpriseCode, eventCode: $route.query.eventCode, couponCode: scope.row.couponCode}}">
               </router-link>
               
             </template>
@@ -100,7 +100,7 @@ export default {
             method: 'get',
             interface: 'couponInfoList',
             data: {
-              eventCode: this.$route.query.type
+              eventCode: this.$route.query.eventCode
             }
         }).then(res => {
             this.discountData = res.result.result
@@ -136,6 +136,8 @@ export default {
       },
       addQuan () {
         this.quanData = {
+          enterpriseCode: this.$route.query.enterpriseCode,
+          eventCode: this.$route.query.eventCode,
           couponTitle: '',
           couponType: '',
           couponScenario: ''
@@ -168,9 +170,6 @@ export default {
           return false
         }
 
-        this.quanData.enterpriseCode = this.$route.query.enterpriseCode
-        this.quanData.eventCode = this.$route.query.type
-
         this.insertQuan()
       },
       insertQuan () {
@@ -183,16 +182,18 @@ export default {
               var pathObj = {
                 name: 'coupon',
                 query: {
-                  index: this.$route.query.index,
-                  enterprise: this.$route.query.enterpriseCode,
-                  market: this.$route.query.type,
-                  page: this.$route.query.page,
-                  code: res.result.result
+                  enterpriseCode: this.$route.query.enterpriseCode,
+                  eventCode: this.$route.query.eventCode,
+                  couponCode: res.result.result
                 }
               }
 
+              this.getList()
+
               this.isAddQuan = false
-              this.$router.push(pathObj)
+
+              window.open('/#/coupon?enterpriseCode=' + this.$route.query.enterpriseCode + '&eventCode=' + this.$route.query.eventCode + '&couponCode=' + res.result.result, '_blank')
+
             } else {
               this.$message.error(res.result.msg)
             }

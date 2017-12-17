@@ -14,7 +14,7 @@
           <div class="line-bold"></div>
 
           <!-- 产品图片 -->
-          <el-collapse-item class="float-form-box" title="产品图片" name="3">
+          <el-collapse-item class="float-form-box" title="产品相册" name="3">
             <upload-dirs :dir-lists="dirList"
                           @changeDir="changeDir"
                           @deleteDir="deleteDir"></upload-dirs>
@@ -68,7 +68,6 @@ export default {
               if (res.result.success == '1') {
                 res.result.result.forEach((item) => {
                     item.docCreateTime = item.docCreateTime.split(' ')[0]
-                    arrs.push(item.fileCode)
                 })
                 this.dirList = res.result.result
               } else {
@@ -96,7 +95,7 @@ export default {
         deleteDir (item) {
           util.request({
               method: 'post',
-              interface: 'productAlbumSave',
+              interface: 'deleteProductAlbum',
               data: {
                 productCode: this.$route.query.productCode,
                 docCode: item.docCode,

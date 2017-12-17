@@ -2,7 +2,7 @@
   <div class="imgs-dirs-box">
     <router-link class="sou-box"
                   target="_blank"
-                  v-for="(item, index) in sourceDatas"
+                  v-for="(item, index) in dirLists"
                   :to="{name: 'source', query: {docCode: item.docCode}}">
         <div class="cover-box">
             <img :src="item.docCover">
@@ -12,7 +12,7 @@
             <div class="time">
                 {{item.docCreateTime}}
                 <span class="btn-box">
-                    <i @click.stop="deleteItem(item)" class="el-icon-delete2"></i>
+                    <i @click.prevent="deleteItem(item)" class="el-icon-delete2"></i>
                 </span>
             </div>
         </div>
@@ -70,21 +70,21 @@ export default {
 
   .sou-box {
       float: left;
-      width: 170px;
+      width: 184px;
       margin-right: 20px;
       margin-bottom: 20px;
       border: 1px solid #D3DCE6;
       border-radius: 3px;
 
       .cover-box {
-          height: 170px;
+          height: 184px;
           overflow: hidden;
           cursor: pointer;
           
           img {
               display: block;
               width: 100%;
-              min-height: 170px;
+              min-height: 184px;
           }
       }
 
@@ -109,6 +109,7 @@ export default {
           }
 
           .btn-box {
+             position: relative;
              float: right;
              font-size: 14px;
              color: #333333;
@@ -127,8 +128,8 @@ export default {
 
     .img-big {
       display: block;
-      width: 200px;
-      height: 170px;
+      width: 184px;
+      height: 184px;
     }
   }
 }

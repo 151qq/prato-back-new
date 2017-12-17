@@ -175,16 +175,20 @@ export default {
     mounted () {
         var stepOne = {
             catalogCname: '根目录',
-            catalogCode: this.$route.query.catalogCode
+            enterpriseCode: this.$route.query.enterpriseCode,
+            catalogCode: this.$route.query.catalogCode,
+            catalogLevel: Number(this.$route.query.catalogLevel)
         }
 
-        this.floorNumber = this.$route.query.catalogLevel
+        this.floorNumber = Number(this.$route.query.catalogLevel)
 
         this.dirSteps.push(stepOne)
         this.getItems(this.$route.query.catalogCode)
     },
     watch: {
         $route () {
+            this.floorNumber = Number(this.$route.query.catalogLevel)
+            this.dirSteps.splice(this.floorNumber)
             this.getItems(this.$route.query.catalogCode)
         }
     },
@@ -292,7 +296,7 @@ export default {
                 catalogParentCode: '',
                 catalogType: '',
                 catalogDesc: '',
-                catalogLevel: this.$route.query.catalogLevel + 1
+                catalogLevel: Number(this.$route.query.catalogLevel) + 1
             }
 
             if (this.floorNumber == 3) {
@@ -382,15 +386,13 @@ export default {
                     }
                 }
 
-                this.$router.replace(pathData)
+                this.$router.push(pathData)
             } else {
-                window.open('/#/productDetail?enterpriseCode=' + item.enterpriseCode + '&productCode' + item.catalogCode, '_blank')
+                window.open('/#/productDetail?enterpriseCode=' + item.enterpriseCode + '&productCode=' + item.catalogCode, '_blank')
             }
         },
         // 目录跳转
         goToDir (item, index) {
-
-            console.log(this.floorNumber, index + 1)
             // 当前目录 不请求
             if (this.floorNumber == index + 1) {
                 return false
@@ -400,7 +402,17 @@ export default {
             this.pageNumber = 1
             this.floorNumber = index + 1
             this.dirSteps.splice(this.floorNumber)
-            this.getItems(this.dirSteps[index].catalogCode)
+
+            var pathData = {
+                name: 'product-list',
+                query: {
+                    enterpriseCode: item.enterpriseCode,
+                    catalogCode: item.catalogCode,
+                    catalogLevel: item.catalogLevel
+                }
+            }
+
+            this.$router.push(pathData)
         },
         // 删除操作弹窗
         deleteOpt () {

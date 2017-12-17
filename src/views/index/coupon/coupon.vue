@@ -20,8 +20,8 @@
                     <el-option
                       v-for="(item, index) in couponTypes"
                       :key="index"
-                      :label="item.label"
-                      :value="item.type">
+                      :label="item.coupunTypeName"
+                      :value="item.coupunType">
                     </el-option>
                 </el-select>
             </section>
@@ -198,34 +198,8 @@ export default {
             },
             useSceneList: [],
             couponTypes: [],
-            products: [
-              {
-                id: 0,
-                label: '产品一'
-              },
-              {
-                id: 1,
-                label: '产品二'
-              },
-              {
-                id: 2,
-                label: '产品三'
-              }
-            ],
-            giftLists: [
-              {
-                id: 10,
-                label: '礼品品一'
-              },
-              {
-                id: 11,
-                label: '礼品品二'
-              },
-              {
-                id: 12,
-                label: '礼品品三'
-              }
-            ]
+            products: [],
+            giftLists: []
         }
     },
     mounted () {
@@ -239,7 +213,7 @@ export default {
               method: 'get',
               interface: 'couponInfoGet',
               data: {
-                couponCode: this.$route.query.code
+                couponCode: this.$route.query.couponCode
               }
           }).then((res) => {
               if (res.result.success == '1') {
@@ -261,6 +235,38 @@ export default {
                 this.$message.error(res.result.msg)
               }
           })
+        },
+        getProducts () {
+            util.request({
+                method: 'get',
+                interface: 'pruductCatalogList',
+                data: {
+                    enterpriseCode: this.$route.query.enterpriseCode,
+                    catalogType: 'pro'
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.products = res.result.result
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
+        },
+        getGifts () {
+            util.request({
+                method: 'get',
+                interface: 'pruductCatalogList',
+                data: {
+                    enterpriseCode: this.$route.query.enterpriseCode,
+                    catalogType: 'pro'
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.giftLists = res.result.result
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
         },
         getTypes () {
             util.request({
@@ -359,13 +365,13 @@ export default {
               data: formData
           }).then((res) => {
               if (res.result.success == '1') {
+                this.getBase()
+
                 var pathObj = {
                   name: 'market-detail',
                   query: {
-                    index: this.$route.query.index,
-                    enterprise: this.$route.query.enterpriseCode,
-                    type: this.$route.query.market,
-                    page: this.$route.query.page
+                    eventCode: this.$route.query.eventCode,
+                    enterprise: this.$route.query.enterpriseCode
                   }
                 }
 

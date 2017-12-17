@@ -120,15 +120,16 @@ export default {
         productScenarioList: platform + 'product/productScenarioList.json',
         getProductScenario: platform + 'product/getProductScenario.json',
         productScenarioSave: platform + 'product/productScenarioSave.json',
-        productScenarioDelete: platform + 'product/productScenarioDelete.json',
+        productScenarioDelete: platform + 'product/deleteProductScenario.json',
         productParameterList: platform + 'product/productParameterList.json',
         deleteProductParameter: platform + 'product/deleteProductParameter.json',
         productParameterSave: platform + 'product/productParameterSave.json',
-        productParameterDelete: platform + 'product/productParameterDelete.json',
-        productAlbumList: platform + 'product/productAlbumList.json',
+        productParameterDelete: platform + 'product/deleteProductParameter.json',
+        productAlbumList: platform + 'product/productAlbums.json',
         deleteProductAlbum: platform + 'product/deleteProductAlbum.json',
         productAlbumSave: platform + 'product/productAlbumSave.json',
-        productAlbumDelete: platform + 'product/productAlbumDelete.json',
+        getProductType: platform + 'product/getProductType.json',
+        productInfoList: platform + 'product/productInfoList.json',
 
         /**
         * 营销树 get

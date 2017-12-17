@@ -28,20 +28,6 @@
             <el-form-item label="场景名称">
                 <el-input v-model="itemData.productScenarioCname"></el-input>
             </el-form-item>
-            <el-form-item label="场景类型">
-                <el-select
-                  class="input-box"
-                  v-model="itemData.productScenarioType"
-                  filterable
-                  placeholder="请选择">
-                  <el-option
-                    v-for="item in productList"
-                    :key="item.id"
-                    :label="item.value"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="推荐产品">
                 <el-select
                   class="input-box"
@@ -101,18 +87,19 @@ export default {
           isAddOEdit: false,
           itemData: {
             productScenarioCname: '',
-            productScenarioType: '',
             scenarioProducts: [],
             productScenarioCover: '',
             productScenarioDesc: ''
           },
           isUpload: {
               value: false
-          }
+          },
+          productList: []
         }
     },
     mounted () {
       this.getItemList()
+      this.getProductList()
     },
     methods: {
       getItemList () {
@@ -124,6 +111,17 @@ export default {
             }
         }).then(res => {
             this.itemList = res.result.result
+        })
+      },
+      getProductList () {
+        util.request({
+            method: 'get',
+            interface: 'productInfoList',
+            data: {
+              enterpriseCode: this.$route.query.enterpriseCode
+            }
+        }).then(res => {
+            this.productList = res.result.result
         })
       },
       addItem () {
@@ -152,9 +150,9 @@ export default {
           this.isUpload.value = true
       },
       changeItemImg (data) {
-          this.addItemForm.catalogImage = data.url
+          this.itemData.productScenarioCover = data.url
       },
-      confirmQuan () {
+      confirmItem () {
         if (!this.itemData.productScenarioCname) {
           this.$message({
               message: '请填写场景名称！',

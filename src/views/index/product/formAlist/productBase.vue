@@ -27,8 +27,8 @@
               <el-option
                 v-for="(item, index) in productTypes"
                 :key="index"
-                :label="item.value"
-                :value="item.id">
+                :label="item.productTypeName"
+                :value="item.productType">
               </el-option>
             </el-select>
         </section>
@@ -71,18 +71,12 @@ export default {
               productCover: '',
               productDesc: ''
             },
-            productTypes: [
-              { value: '产品一', id: 0 },
-              { value: '产品二', id: 1 },
-              { value: '产品三', id: 2 },
-              { value: '产品四', id: 3 },
-              { value: '产品五', id: 4 },
-              { value: '产品六', id: 5 }
-            ]
+            productTypes: []
         }
     },
     mounted () {
       this.getBase()
+      this.getTypes()
     },
     methods: {
         getBase () {
@@ -94,7 +88,7 @@ export default {
               }
           }).then(res => {
               if (res.result.success = '1') {
-                this.base = res.result.result
+                this.base = res.result.result.productInfo
               } else {
                 this.$message.error(res.result.message)
               }
@@ -103,7 +97,7 @@ export default {
         getTypes () {
           util.request({
               method: 'get',
-              interface: 'productInfoGet',
+              interface: 'getProductType',
               data: {}
           }).then(res => {
               if (res.result.success = '1') {
@@ -120,9 +114,7 @@ export default {
           util.request({
               method: 'post',
               interface: 'productInfoSave',
-              data: {
-                productCode: this.base.productCode
-              }
+              data: this.base
           }).then(res => {
               if (res.result.success = '1') {
                 this.getBase()

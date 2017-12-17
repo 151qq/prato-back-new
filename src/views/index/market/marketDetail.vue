@@ -1,27 +1,43 @@
 <template>
-    <div class="float-box flexBox" v-cloak>
-        <!-- 左侧文章列表 -->
-        <section class="leftBox">
-            <market-items ref="listBox" :path-name="'market-detail'"></market-items>
-        </section>
-        <!-- 中间文章编辑区域 -->
-        <div class="body-mid flexItem">
-            <market-form></market-form>
-        </div>
+    <div class="form-discount">
+        <el-collapse v-model="activeNames" @change="collChange">
+          <el-collapse-item class="float-form-box" title="基本信息" name="0">
+            <market-base></market-base>
+          </el-collapse-item>
+          <div class="line-bold"></div>
+
+          <el-collapse-item class="float-form-box" title="活动优惠" name="3">
+            <discount></discount>
+          </el-collapse-item>
+        </el-collapse>          
     </div>
 </template>
 <script>
-import marketItems from '../../../components/itemList/marketItems'
-import marketForm from './marketForm.vue'
 import util from '../../../assets/common/util'
+import marketBase from './formAlist/marketBase'
+import discount from './formAlist/discount'
 
 export default {
     data () {
-        return {}
+        return {
+            id: 0,
+            activeNames: ['1']
+        }
+    },
+    mounted () {
+        var marketColl = localStorage.getItem("marketColl")
+        if (marketColl) {
+            this.activeNames = marketColl.split(',')
+        }
+    },
+    methods: {
+        collChange () {
+            localStorage.setItem("marketColl", this.activeNames)
+        }
     },
     components: {
-        marketItems,
-        marketForm
+        marketBase,
+        discount
     }
 }
 </script>

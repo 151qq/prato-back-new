@@ -110,12 +110,22 @@ const routers = [
         }
       },
       {
-        // 营销方案
+        // 券
         path: 'coupon',
         name: 'coupon',
         component (resolve) {
           require.ensure(['./coupon/coupon.vue'], () => {
             resolve(require('./coupon/coupon.vue'))
+          })
+        }
+      },
+      {
+        // 文章模版
+        path: 'articleTemplate',
+        name: 'article-template',
+        component (resolve) {
+          require.ensure(['./articleTemplate/articleTemplate.vue'], () => {
+            resolve(require('./articleTemplate/articleTemplate.vue'))
           })
         }
       }
