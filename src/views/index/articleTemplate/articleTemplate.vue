@@ -360,34 +360,6 @@
                         <el-color-picker v-model="base.fileTaxtFontColor"></el-color-picker>
                     </section>
                     <section class="baseInput rightF">
-                        <span>字体样式</span>
-                        <el-select class="input-box"
-                                   v-model="base.fileFontType"
-                                   name="investor"
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in fontStyles"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput">
-                        <span>对齐方式</span>
-                        <el-select class="input-box"
-                                   v-model="base.fileFaxtAlignment"
-                                   name="investor"
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in alignmentStyles"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
                         <span>顶部空隙</span>
                         <el-input
                                 class="input-box"
@@ -436,7 +408,7 @@
                 Sagmeister & Walsh 这次又搞了个大新闻！24小时全球直播工作室状态
             </div>
             <div class="ar-author-date" :style="arAuthorDate">
-                <span class="ar-date">2019-10-10</span>
+                <span class="ar-date">{{ '2019-10-10' | formatDate(base.dateStyle)}}</span>
                 <a  class="ar-author"
                     target="_blank" 
                     :style="arAuthor"
@@ -459,9 +431,7 @@
                 <div class="ar-content" :style="arContent">
                     <div style="text-align: center;">
                         葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
-                        醉卧沙场君莫笑，古来征战几人回？ <br>
-                        葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
-                        醉卧沙场君莫笑，古来征战几人回？ 
+                        醉卧沙场君莫笑，古来征战几人回？
                     </div>
                 </div>
                 <img class="ar-img" :style="arImg" src="/static/images/img1.png">
@@ -479,7 +449,8 @@
 </template>
 <script>
 import upload from '../../../components/common/upload'
-
+import util from '../../../assets/common/util'
+import templateMixin from '../../../assets/common/templateMixin'
 export default {
     data () {
         return {
@@ -505,13 +476,13 @@ export default {
                 editorDateStyle: 'space-between',
                 editorDateSpace: '',
                 editorLink: '',
-                dateStyle: '',
+                dateStyle: 'yyyy-MM-dd',
                 editorMaxInput: 30,
                 innerTitleBackground: '/static/images/ar-title-bg.jpg',
                 innerTitleBlockHeight: 60,
                 innerTitleMaxInput: 30,
                 innerTitleFontSize: 16,
-                innerinnerTitleLineHeight: 30,
+                innerTitleLineHeight: 30,
                 innerTitleFontColor: '#000000',
                 innerTitleFontStyle: 'normal',
                 innerTitleAlignment: 'center',
@@ -520,9 +491,9 @@ export default {
                 fileTaxtMaxInput: 500,
                 fileFontSize: 14,
                 fileTaxtLineHeight: 24,
-                fileFaxtFontColor: '#333333',
+                fileTaxtFontColor: '#333333',
                 fileFontType: 'normal',
-                fileFaxtAlignment: 'justify',
+                fileFaxAlignment: 'justify',
                 fileBlcokTopHeight: 0,
                 fileBackground: '',
                 fileMarginTop: 20,
@@ -586,138 +557,97 @@ export default {
             dateStyles: [
                 {
                     label: '2017年10月10日',
-                    value: 'text-date'
+                    value: 'yyyy年MM月dd日'
                 },
                 {
                     label: '2017-10-10',
-                    value: 'sub-date'
+                    value: 'yyyy-MM-dd'
                 },
                 {
                     label: '2017/10/10',
-                    value: 'except-date'
+                    value: 'yyyy/MM/dd'
                 },
                 {
                     label: '2017-10-10 12:12:12',
-                    value: 'sed-sub-date'
-                },
-                {
-                    label: '2017年10月10日 12:12:12',
-                    value: 'sed-text-date'
+                    value: 'yyyy-MM-dd hh:mm:ss'
                 }
             ]
         }
     },
-    computed: {
-        arTitle () {
-            var styleData = {
-                'display': 'block',
-                'padding': '0 15px',
-                'box-sizing': 'border-box',
-                'background-position': 'center',
-                'background-size': '100% 100%',
-                'overflow': 'hidden',
-                'height': this.base.titleBlockHeight + 'px',
-                'background-image': 'url(' + this.base.titleBackground + ')',
-                'font-size': this.base.titleFontSize + 'px',
-                'text-align': this.base.titleAlignment,
-                'font-style': this.base.titleFontStyle,
-                'color': this.base.titleFontColor,
-                'line-height': this.base.titleLineHeight + 'px',
-                'padding-top': this.base.titleTopHeight + 'px',
-                'margin-top': this.base.titleMarginTop + 'px'
-            }
-
-            return styleData
-        },
-        arAuthorDate () {
-            var styleData = {
-                'display': 'flex',
-                'padding': '0 15px',
-                'box-sizing': 'border-box',
-                'justify-content': this.base.editorDateStyle,
-                'overflow': 'hidden',
-                'height': this.base.editorDateBlockHeight + 'px',
-                'font-size': this.base.editorDateFontSize + 'px',
-                'font-style': this.base.editorDateFontStyle,
-                'color': this.base.editorDateFontColor,
-                'line-height': this.base.editorDateLineHeight + 'px'
-            }
-
-            return styleData
-        },
-        arAuthor () {
-            var styleData = {
-                'color': this.base.editorLink ? '#368ccd' : this.base.editorDateFontColor,
-                'margin-left': this.base.editorDateSpace + 'px'
-            }
-
-            return styleData
-        },
-        arTextBody () {
-            var styleData = {
-                'padding': '15px',
-                'display': 'block',
-                'box-sizing': 'border-box',
-                'background-repeat-y': 'repeat',
-                'background-repeat-x': 'no-repeat',
-                'background-size': '100% 100%',
-                'overflow': 'hidden',
-                'background-image': 'url(' + this.base.fileBackground + ')',
-                'padding-top': this.base.fileBlcokTopHeight + 'px'
-            }
-
-            return styleData
-        },
-        arImg () {
-            var styleData = {
-                'display': 'block',
-                'width': '100%',
-                'margin-top': this.base.fileMarginTop + 'px'
-            }
-
-            return styleData
-        },
-        arInTitle () {
-            var styleData = {
-                'display': 'block',
-                'box-sizing': 'border-box',
-                'background-repeat-y': 'no-repeat',
-                'background-repeat-x': 'no-repeat',
-                'background-position': 'center',
-                'background-size': '100% 100%',
-                'overflow': 'hidden',
-                'height': this.base.innerTitleBlockHeight + 'px',
-                'background-image': 'url(' + this.base.innerTitleBackground + ')',
-                'font-size': this.base.innerTitleFontSize + 'px',
-                'text-align': this.base.innerTitleAlignment,
-                'font-style': this.base.innerTitleFontStyle,
-                'color': this.base.innerTitleFontColor,
-                'line-height': this.base.innerinnerTitleLineHeight + 'px',
-                'padding-top': this.base.innerTitleTopHeight + 'px',
-                'margin-top': this.base.innerTitleMarginTop + 'px'
-            }
-
-            return styleData
-        },
-        arContent () {
-            var styleData = {
-                'display': 'block',
-                'box-sizing': 'border-box',
-                'overflow': 'hidden',
-                'font-size': this.base.fileFontSize + 'px',
-                'text-align': this.base.fileFaxtAlignment,
-                'font-style': this.base.fileFontType,
-                'color': this.base.fileFaxtFontColor,
-                'line-height': this.base.fileTaxtLineHeight + 'px',
-                'margin-top': this.base.fileMarginTop + 'px'
-            }
-
-            return styleData
-        }
+    mixins: [templateMixin],
+    filters: {
+        formatDate: util.formatDate
+    },
+    mounted () {
+        this.getBase()
+        this.getTypes()
     },
     methods: {
+        getBase () {
+            util.request({
+                method: 'get',
+                interface: 'getTemplates',
+                data: {
+                    templateCode: this.$route.query.templateCode
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.base = Object.assign(res.result.result[0], this.base)
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
+        },
+        getTypes () {
+            util.request({
+                method: 'get',
+                interface: 'disOfEnterpriseInfo',
+                data: {
+                  types: 'template_type'
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.templateTypes = res.result.result.template_type
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
+        },
         saveBase () {
+            if (!this.base.templateTitle) {
+                this.$message({
+                    message: '请填写模版标题！',
+                    type: 'warning'
+                })
+                return false
+            }
 
+            if (!this.base.templateType) {
+                this.$message({
+                    message: '请选择模版类型！',
+                    type: 'warning'
+                })
+                return false
+            }
+
+            util.request({
+                method: 'post',
+                interface: 'insertTemplate',
+                data: this.base
+            }).then(res => {
+                if (res.result.success == '1') {
+                    var pathData = {
+                        name: 'enterprise-list',
+                        query: {
+                            enterpriseCode: this.$route.query.enterpriseCode
+                        }
+                    }
+
+                    this.$router.replace(pathData)
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
         },
         changeTitleBg (data) {
             this.base.titleBackground = data.url

@@ -476,125 +476,9 @@
           </el-collapse-item>
           <div class="line-bold"></div>
           <!-- 管理员 -->
-          <!-- <el-collapse-item class="formStylePro editShow" title="管理员" name="5">
-            <template v-if="!$route.query.from">
-              <section class="baseInput">
-                  <span>超级管理员</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    :disabled = "true"
-                    v-model="superManagement.name">
-                  </el-input>
-              </section>
-              <section class="baseInput">
-                  <span>注册手机</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    :disabled = "true"
-                    v-model="superManagement.phoneNum">
-                  </el-input>
-              </section>
-              <section class="baseInput">
-                  <el-button class="btn-a" type="primary" icon="edit" size="small">申请修改</el-button>
-              </section>
-              <div class="clear"></div>
-              <section class="baseInput">
-                  <span>产品发布员</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="productPub.name">
-                  </el-input>
-              </section>
-              <section class="baseInput">
-                  <span>注册手机</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="productPub.phoneNum">
-                  </el-input>
-              </section>
-              <div class="clear"></div>
-              <section class="baseInput">
-                  <span>素材发布员</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="marketExecutive.name">
-                  </el-input>
-              </section>
-              <section class="baseInput">
-                  <span>注册手机</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="marketExecutive.phoneNum">
-                  </el-input>
-              </section>
-              <div class="clear"></div>
-              <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-              @click="saveBase">保存</el-button>
-
-            </template>
+          <el-collapse-item class="formStylePro" title="文章模板" name="5">
+            <template-list></template-list>
           </el-collapse-item>
-          <div class="line-bold"></div> -->
-          <!-- 角色授权 -->
-          <!-- <el-collapse-item class="formStylePro" title="角色授权" name="6">
-            <div class="btn-one">
-              <el-button type="primary" icon="delete2" size="small">删除</el-button>
-              <el-button type="primary" icon="plus" size="small">增加</el-button>
-            </div>
-
-            <el-table
-              :data="roleData"
-              border
-              tooltip-effect="dark"
-              style="width: 100%"
-              @selection-change="handleRolesChange">
-              <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                label="角色">
-                <template scope="scope">
-                  <el-select class="input-box" v-model="scope.row.role" placeholder="请选择">
-                    <el-option
-                      v-for="item in roles"
-                      :key="item.id"
-                      :label="item.label"
-                      :value="item.id">
-                    </el-option>
-                </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="姓名">
-                <template scope="scope">
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="scope.row.name">
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="手机号">
-                <template scope="scope">
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="scope.row.tel">
-                  </el-input>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-            @click="saveBase">保存</el-button>
-          </el-collapse-item> -->
         </el-collapse>
     </div>
 </template>
@@ -604,6 +488,7 @@ import upload from '../../../components/common/upload'
 import ueditor from '../../../components/common/ueditor'
 import ewmUpload from '../../../components/common/ewm-upload'
 import colorSelect from '../../../components/common/color-select'
+import templateList from './formAlist/templateList'
 
 export default {
     data () {
@@ -728,45 +613,7 @@ export default {
                         countStyle: 0,
                     }
                 }
-            },
-            multipleSelection: [],
-            superManagement: {
-              name: '',
-              phoneNum: ''
-            },
-            productPub: {
-              name: '',
-              phoneNum: ''
-            },
-            marketExecutive: {
-              name: '',
-              phoneNum: ''
-            },
-            roleData: [
-              {
-                id: 0,
-                role: 0,
-                name: '我是谁',
-                tel: '1654452672'
-              },
-              {
-                id: 1,
-                role: 1,
-                name: '我是谁',
-                tel: '1654433672'
-              }
-            ],
-            roles: [
-              {
-                id: 0,
-                label: '编辑'
-              },
-              {
-                id: 1,
-                label: '券营销方案设计者'
-              }
-            ],
-            companyData: {}
+            }
         }
     },
     mounted () {
@@ -902,7 +749,8 @@ export default {
       ewmUpload,
       colorSelect,
       ueditor,
-      upload
+      upload,
+      templateList
     }
 }
 </script>

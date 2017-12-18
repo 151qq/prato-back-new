@@ -11,11 +11,21 @@ const routers = [
     children: [
       {
         // 推广文章
-        path: 'spread',
-        name: 'spread',
+        path: 'articleDetail',
+        name: 'article-detail',
         component (resolve) {
-          require.ensure(['./article/spread.vue'], () => {
-            resolve(require('./article/spread.vue'))
+          require.ensure(['./article/articleDetail.vue'], () => {
+            resolve(require('./article/articleDetail.vue'))
+          })
+        }
+      },
+      {
+        // 推广文章
+        path: 'articleList',
+        name: 'article-list',
+        component (resolve) {
+          require.ensure(['./article/article.vue'], () => {
+            resolve(require('./article/article.vue'))
           })
         }
       },
@@ -36,16 +46,6 @@ const routers = [
         component (resolve) {
           require.ensure(['./product/productDetail.vue'], () => {
             resolve(require('./product/productDetail.vue'))
-          })
-        }
-      },
-      {
-        // 礼品中心
-        path: 'gift',
-        name: 'gift',
-        component (resolve) {
-          require.ensure(['./article/gift.vue'], () => {
-            resolve(require('./article/gift.vue'))
           })
         }
       },

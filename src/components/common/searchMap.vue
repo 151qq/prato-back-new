@@ -97,7 +97,7 @@ export default {
     #containerhouse {
         width: 640px;
         height: 180px;
-        margin: 0 0 15px;
+        margin: 20px 0 15px;
     }
 }
 </style>

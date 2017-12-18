@@ -4,25 +4,16 @@
 const platform = "/E2-Platform/"
 export default {
     interfaces: {
-        "authentication": platform + "authentication.json",     //登录
-        "uploadArticleAreaImage": platform + "siteEdit/uploadArticleAreaImage.json",   //图片上传接口
-        "deleteDraftFile": platform + "html5SiteInfo/deleteDraftFile.json",                       //文章删除接口,参数 html5PageCode,id
-        "mediaList": platform + "html5SiteInfo/mediaList.json",
+        "authentication": platform + "authentication.json",
         "getUserInfo": platform + "getUserInfo.json",
-        "draftArticle": platform + "siteEdit/draftArticle.json",          //保存草草
-        "publishArticle": platform + "siteEdit/publishArticle.json",       //发布
-        "changePassword": platform + "changePassword.json",         //修改密码
-        "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
-        "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
-
-        /**
-        * 上传头像 post                                
-        */
+        "changePassword": platform + "changePassword.json",
+        "getTelCode": "/static/api/common/telcode.json",
+        "forgetPassword": "/static/api/common/telcode.json",
         "headImage": platform + "headImage.json",
         "logout": platform + 'logout.json',
-        "changePassword": platform + "changePassword.json",         //修改密码
-        "resetPassword": platform + "resetPassword.json",  // 重置密码
-        "imageUpload": platform + 'houses/image/upload.json',
+        "changePassword": platform + "changePassword.json",
+        "resetPassword": platform + "resetPassword.json",
+
         uploadFile: platform + 'platformFile/uploadFile.json',
 
         /**
@@ -156,18 +147,21 @@ export default {
         * 推荐文章 get
         * key 搜索时使用，返回搜索相关数据
         */
-        articleList: '/static/api/article/articleList.json',
-        /**
-        * 推广文章 get
-        */
-        // spreadTree: '/static/api/article/articleTree.json',
-        spreadTree: platform +'report/reportTree.json',
-        draftArticle: platform + 'siteEdit/draftArticle.json',
-        findArticleByFileCode: platform + 'siteEdit/findArticleByFileCode.json',
-        getInvestors: platform +'getUserInfoByRoleCode.json',
-        findRecommendArticleByCode: platform + 'siteEdit/findRecommendArticleByCode.json',
-        setArticles: platform + 'siteEdit/setRecommendArticle.json',
-        saveArticleArea: platform + 'siteEdit/saveArticleArea.json',
+        html5PageList: platform + 'html5PageList.json',
+        html5PageDelete: platform + 'html5PageDelete.json',
+        html5PageSubmit: platform + 'html5PageSubmit.json',
+        html5PageGet: platform + 'html5PageGet.json',
+        html5PageSave: platform + 'html5PageSave.json',
+        html5PageAreaSave: platform + 'html5PageAreaSave.json',
+        listPageArea: platform + 'listPageArea.json',
+        deletePageArea: platform + 'deletePageArea.json',
+        html5PageExtendInsert: platform + 'html5PageExtendInsert.json',
+        html5PageExtendGet: platform + 'html5PageExtendGet.json',
+
+        getTemplates: platform +'htmlPageTemplate/listPage.json',
+        insertTemplate: platform + 'htmlPageTemplate/save.json',
+        deleteTemplate: platform + 'htmlPageTemplate/delete.json',
+        updateTemplate: platform +'htmlPageTemplate/update.json',
         /**
         * 推广文章 get
         */

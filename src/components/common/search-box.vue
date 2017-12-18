@@ -37,33 +37,11 @@ export default {
   created () {
     var _self = this
     $('body').click(function () {
-      _self.keyValue = ''
       _self.messDate = []
       _self.isShow = false
     })
   },
   methods: {
-    // 获取搜索数据
-    getDatas (vr) {
-      // 记录被调用序号
-      var count = this.count
-
-      let formData = {
-        type: this.$route.name,
-        vr: vr
-      }
-
-      util.request({
-          method: 'get',
-          interface: 'searchMap',
-          data: formData
-      }).then(res => {
-          if (count !== this.count) {
-            return false
-          }
-          this.messDate = res.result.datas
-      })
-    },
     getMess () {
       if (this.keyValue === '') {
         return false
@@ -75,11 +53,11 @@ export default {
         onSearchComplete (results) {
           // 更新调用记录
           _self.count++
-          _self.getDatas(results.vr)
-        },
-        autoViewport: true
+          _self.messDate = results.vr ? results.vr : results.wr
+        }
       }
-      var local = new window.BMap.LocalSearch('北京', options)
+      
+      var local = new window.BMap.LocalSearch(this.city ? this.city : '北京', options)
       local.search(this.keyValue)
     },
     showModel () {
@@ -89,13 +67,16 @@ export default {
       this.isShow = false
     },
     goMap (item) {
-      if (this.keyValue === '') {
-        this.$message.error('请输入搜索关键字')
-        return false
-      }
-
+      this.keyValue = item.title
       this.isShow = false
       this.$emit('mapChange', item)
+    },
+    resetKey (key) {
+      if (key) {
+        this.keyValue = key
+        return
+      }
+      this.keyValue = ''
     }
   }
 }
@@ -108,7 +89,7 @@ export default {
     .mess-box {
       position: absolute;
       left: 0;
-      top: 49px;
+      top: 35px;
       width: 534px;
       box-sizing: border-box;
       padding: 15px 0;

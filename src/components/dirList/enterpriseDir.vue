@@ -10,7 +10,7 @@
             :index="index + ''">
             <router-link
                 class="lists-box"
-                :to="{name: pathName, query: {index: index, enterpriseCode: item.enterpriseCode}}">
+                :to="{name: pathName, query: {enterpriseCode: item.enterpriseCode}}">
                 
                 <div class="img-box">
                   <img v-if="item.enterpriseLogoUrl" :src="item.enterpriseLogoUrl">
@@ -70,12 +70,12 @@
       }
     },
     mounted(){
-      this.loadList()
+      this.loadList('reload')
     },
     watch: {
       $route () {
         setTimeout(() => {
-          this.activeName = String(this.$route.query.index)
+          this.activeName = String(this.getIndexByCode())
         }, 0)
       }
     },
@@ -106,9 +106,9 @@
           }
 
           // 删除非当前选中或刷新页面，保留当前
-          if (type) {
+          if (type && this.$route.query.enterpriseCode) {
             setTimeout(() => {
-              this.activeName = String(this.$route.query.index)
+              this.activeName = String(this.getIndexByCode())
             }, 0)
             return
           }
@@ -116,7 +116,6 @@
           var pathObj = {
             name: this.pathName,
             query: {
-              index: 0,
               enterpriseCode: this.treeData[0].enterpriseCode
             }
           }
@@ -126,6 +125,18 @@
           }, 0)
           this.$router.push(pathObj)
         })
+      },
+      getIndexByCode () {
+        var index = 0
+        var code = this.$route.query.enterpriseCode
+        for (var i = 0, len = this.treeData.length; i < len; i++) {
+          if (code == this.treeData[i].enterpriseCode) {
+            index = i
+            break
+          }
+        }
+
+        return index
       },
       loadDown () {
         this.pageNumber++
