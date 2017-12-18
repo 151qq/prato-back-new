@@ -444,32 +444,35 @@
                         Sagmeister & Walsh杂志
                 </a>
             </div>
-            <img class="ar-img" :style="arImg" src="/static/images/bench1.png">
-            <div class="ar-in-title" :style="arInTitle">
-                Sagmeister & Walsh 搞事
-            </div>
-            <div class="ar-content" :style="arContent">
-                Sagmeister & Walsh 最近把网站和办公室都全新改版了，网站变得很酷，首页是他们办公室的24小时动态录像直播（中国内地可能需要翻墙才能观看）！听起来是不是很有创意呢？这可是前无古人后无来者事儿！
-            </div>
-            <img class="ar-img" :style="arImg" src="/static/images/detial1.png">
-            <div class="ar-in-title" :style="arInTitle">
-                凉州词(王翰)
-            </div>
-            <div class="ar-content" :style="arContent">
-                <div style="text-align: center;">
-                    葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
-                    醉卧沙场君莫笑，古来征战几人回？ <br>
-                    葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
-                    醉卧沙场君莫笑，古来征战几人回？ 
+            <section class="ar-text-body" :style="arTextBody">
+                <img class="ar-img" :style="arImg" src="/static/images/bench1.png">
+                <div class="ar-in-title" :style="arInTitle">
+                    Sagmeister & Walsh 搞事
                 </div>
-            </div>
-            <img class="ar-img" :style="arImg" src="/static/images/img1.png">
-            <div class="ar-in-title" :style="arInTitle">
-                产品详细规格参数
-            </div>
-            <div class="ar-content" :style="arContent">
-                Sagmeister & Walsh 最近把网站和办公室都全新改版了，网站变得很酷，首页是他们办公室的24小时动态录像直播（中国内地可能需要翻墙才能观看）！
-            </div>
+                <div class="ar-content" :style="arContent">
+                    Sagmeister & Walsh 最近把网站和办公室都全新改版了，网站变得很酷，首页是他们办公室的24小时动态录像直播（中国内地可能需要翻墙才能观看）！听起来是不是很有创意呢？这可是前无古人后无来者事儿！
+                </div>
+                <img class="ar-img" :style="arImg" src="/static/images/detial1.png">
+                <div class="ar-in-title" :style="arInTitle">
+                    凉州词(王翰)
+                </div>
+                <div class="ar-content" :style="arContent">
+                    <div style="text-align: center;">
+                        葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
+                        醉卧沙场君莫笑，古来征战几人回？ <br>
+                        葡萄美酒夜光杯，欲饮琵琶马上催。 <br>
+                        醉卧沙场君莫笑，古来征战几人回？ 
+                    </div>
+                </div>
+                <img class="ar-img" :style="arImg" src="/static/images/img1.png">
+                <div class="ar-in-title" :style="arInTitle">
+                    产品详细规格参数
+                </div>
+                <div class="ar-content" :style="arContent">
+                    Sagmeister & Walsh 最近把网站和办公室都全新改版了，网站变得很酷，首页是他们办公室的24小时动态录像直播（中国内地可能需要翻墙才能观看）！
+                </div>
+            </section>
+            
             <img class="ar-img" :style="arImg" :src="base.fileEndPic">
         </section>
     </section>
@@ -580,18 +583,35 @@ export default {
                     value: 'space-around'
                 }
             ],
-            dateStyles: [],
-            arImg: {
-                'display': 'block',
-                'width': '100%',
-                'margin-top': '15px'
-            }
+            dateStyles: [
+                {
+                    label: '2017年10月10日',
+                    value: 'text-date'
+                },
+                {
+                    label: '2017-10-10',
+                    value: 'sub-date'
+                },
+                {
+                    label: '2017/10/10',
+                    value: 'except-date'
+                },
+                {
+                    label: '2017-10-10 12:12:12',
+                    value: 'sed-sub-date'
+                },
+                {
+                    label: '2017年10月10日 12:12:12',
+                    value: 'sed-text-date'
+                }
+            ]
         }
     },
     computed: {
         arTitle () {
             var styleData = {
                 'display': 'block',
+                'padding': '0 15px',
                 'box-sizing': 'border-box',
                 'background-position': 'center',
                 'background-size': '100% 100%',
@@ -612,6 +632,7 @@ export default {
         arAuthorDate () {
             var styleData = {
                 'display': 'flex',
+                'padding': '0 15px',
                 'box-sizing': 'border-box',
                 'justify-content': this.base.editorDateStyle,
                 'overflow': 'hidden',
@@ -632,10 +653,36 @@ export default {
 
             return styleData
         },
+        arTextBody () {
+            var styleData = {
+                'padding': '15px',
+                'display': 'block',
+                'box-sizing': 'border-box',
+                'background-repeat-y': 'repeat',
+                'background-repeat-x': 'no-repeat',
+                'background-size': '100% 100%',
+                'overflow': 'hidden',
+                'background-image': 'url(' + this.base.fileBackground + ')',
+                'padding-top': this.base.fileBlcokTopHeight + 'px'
+            }
+
+            return styleData
+        },
+        arImg () {
+            var styleData = {
+                'display': 'block',
+                'width': '100%',
+                'margin-top': this.base.fileMarginTop + 'px'
+            }
+
+            return styleData
+        },
         arInTitle () {
             var styleData = {
                 'display': 'block',
                 'box-sizing': 'border-box',
+                'background-repeat-y': 'no-repeat',
+                'background-repeat-x': 'no-repeat',
                 'background-position': 'center',
                 'background-size': '100% 100%',
                 'overflow': 'hidden',
@@ -656,16 +703,12 @@ export default {
             var styleData = {
                 'display': 'block',
                 'box-sizing': 'border-box',
-                'background-position': 'center',
-                'background-size': '100% 100%',
                 'overflow': 'hidden',
-                'background-image': 'url(' + this.base.fileBackground + ')',
                 'font-size': this.base.fileFontSize + 'px',
                 'text-align': this.base.fileFaxtAlignment,
                 'font-style': this.base.fileFontType,
                 'color': this.base.fileFaxtFontColor,
                 'line-height': this.base.fileTaxtLineHeight + 'px',
-                'padding-top': this.base.fileBlcokTopHeight + 'px',
                 'margin-top': this.base.fileMarginTop + 'px'
             }
 
@@ -679,13 +722,13 @@ export default {
         changeTitleBg (data) {
             this.base.titleBackground = data.url
         },
-        changeInnerTitleBg () {
+        changeInnerTitleBg (data) {
             this.base.innerTitleBackground = data.url
         },
-        changeFileBackground () {
+        changeFileBackground (data) {
             this.base.fileBackground = data.url
         },
-        changeFileEndPic () {
+        changeFileEndPic (data) {
             this.base.fileEndPic = data.url
         }
     },
@@ -725,9 +768,9 @@ export default {
 
     .right-content {
         box-sizing: border-box;
-        padding: 15px;
+        padding: 15px 0;
         border: 1px solid #bfcbd9;
-        border-radius: 5px;
+        border-radius: 3px;
         float: right;
         width: 350px;
         margin-top: 180px;
