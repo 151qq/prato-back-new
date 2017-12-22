@@ -30,8 +30,7 @@
               <i v-if="scope.row.templateStatus == '2'"
                   class="el-icon-delete2" @click="deleteTemplate(scope.row)"></i>
 
-              <router-link  v-if="scope.row.templateStatus == '2'"
-                            class="el-icon-document black"
+              <router-link  class="el-icon-document black"
                             target="_blank"
                             :to="{name: 'article-template',
                                   query: {
@@ -87,6 +86,11 @@ export default {
     mounted () {
       this.getItemList()
       this.getTypes()
+    },
+    watch: {
+      $route () {
+        this.getItemList()
+      }
     },
     methods: {
       getItemList () {
@@ -168,6 +172,7 @@ export default {
             method: 'post',
             interface: 'updateTemplate',
             data: {
+              enterpriseCode: this.$route.query.enterpriseCode,
               templateCode: row.templateCode
             }
         }).then((res) => {

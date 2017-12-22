@@ -51,9 +51,10 @@ export default {
       this.isShow = true
       var options = {
         onSearchComplete (results) {
+          console.log(results)
           // 更新调用记录
           _self.count++
-          _self.messDate = results.vr ? results.vr : results.wr
+          _self.messDate = results.yr
         }
       }
       

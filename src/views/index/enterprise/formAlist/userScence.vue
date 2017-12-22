@@ -101,6 +101,11 @@ export default {
       this.getItemList()
       this.getProductList()
     },
+    watch: {
+      $route () {
+        this.getItemList()
+      }
+    },
     methods: {
       getItemList () {
         util.request({

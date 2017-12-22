@@ -262,7 +262,7 @@
                                 class="input-box"
                                 type="number"
                                 :min="0"
-                                v-model="base.innerinnerTitleLineHeight">
+                                v-model="base.innerTitleFontType">
                         </el-input>
                     </section>
                     <section class="baseInput">
@@ -397,7 +397,7 @@
                     </section>
                     <div class="clear"></div>
                 </div>
-                <el-button v-if="isOperate"
+                <el-button v-if="isOperate && base.templateStatus == '2'"
                             class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
@@ -482,7 +482,7 @@ export default {
                 innerTitleBlockHeight: 60,
                 innerTitleMaxInput: 30,
                 innerTitleFontSize: 16,
-                innerTitleLineHeight: 30,
+                innerTitleFontType: 30,
                 innerTitleFontColor: '#000000',
                 innerTitleFontStyle: 'normal',
                 innerTitleAlignment: 'center',
@@ -491,9 +491,7 @@ export default {
                 fileTaxtMaxInput: 500,
                 fileFontSize: 14,
                 fileTaxtLineHeight: 24,
-                fileTaxtFontColor: '#333333',
                 fileFontType: 'normal',
-                fileFaxAlignment: 'justify',
                 fileBlcokTopHeight: 0,
                 fileBackground: '',
                 fileMarginTop: 20,
@@ -592,7 +590,17 @@ export default {
                 }
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.base = Object.assign(res.result.result[0], this.base)
+                    var obj = res.result.result[0]
+
+                    if (obj) {
+                        for (var key in obj) {
+                            if (!obj[key]) {
+                                delete obj[key]
+                            }
+                        }
+                    }
+
+                    this.base = Object.assign(this.base, obj)
                 } else {
                     this.$message.error(res.result.message)
                 }

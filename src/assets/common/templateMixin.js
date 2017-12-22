@@ -84,7 +84,7 @@ export default {
                 'text-align': this.base.innerTitleAlignment,
                 'font-style': this.base.innerTitleFontStyle,
                 'color': this.base.innerTitleFontColor,
-                'line-height': this.base.innerinnerTitleLineHeight + 'px',
+                'line-height': this.base.innerTitleFontType + 'px',
                 'padding-top': this.base.innerTitleTopHeight + 'px',
                 'margin-top': this.base.innerTitleMarginTop + 'px'
             }

@@ -103,11 +103,7 @@ export default {
               eventCode: this.$route.query.eventCode
             }
         }).then(res => {
-            if (res.result.success == '1') {
-                this.discountData = res.result.result
-            } else {
-                this.$message.error(res.result.message)
-            }
+            this.discountData = res.result.result
         })
       },
       getTypes () {

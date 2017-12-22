@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <section class="upload-box">
-      <div class="img-big" @click="showMedia">
-        <img v-if="!curPath && !bgPath"
-            src="../../assets/images/img-default.jpg">
-        <img v-if="!curPath && bgPath"
-            src="../../assets/images/page-img.jpg">
-        <img v-else class="img-big" :src="curPath">
+  <div class="imgs-attachment-box">
+    <section class="img-box" v-for="(item, index) in imgsData" :key="index">
+      <img class="img-big" :src="item.attachmentTargetCode" @click="showImg(index)">
+      <div class="delete-box">
+        <i class="el-icon-close" @click="deleteImg(item)"></i>
       </div>
     </section>
+
+    <div class="img-box" v-if="imgsData.length < 9 && isOperate" @click="showMedia">
+      <img class="img-big" src="../../assets/images/add-img.jpg">
+    </div>
 
     <el-dialog
       title="上传"
@@ -17,7 +18,7 @@
       size="tiny">
       <section>
         <label class="input-label" :for="idFor">本地上传</label>
-        <input type="file" v-if="isOperate" class="ben-input" :id="idFor" @change="postImg($event)">
+        <input type="file" class="ben-input" :id="idFor" @change="postImg($event)">
 
         <el-button @click="getMediaList('pic')" class="upload-btn" type="primary">图片素材</el-button>
         <el-button v-if="isMedia" @click="getMediaList('media')" class="upload-btn" type="primary">媒体素材</el-button>
@@ -27,36 +28,37 @@
     <file-lists :doc-type="docType"
                 :select-data="selectData"
                 @suSelect="suSelect"></file-lists>
+
+    <!-- 大图 -->
+    <swiper-img :is-show="isShow" :index="nowIndex" :big-imgs="imgLists"></swiper-img>
   </div>
 </template>
 <script>
 import util from '../../assets/common/util'
 import fileLists from './fileLists'
+import swiperImg from './swiper-img.vue'
 
 export default {
-    props: ['path', 'bgPath', 'idName', 'isOperate', 'isMedia', 'itemIndex'],
+    props: ['imgsData', 'objectCode', 'idName', 'isMedia', 'itemIndex', 'itemCode', 'isOperate'],
     data() {
       return {
-        curPath: '',
-        curCode: '',
-        idFor: '',
-        dialogVisible: false,
-        mediaList: [],
-        enterprise: '',
-        docType: '',
         selectData: {
           isShow: false
-        }
+        },
+        docType: 'pic',
+        imgLists: [],
+        nowIndex: 0,
+        isShow: {
+          value: false
+        },
+        idFor: '',
+        dialogVisible: false,
       }
     },
     mounted () {
       this.idFor = this.idName ? this.idName : 'upload-file-single'
-      this.curPath = this.path
     },
     watch: {
-      path () {
-        this.curPath = this.path
-      },
       idName () {
         this.idFor = this.idName ? this.idName : 'upload-file-single'
       }
@@ -74,7 +76,8 @@ export default {
         var data = {
           url: this.curPath,
           file: imgData.file,
-          index: this.itemIndex
+          index: this.itemIndex,
+          code: this.itemCode
         }
         this.selectData.isShow = false
         this.dialogVisible = false
@@ -87,7 +90,7 @@ export default {
           data: {
             enterpriseCode: this.$route.query.enterpriseCode,
             fileType: 'pic',
-            oldFilePath: this.curPath
+            oldFilePath: ''
           }
         }
 
@@ -96,66 +99,67 @@ export default {
           this.curPath = result.filePath
           var data = {
             url: this.curPath,
-            index: this.itemIndex
+            index: this.itemIndex,
+            code: this.itemCode
           }
           this.dialogVisible = false
           this.$emit('changeImg', data)
         })
+      },
+      showImg (index) {
+        this.nowIndex = index
+
+        var arrs = []
+        this.imgsData.forEach((item) => {
+          arrs.push(item.attachmentTargetCode)
+        })
+        this.imgLists = arrs
+
+        this.isShow.value = true
+      },
+      deleteImg (item) {
+        this.$emit('deleteImg', item)
       }
     },
     components: {
-      fileLists
+      fileLists,
+      swiperImg
     }
 }
 </script>
 
 <style lang="scss">
-.upload-box {
+.imgs-attachment-box {
+  width: 110%;
   overflow: hidden;
-  position: relative;
-  cursor: pointer;
 
-  .img-big {
-    display: block;
-    width: 100%;
-    height: auto;
+  .img-box {
+    float: left;
+    margin-right: 10px;
+    position: relative;
     cursor: pointer;
 
-    img {
+    .img-big {
       display: block;
-      width: 100%;
-      height: auto;
+      width: 100px;
+      height: 60px;
     }
-  }
-}
 
-.upload-dia {
-  .input-label {
-    display: block;
-    width: 100%;
-    color: #fff;
-    background-color: #20a0ff;
-    border: 1px solid #20a0ff;
-    padding: 10px 15px;
-    border-radius: 4px;
-    text-align: center;
-    line-height: 1;
-    white-space: nowrap;
-    cursor: pointer;
-    margin: 0 0 15px 0;
+    .delete-box {
+      position: absolute;
+      right: 3px;
+      top: 0px;
+      font-size: 12px;
+      cursor: pointer;
 
-    &:hover {
-      opacity: 0.8;
+      &:hover {
+        color: #20a0ff;
+      }
     }
-  }
 
-  .ben-input {
-    display: none;
-  }
-
-  .upload-btn {
-    width: 100%;
-    margin: 0 0 15px 0;
+    .img-input {
+      display: none;
+    }
   }
 }
 </style>

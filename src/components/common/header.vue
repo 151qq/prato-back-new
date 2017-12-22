@@ -5,6 +5,7 @@
     <div class="nav-box">
       <router-link :to="{ name: 'market-list'}">营销方案</router-link>
       <router-link :to="{ name: 'article-list'}">推广文章</router-link>
+      <router-link :to="{ name: 'survey-list'}">调研发布</router-link>
       <router-link :to="{ name: 'product-list'}">产品中心</router-link>
       <!-- <router-link :to="{ name: 'gift'}">礼品中心</router-link> -->
       <router-link :to="{ name: 'enterprise-list'}">企业信息</router-link>

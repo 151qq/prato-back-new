@@ -1,5 +1,5 @@
 <template>
-    <div class="article-list-box">
+    <div class="survey-list-box">
         <div class="input-box">
             <el-input
               placeholder="请输入需查询条件"
@@ -15,27 +15,28 @@
         </div>
         <section class="big-cards-box">
             <router-link class="card-box"
+                         target="_blank"
                          v-for="(item, index) in marketList"
-                         :to="{name: 'article-detail', query: {enterpriseCode: item.enterpriseCode, pageCode: item.pageCode, templateCode: item.templateCode}}">
+                         :to="{name: 'survey-detail', query: {enterpriseCode: item.enterpriseCode, surveyCode: item.surveyCode, surveyType: item.surveyType}}">
                 <div class="card-img">
-                    <img v-if="item.pageCover" :src="item.pageCover">
+                    <img v-if="item.surveyCover" :src="item.surveyCover">
                 </div>
                 
                 <div class="card-content">
-                    <div class="card-title">{{item.pageTitle}}</div>
-                    <div class="card-desc">{{item.pageAbstract}}</div>
+                    <div class="card-title">{{item.surveyTitle}}</div>
+                    <div class="card-desc">{{item.surveyAbstraction}}</div>
                     <div class="card-tag">
-                        <el-tag v-if="item.pageStatus == '2'" type="gray">草稿</el-tag>
-                        <el-tag v-if="item.pageStatus == '1'" type="success">已发布</el-tag>
-                        <el-tag v-if="item.pageStatus == '3'">已下架</el-tag>
+                        <el-tag v-if="item.surveyStatus == 'survey_status_1'" type="gray">草稿</el-tag>
+                        <el-tag v-if="item.surveyStatus == 'survey_status_2'" type="success">正在使用</el-tag>
+                        <el-tag v-if="item.surveyStatus == 'survey_status_3'">已下线</el-tag>
                     </div>
                 </div>
                 <section class="card-btns">
                     <i class="el-icon-upload2"
-                        v-if="item.pageStatus == '2'"
-                        @click.prevent="changeStatus(item, 'submitted')"></i>
+                        v-if="item.surveyStatus == 'survey_status_1'"
+                        @click.prevent="changeStatus(item, 'survey_status_2')"></i>
                     <i class="el-icon-delete2"
-                        v-if="item.pageStatus == '2'"
+                        v-if="item.surveyStatus == 'survey_status_1'"
                         @click.prevent="deleteItem(item)"></i>
                 </section>
             </router-link>
@@ -44,34 +45,23 @@
                 v-if="total && marketList.length < total"
                 @click="loadMore">加载更多...</div>
 
-        <el-dialog title="添加方案" :visible.sync="isAddItem">
+        <el-dialog title="添加调研" :visible.sync="isAddItem">
           <el-form :label-position="'left'" :model="addItemForm" label-width="80px">
-            <el-form-item label="任务">
-                <el-select v-model="addItemForm.taskCode"
-                            placeholder="请选择">
-                    <el-option
-                      v-for="(item, index) in taskList"
-                      :key="index"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                </el-select>
+            <el-form-item label="调研标题">
+                <el-input v-model="addItemForm.surveyTitle" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="文章标题">
-                <el-input v-model="addItemForm.pageTitle" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="文章封面">
-                <popup-img :path="addItemForm.pageCover"
+            <el-form-item label="调研封面">
+                <popup-img :path="addItemForm.surveyCover"
                             :is-operate="true"
                             :bg-path="true"
                             @imgClick="imgClick"></popup-img>
             </el-form-item>
-            <el-form-item label="文章摘要">
+            <el-form-item label="调研摘要">
                 <el-input
                     type="textarea"
                     :rows="3"
                     placeholder="请输入内容"
-                    v-model="addItemForm.pageAbstract">
+                    v-model="addItemForm.surveyAbstraction">
                 </el-input>
             </el-form-item>
           </el-form>
@@ -81,7 +71,7 @@
           </div>
         </el-dialog>
 
-        <popup-load :path="addItemForm.pageCover"
+        <popup-load :path="addItemForm.surveyCover"
                      :is-operate="true"
                      :bg-path="true"
                      :id-name="'pageCover'"
@@ -95,7 +85,7 @@ import popupImg from '../../../components/common/popupImg.vue'
 import popupLoad from '../../../components/common/popupLoad.vue'
 
 export default {
-    props: ['articleType'],
+    props: ['surveyType'],
     data () {
         return {
             keyValue: '',
@@ -105,47 +95,31 @@ export default {
             total: 0,
             isAddItem: false,
             addItemForm: {
-                pageTitle: '',
-                pageCover: '',
-                pageAbstract: '',
-                taskCode: ''
+                surveyTitle: '',
+                surveyCover: '',
+                surveyAbstraction: ''
             },
-            taskList: [
-              {
-                label: '假任务',
-                value: '3823882322992'
-              }
-            ],
             isUpload: {
                 value: false
             }
         }
     },
     mounted () {
-      this.getList()
-    },
-    watch: {
-      $route () {
-        this.keyValue = ''
-        this.pageNumber = 1
-        this.getList()
-      }
+         this.getList()
     },
     methods: {
-        searchItem () {
-          
-        },
+        searchItem () {},
         getList (type) {
             var formData = {
                 enterpriseCode: this.$route.query.enterpriseCode,
-                pageType: this.articleType,
+                surveyType: this.surveyType,
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber
             }
 
             util.request({
                 method: 'get',
-                interface: 'html5PageList',
+                interface: 'selectByEcAndTy',
                 data: formData
             }).then(res => {
                 if (res.result.success == '0') {
@@ -153,7 +127,7 @@ export default {
                     return
                 }
 
-                this.total = res.result.total
+                this.total = Number(res.result.total)
                 if (!type) {
                     this.marketList = res.result.result
                 } else {
@@ -163,11 +137,11 @@ export default {
         },
         changeStatus (item, type) {
             util.request({
-              method: 'post',
-              interface: 'html5PageSubmit',
+              method: 'get',
+              interface: 'updateSurveyStatus',
               data: {
-                pageCode: item.pageCode,
-                pageStatus: '1'
+                surveyCode: item.surveyCode,
+                surveyStatus: type
               }
             }).then(res => {
               if (res.result.success == '1') {
@@ -183,10 +157,10 @@ export default {
         },
         deleteItem (item) {
             util.request({
-              method: 'post',
-              interface: 'html5PageDelete',
+              method: 'get',
+              interface: 'deleteSurvey',
               data: {
-                pageCode: item.pageCode
+                surveyCode: item.surveyCode
               }
             }).then(res => {
               if (res.result.success == '1') {
@@ -202,48 +176,36 @@ export default {
             })
         },
         addItem () {
-            this.addItemForm = {
-                pageTitle: '',
-                pageCover: '',
-                pageAbstract: '',
-                taskCode: ''
-            }
             this.isAddItem = true
         },
         imgClick () {
             this.isUpload.value = true
         },
         changeItemImg (data) {
-            this.addItemForm.pageCover = data.url
+            this.addItemForm.surveyCover = data.url
         },
         confirmItem () {
-            if (!this.addItemForm.taskCode) {
-              this.$message.error('请选择任务！')
+            if (!this.addItemForm.surveyTitle) {
+              this.$message.error('调研标题不能为空！')
               return
             }
 
-            if (!this.addItemForm.pageTitle) {
-              this.$message.error('文章标题不能为空！')
-              return
-            }
-
-            if (!this.addItemForm.pageCover) {
-              this.$message.error('文章封面不能为空！')
+            if (!this.addItemForm.surveyCover) {
+              this.$message.error('调研封面不能为空！')
               return
             }
 
             var formData = {
                 enterpriseCode: this.$route.query.enterpriseCode,
-                pageType: this.articleType,
-                pageTitle: this.addItemForm.pageTitle,
-                pageCover: this.addItemForm.pageCover,
-                pageAbstract: this.addItemForm.pageAbstract,
-                taskCode: this.addItemForm.taskCode
+                surveyType: this.surveyType,
+                surveyTitle: this.addItemForm.surveyTitle,
+                surveyCover: this.addItemForm.surveyCover,
+                surveyAbstraction: this.addItemForm.surveyAbstraction
             }
 
             util.request({
                 method: 'post',
-                interface: 'html5PageSave',
+                interface: 'manageSurveyInfo',
                 data: formData
             }).then(res => {
                 if (res.result.success == '1') {
@@ -251,7 +213,7 @@ export default {
                   this.getList()
                   this.isAddItem = false
 
-                  window.open('/#/articleDetail?enterpriseCode=' + this.$route.query.enterpriseCode + '&pageCode=' + res.result.result.pageCode + '&templateCode=' + res.result.result.templateCode, '_blank')
+                  window.open('/#/surveyDetail?enterpriseCode=' + this.$route.query.enterpriseCode + '&surveyCode=' + res.result.result, '_blank')
                 } else {
                   this.$message.error(res.result.message)
                 }
@@ -269,23 +231,23 @@ export default {
 }
 </script>
 <style lang="scss">
-.article-list-box {
+.survey-list-box {
     margin: auto;
 
     .input-box {
         display: block;
-        width: 660px;
-        height: 36px;
-        margin: 20px auto 30px;
+        width: 800px;
+        height: 50px;
+        margin: 0 auto 30px;
 
         .el-input {
           float: left;
-          width: 460px;
-          height: 36px;
+          width: 600px;
+          height: 50px;
 
           input {
             font-size: 14px;
-            height: 36px;
+            height: 50px;
           }
         }
 
@@ -295,14 +257,14 @@ export default {
           margin-left: -10px;
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
-          height: 36px;
+          height: 50px;
           font-size: 16px;
           padding: 0 23px;
         }
 
         .add-new-btn {
             float: right;
-            height: 36px;
+            height: 50px;
         }
     }
 
@@ -327,26 +289,25 @@ export default {
 
         .card-img {
           float: left;
-          width: 160px;
-          height: 100px;
+          width: 200px;
+          height: 120px;
           background: #cfcfd0;
 
           img {
             display: block;
-            width: 160px;
-            height: 100px;
+            width: 200px;
+            height: 120px;
           }
         }
 
         .card-content {
           float: right;
-          width: 620px;
+          width: 780px;
 
           .card-title {
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 18px;
+            line-height: 30px;
             color: #000000;
-            margin-bottom: 3px;
           }
 
           .card-desc {
@@ -354,6 +315,7 @@ export default {
             line-height: 24px;
             color: #475669;
             height: 48px;
+            margin-top: 10px;
             overflow: hidden;
           }
         }

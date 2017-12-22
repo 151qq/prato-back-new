@@ -10,7 +10,7 @@
             label="场景名称">
           </el-table-column>
           <el-table-column
-            prop="scenarioProducts"
+            prop="productScenarioProductName"
             label="推荐产品">
           </el-table-column>
           <el-table-column

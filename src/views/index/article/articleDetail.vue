@@ -12,7 +12,7 @@
           </el-collapse-item>
           <div class="line-bold"></div>
 
-          <el-collapse-item class="float-form-box" title="相关文章" name="2">
+          <el-collapse-item class="float-form-box" title="文章推荐" name="2">
             <form-article></form-article>
           </el-collapse-item>
           

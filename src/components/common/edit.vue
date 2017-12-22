@@ -10,7 +10,8 @@
                         <upload
                             :path="item.imgUrl"
                             :id-name="'edit-img' + index"
-                            @changeImg="changeImg(data, index)"></upload>
+                            :item-index="index"
+                            @changeImg="changeImg"></upload>
                     </div>
 
                     <div class="show-box" v-if="item.type === 'text'">
@@ -40,6 +41,14 @@
                                 @blur="titleBlur(item, index)"
                                 :style="arInTitle"
                                 placeholder="编辑中的内标题样式">
+                    </div>
+
+                    <div class="show-box" v-if="item.type === 'specList'">
+                        <div class="spec-box" v-html="item.content"></div>
+                    </div>
+
+                    <div class="show-box" v-if="item.type === 'userScence'">
+                        <div class="scence-box" v-html="item.content"></div>
                     </div>
                 </template>
 
@@ -100,6 +109,14 @@
                 <img class="gray-box" src="../../assets/images/add-table-icon.png">
                 <img class="now-box" src="../../assets/images/table-now.png">
             </div>
+            <div @click="addTem('specList')">
+                <img class="gray-box" src="../../assets/images/add-table-icon.png">
+                <img class="now-box" src="../../assets/images/table-now.png">
+            </div>
+            <div @click="addTem('userScence')">
+                <img class="gray-box" src="../../assets/images/add-table-icon.png">
+                <img class="now-box" src="../../assets/images/table-now.png">
+            </div>
             <div @click="addTem('map')">
                 <img class="gray-box" src="../../assets/images/add-map-icon.png">
                 <img class="now-box" src="../../assets/images/map-now.png">
@@ -140,7 +157,39 @@ export default {
             },
             sortNum: '',
             btnShowIndex: '',
-            isLook: false
+            isLook: false,
+            tableStyle: {
+                'border': '1px solid #D3DCE6',
+                'border-bottom': 'none'
+            },
+            rowStyle: {
+                'overflow': 'hidden',
+                'min-height': '40px',
+                'box-sizing': 'border-box',
+                'padding': ' 10px 10px 10px 180px',
+                'position': 'relative',
+                'font-size': '14px',
+                'color': '#000000',
+                'line-height': '20px',
+                'border-bottom': '1px solid #D3DCE6'
+            },
+            leftStyle: {
+                'width': '180px',
+                'box-sizing': 'border-box',
+                'position': 'absolute',
+                'left': '0',
+                'top': '0',
+                'font-size': '14px',
+                'color': '#000000',
+                'line-height': '20px',
+                'padding': '10px'
+            },
+            oddStyle: {
+                'background': '#f9f9f9'
+            },
+            headStyle: {
+                'background': '#F0F0F0'
+            }
         }
     },
     mixins: [templateMixin],
@@ -175,6 +224,22 @@ export default {
                         case 'table':
                             var data = {
                                 type: 'table',
+                                content: item.pageAreaContent,
+                                pageAreaCode: item.pageAreaCode
+                            }
+                            arrData.push(data)
+                            break
+                        case 'specList':
+                            var data = {
+                                type: 'specList',
+                                content: item.pageAreaContent,
+                                pageAreaCode: item.pageAreaCode
+                            }
+                            arrData.push(data)
+                            break
+                        case 'userScence':
+                            var data = {
+                                type: 'userScence',
                                 content: item.pageAreaContent,
                                 pageAreaCode: item.pageAreaCode
                             }
@@ -269,6 +334,12 @@ export default {
                     }
                     this.articleList.push(data)
                     break
+                case 'specList':
+                    this.getSpecList()
+                    break
+                case 'userScence':
+                    this.getUserScence()
+                    break
                 case 'map':
                     this.mapData = {
                         type: 'map',
@@ -293,6 +364,89 @@ export default {
                     this.isLook = !this.isLook
                     break
             }
+        },
+        formDataStyle (styleData) {
+            var str = JSON.stringify(styleData).trim()
+            str = str.substring(1, str.length - 1)
+            return str.replace(/,/g, ';').replace(/"/g, '')
+        },
+        getSpecList () {
+            var data = {
+                type: 'specList',
+                content: ''
+            }
+
+            var content = '<div style="' + this.formDataStyle(this.rowStyle) + ';' + this.formDataStyle(this.headStyle) + '"><div style="' + this.formDataStyle(this.leftStyle) + '">规格名称</div>规格说明</div>'
+
+            util.request({
+                method: 'get',
+                interface: 'productParameterList',
+                data: {
+                  productCode: 'productcatalog20171217151955507173'
+                }
+            }).then(res => {
+                if (!res.result.result.length) {
+                    this.$message({
+                          message: '该产品未添加规格数据！',
+                          type: 'warning'
+                    })
+                }
+
+                res.result.result.forEach((item, index) => {
+                    var evenOoddStyle = ''
+                    if (index % 2 == 1) {
+                        evenOoddStyle = this.formDataStyle(this.oddStyle)
+                    }
+                    var template = '<div style="' + this.formDataStyle(this.rowStyle) + ';' + evenOoddStyle + '"><div style="' + this.formDataStyle(this.leftStyle) + '">' + item.productParameterKey + '</div>' + item.productParameterValue + '</div>'
+
+                    content += template
+                })
+
+                content = '<div style="' + this.formDataStyle(this.tableStyle) + '">' + content + '</div>'
+
+                data.content = content
+
+                this.articleList.push(data)
+            })
+        },
+        getUserScence () {
+            var data = {
+                type: 'userScence',
+                content: ''
+            }
+
+            var content = '<div style="' + this.formDataStyle(this.rowStyle) + ';' + this.formDataStyle(this.headStyle) + '"><div style="' + this.formDataStyle(this.leftStyle) + '">场景名称</div>推荐产品</div>'
+
+            util.request({
+                method: 'get',
+                interface: 'productScenarioList',
+                data: {
+                  productCode: 'productcatalog20171217151955507173'
+                }
+            }).then(res => {
+                if (!res.result.result.length) {
+                    this.$message({
+                          message: '该产品未添加规格数据！',
+                          type: 'warning'
+                    })
+                }
+
+                res.result.result.forEach((item, index) => {
+                    var evenOoddStyle = ''
+                    if (index % 2 == 1) {
+                        evenOoddStyle = this.formDataStyle(this.oddStyle)
+                    }
+                    var template = '<div style="' + this.formDataStyle(this.rowStyle) + ';' + evenOoddStyle + '"><div style="' + this.formDataStyle(this.leftStyle) + '">' + item.productScenarioCname + '</div>' + item.productScenarioProductName + '</div>'
+
+                    content += template
+                })
+
+                content = '<div style="' + this.formDataStyle(this.tableStyle) + '">' + content + '</div>'
+
+                data.content = content
+
+                this.articleList.push(data)
+            })
         },
         // 删除
         deleteArticleArea (code, index) {
@@ -344,20 +498,21 @@ export default {
                 this.$refs.searchMap.initMap(index)
             }, 0)
         },
-        changeImg (data, index) {
-            var imgData = {
-                id: data.id,
-                type: 'upload',
+        changeImg (data) {
+            var obj = {
                 imgUrl: data.url,
-                content: '<img src="' + data.url + '" style="' + JSON.stringify(this.arImg).replace(/,/g, ';') +'">'
+                content: '<img src="' + data.url + '" style="' + this.formDataStyle(this.arImg) +'">'
             }
-            this.articleList.splice(index, 1, imgData)
+
+            var imgData = Object.assign(this.articleList[data.index], obj)
+
+            this.articleList.splice(data.index, 1, imgData)
         },
         setContent (data) {
             this.articleList[data.index].content = data.content
         },
         titleBlur (item, index) {
-            this.articleList[index].content = '<div style="' + JSON.stringify(this.arInTitle).replace(/,/g, ';') + '">' + item.title + '</div>'
+            this.articleList[index].content = '<div style="' + this.formDataStyle(this.arInTitle) + '">' + item.title + '</div>'
         },
         // 保存
         saveData (item, index) {
@@ -396,6 +551,7 @@ export default {
         },
         upMove (index) {
             this.moveTo(index, index - 1)
+            console.log(this.articleList)
         },
         downMove (index) {
             this.moveTo(index, index + 1)

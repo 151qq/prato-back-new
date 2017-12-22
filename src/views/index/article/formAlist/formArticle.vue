@@ -1,52 +1,55 @@
 <template>
     <section class="article-box-outer">
-      <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addReport">增加</el-button>
-      <div v-for="(item, index) in reportSelect"
-          v-if="reportSelect.length"
-          :key="index"
-          class="report-box">
-          <img class="report-i" :src="item.html5PageindexImg">
-          <div class="content-b">
-            <p class="title">{{item.html5PageTitle}}</p>
+      <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addItem">增加</el-button>
+      <router-link class="card-box"
+                    target="_blank"
+                   v-for="(item, index) in selectList"
+                   :to="{name: 'article-detail', query: {enterpriseCode: item.enterpriseCode, pageCode: item.pageCode, templateCode: item.templateCode}}">
+          <div class="card-img">
+              <img v-if="item.pageCover" :src="item.pageCover">
           </div>
-          <el-button class="delete-b"
-                      type="danger"
-                      :plain="true"
-                      size="small"
-                      icon="delete"
-                      @click="deleteReport(index)">删除</el-button>
-      </div>
-      <div v-if="!reportSelect.length"
+
+          <div class="card-content">
+              <div class="card-title">{{item.pageTitle}}</div>
+              <div class="card-desc">{{item.pageAbstract}}</div>
+          </div>
+          
+          <section class="card-btns">
+              <i class="el-icon-delete2"
+                  @click.prevent="deleteItem(item)"></i>
+          </section>
+      </router-link>
+      <div v-if="!selectList.length"
             class="null-box">
         还没有推荐文章，请点击增加按钮添加！
       </div>
-      <div class="clear"></div>
-      <el-button class="save-btn"
-                  v-if="reportSelect.length"
-                  type="info"
-                  :plain="true"
-                  size="small"
-                  icon="document"
-                  @click="setArticles">保存</el-button>
-      <div class="clear"></div>
 
-      <el-dialog class="report-m" title="选择文章" :visible.sync="dialogVisible">
-          <div class="articles-box" v-for="(item, index) in reportList"
-              @click="changeReport(index)"
-              :class="item.isSelected ? 'active' : ''">
-            <img class="report-i" :src="item.html5PageindexImg">
-            <div class="content-b">
-              <div class="title">{{item.html5PageTitle}}</div>
+      <el-dialog class="select-big-box" title="选择文章" :visible.sync="dialogVisible">
+          <div class="articles-box" v-for="(item, index) in articleList"
+              @click="changeSelect(item)"
+              :class="selectClass(item)">
+            <div class="card-img">
+                <img v-if="item.pageCover" :src="item.pageCover">
             </div>
+
+            <div class="card-content">
+                <div class="card-title">{{item.pageTitle}}</div>
+                <div class="card-desc">{{item.pageAbstract}}</div>
+            </div>
+          </div>
+          <div v-if="!articleList.length"
+                class="null-box">
+            暂无可推荐文章，请增加文章！
           </div>
           <el-pagination
             layout="prev, pager, next"
+            v-if="total > articleList.length"
             :page-size="pageSize"
             @current-change="changePage"
             :total="total">
           </el-pagination>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="closeSelect">取 消</el-button>
+            <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="confirmSelect">确 定</el-button>
           </div>
         </el-dialog>
@@ -57,124 +60,161 @@ import util from '../../../../assets/common/util'
 export default {
     data () {
         return {
-          articles: [],
+          articleList: [],
           pageSize: 2,
           pageNumber: 1,
           total: 0,
-          reportSelect: [],
-          reportAllList: [],
-          reportList: [],
+          hasSelects: [],
+          selectData: [],
+          selectList: [],
           dialogVisible: false
         }
     },
+    mounted () {
+      this.getArticles()
+      this.getSelectList()
+    },
     methods: {
-        getData () {
-          this.getReportList()
-          this.getSelectList()
-          this.articles = []
-        },
         getSelectList () {
-          var formD = {
-            fileCode: localStorage.getItem('code')
+          var formData = {
+              enterpriseCode: this.$route.query.enterpriseCode,
+              pageCode: this.$route.query.pageCode,
+              pageSize: 100,
+              pageNumber: 1
           }
 
           util.request({
               method: 'get',
-              interface: 'findRecommendArticleByCode',
-              data: formD
+              interface: 'getExtendPages',
+              data: formData
           }).then(res => {
-              this.reportSelect = res.result.result
+              if (res.result.success == '1') {
+                var arrs = []
 
-              this.reportSelect.forEach((item) => {
-                this.articles.push(item.html5PageCode)
-              })
+                if (!res.result.result) {
+                  return
+                }
+
+                res.result.result.forEach((item) => {
+                  arrs.push(item.pageCode)
+                })
+
+                this.hasSelects = arrs
+                this.selectList = res.result.result
+              } else {
+                this.$message.error(res.result.message)
+              }
           })
         },
-        getReportList () {
+        getArticles (type) {
+            var formData = {
+                enterpriseCode: this.$route.query.enterpriseCode,
+                pageStatus: '1',
+                pageSize: this.pageSize,
+                pageNumber: this.pageNumber
+            }
+
             util.request({
                 method: 'get',
-                interface: 'findRecommendArticleByCode',
-                data: {}
+                interface: 'html5PageList',
+                data: formData
             }).then(res => {
-                this.reportAllList = res.result.result
-                this.total = this.reportAllList.length
-                this.resetReport()
-                this.getPageReport()
+                if (res.result.success == '1') {
+                  this.total = Number(res.result.total)
+                  this.articleList = res.result.result
+                } else {
+                  this.$message.error(res.result.message)
+                }
             })
         },
-        getPageReport () {
-          var startL = this.pageSize * (this.pageNumber - 1)
-          var stopL = this.pageSize * this.pageNumber
-          this.reportList = this.reportAllList.slice(startL, stopL)
-        },
-        deleteReport (index) {
-          if (!this.articles.length) {
-            return false
+        deleteItem (item) {
+          var formData = {
+              enterpriseCode: this.$route.query.enterpriseCode,
+              primePageCode: this.$route.query.pageCode,
+              extendPageCode: item.pageCode
           }
-          this.articles.splice(index, 1)
-          this.reportSelect.splice(index, 1)
-          this.resetReport()
-        },
-        resetReport () {
-          // 存储选择状态
-          this.selListInit = []
 
-          this.reportAllList.forEach((item) => {
-            var index = this.articles.indexOf(String(item.html5PageCode))
-            // 存储选择状态
-            this.selListInit.push(index > -1)
-
-            if (index > -1) {
-              item.isSelected = true
-            } else {
-              item.isSelected = false
-            }
+          util.request({
+              method: 'post',
+              interface: 'html5PageExtendDelete',
+              data: formData
+          }).then(res => {
+              if (res.result.success == '1') {
+                this.getSelectList()
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+              } else {
+                this.$message.error(res.result.message)
+              }
           })
-          this.reportAllList = this.reportAllList.concat([])
         },
-        changeReport (index) {
-          let item = this.reportList[index]
-          item.isSelected = !item.isSelected
-          this.reportList = this.reportList.concat([])
-        },
-        addReport () {
+        addItem () {
+          this.pageNumber = 1
+          this.selectData = []
           this.dialogVisible = true
         },
-        closeSelect () {
-          this.reportAllList.forEach((item, index) => {
-            item.isSelected = this.selListInit[index]
-          })
-          this.dialogVisible = false
-          this.reportAllList = this.reportAllList.concat([])
+        selectClass (item) {
+          var selectClassName = ''
+          if (this.selectData.indexOf(item.pageCode) > -1) {
+            selectClassName = 'active'
+          }
+          if (this.hasSelects.indexOf(item.pageCode) > -1) {
+            selectClassName = 'hasSelect'
+          }
+          if (item.pageCode == this.$route.query.pageCode) {
+            selectClassName = 'noneSelect'
+          }
+          return selectClassName
+        },
+        changeSelect (item) {
+          if (this.hasSelects.indexOf(item.pageCode) > -1) {
+            this.$message({
+              type: 'warning',
+              message: '已推荐该文章!'
+            })
+            return false
+          }
+
+          if (item.pageCode == this.$route.query.pageCode) {
+            this.$message({
+              type: 'warning',
+              message: '不能推荐自己!'
+            })
+            return false
+          }
+
+          var index = this.selectData.indexOf(item.pageCode)
+          if (index > -1) {
+              this.selectData.splice(index, 1)
+          } else {
+              this.selectData.push(item.pageCode)
+          }
         },
         confirmSelect () {
-          // 存储选择状态
-          this.selListInit = []
-          var selects = this.articles.concat([])
-          this.reportAllList.forEach((item, num) => {
-            var index = selects.indexOf(item.html5PageCode)
-            // 存储选择状态
-            this.selListInit.push(item.isSelected)
+          var formData = {
+              enterpriseCode: this.$route.query.enterpriseCode,
+              primePageCode: this.$route.query.pageCode,
+              extendPageCodes: this.selectData
+          }
 
-            if (index > -1 && !item.isSelected) {
-              // 删除
-              selects.splice(index, 1)
-              this.reportSelect.splice(index, 1)
-            } if (index < 0 && item.isSelected) {
-              // 添加
-              selects.push(item.html5PageCode)
-              this.reportSelect.push(item)
-            }
+          util.request({
+              method: 'post',
+              interface: 'html5PageExtendInsert',
+              data: formData
+          }).then(res => {
+              if (res.result.success == '1') {
+                this.getSelectList()
+                this.dialogVisible = false
+              } else {
+                this.$message.error(res.result.message)
+              }
           })
-          this.articles = selects.concat([])
-          this.dialogVisible = false
         },
         changePage (size) {
           this.pageNumber = size
-          this.getPageReport()
-        },
-        setArticles () {
-          this.$emit('saveData', this.articles)
+          this.getArticles()
         }
     }
 }
@@ -186,54 +226,60 @@ export default {
     width: 478px;
   }
 
-  .report-box {
-    width: 670px;
-    padding: 15px;
-    box-sizing: border-box;
+  .card-btns {
+    text-align: right;
+    position: absolute;
+    font-size: 16px;
+    color: #000000;
+    right: 10px;
+    bottom: 23px;
+  }
+
+  .card-box {
+    position: relative;
+    display: block;
     overflow: hidden;
-    margin-left: -15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #C0CCDA;
+    margin-bottom: 20px;
 
-    &:nth-of-type(2n) {
-        background: #F9F9F9;
-    }
-
-    .report-i {
+    .card-img {
       float: left;
-      width: 160px;
+      width: 200px;
       height: 120px;
+      background: #cfcfd0;
+
+      img {
+        display: block;
+        width: 200px;
+        height: 120px;
+      }
     }
 
-    .content-b {
+    .card-content {
       float: right;
-      width: 460px;
+      width: 780px;
 
-      .title {
-        font-size: 16px;
+      .card-title {
+        font-size: 18px;
+        line-height: 30px;
         color: #000000;
-        margin-bottom: 6px;
       }
 
-      .des {
+      .card-desc {
         font-size: 14px;
+        line-height: 24px;
         color: #475669;
-        line-height: 26px;
-        height: 52px;
+        height: 48px;
+        margin-top: 10px;
         overflow: hidden;
       }
     }
+  }
 
-    .delete-b {
-        float: right;
-        display: block;
-        margin-top: 4px;
-        cursor: pointer;
-    }
-
-    .save-sub-btn {
-      float: right;
-      margin-top: 4px;
-      margin-left: 12px;
-    }
+  .null-box {
+    line-height: 80px;
+    padding-bottom: 20px;
   }
 
   .articles-box {
@@ -252,29 +298,50 @@ export default {
       background-color: #EFF2F7;
     }
 
-    .report-i {
-      float: left;
-      width: 107px;
-      height: 80px;
-      border-radius: 4px;
+    &.noneSelect {
+      background-image: url();
     }
 
-    .content-b {
-      float: left;
-      width: 260px;
-      margin-left: 13px; 
+    &.hasSelect {
+      background-image: url();
+    }
 
-      .title {
+    &.hasSelect:after {
+      content: '已推荐';
+      color: #13ce66;
+      font-size: 12px;
+      line-height: 70px;
+    }
+
+    .card-img {
+      float: left;
+      width: 120px;
+      height: 70px;
+      background: #cfcfd0;
+
+      img {
+        display: block;
+        width: 120px;
+        height: 70px;
+      }
+    }
+
+    .card-content {
+      float: left;
+      width: 246px;
+      margin-left: 15px;
+
+      .card-title {
         font-size: 16px;
+        line-height: 26px;
         color: #000000;
-        margin-bottom: 6px;
       }
 
-      .des {
+      .card-desc {
         font-size: 14px;
+        line-height: 22px;
         color: #475669;
-        line-height: 26px;
-        height: 52px;
+        height: 44px;
         overflow: hidden;
       }
     }

@@ -90,6 +90,26 @@ const routers = [
         }
       },
       {
+        // 调研
+        path: 'surveyList',
+        name: 'survey-list',
+        component (resolve) {
+          require.ensure(['./survey/survey.vue'], () => {
+            resolve(require('./survey/survey.vue'))
+          })
+        }
+      },
+      {
+        // 调研详情
+        path: 'surveyDetail',
+        name: 'survey-detail',
+        component (resolve) {
+          require.ensure(['./survey/surveyDetail.vue'], () => {
+            resolve(require('./survey/surveyDetail.vue'))
+          })
+        }
+      },
+      {
         // 营销方案
         path: 'marketList',
         name: 'market-list',

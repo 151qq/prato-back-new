@@ -60,16 +60,14 @@ export default {
         getBase () {
             util.request({
                 method: 'get',
-                interface: 'html5PageList',
+                interface: 'getPageInfo',
                 data: {
                     enterpriseCode: this.$route.query.enterpriseCode,
-                    pageCode: this.$route.query.pageCode,
-                    pageSize: 1,
-                    pageNumber: 1
+                    pageCode: this.$route.query.pageCode
                 }
             }).then(res => {
                 if (res.result.success == '1') {
-                  this.base = res.result.result[0]
+                  this.base = res.result.result
                 } else {
                   this.$message.error(res.result.message)
                 }
