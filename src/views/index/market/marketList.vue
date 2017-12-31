@@ -117,7 +117,7 @@ export default {
             }
 
             util.request({
-                method: 'get',
+                method: 'post',
                 interface: 'eventInfoList',
                 data: formData
             }).then(res => {
