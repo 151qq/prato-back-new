@@ -32,6 +32,7 @@ export default {
         insertCallCenterConfig: platform + 'callCenterConfig/insertCallCenterConfig.json',
         updateCallCenterConfig: platform + 'callCenterConfig/updateCallCenterConfig.json',
         findCallCenterConfig: platform + 'callCenterConfig/findCallCenterConfig.json',
+        getEnterpriseConfigDic: platform + 'callCenterConfig/getEnterpriseConfigDic.json',
 
         /**
         * 调研 get
