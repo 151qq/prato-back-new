@@ -1,14 +1,22 @@
 <template>
+    <!--    公司相册 管理员可以增删改查，其他人只能查
+            活动现场 目录只能更新，素材可以增删改查
+            系统图片 目录不能更改，素材可以增删改查
+            平台图片 平台可以增删改查，企业只能查
+     -->
     <div class="source-box">
         <el-tabs v-model="activeName">
-            <el-tab-pane :label="'图片'" :name="'e2_pic'">
-                <image-manage :file-type="'e2_pic'"></image-manage>
+            <el-tab-pane :label="'公司相册'" :name="'e2_1'">
+                <image-manage :file-type="'e2_1'"></image-manage>
             </el-tab-pane>
-            <el-tab-pane :label="'文件'" :name="'e2_doc'">
-                <file-manage></file-manage>
+            <el-tab-pane :label="'活动现场'" :name="'e2_2'">
+                <image-manage :file-type="'e2_2'"></image-manage>
             </el-tab-pane>
-            <el-tab-pane :label="'媒体'" :name="'e2_media'">
-                <media-manage :file-type="'e2_media'"></media-manage>
+            <el-tab-pane :label="'系统图片'" :name="'e2_3'">
+                <image-manage :file-type="'e2_3'"></image-manage>
+            </el-tab-pane>
+            <el-tab-pane :label="'平台图片'" :name="'e2_4'">
+                <image-manage :file-type="'e2_4'"></image-manage>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -17,13 +25,11 @@
 import $ from 'Jquery'
 import util from '../../../assets/common/util'
 import imageManage from './imageManage'
-import fileManage from './fileManage'
-import mediaManage from './mediaManage'
 
 export default {
     data() {
         return {
-            activeName: 'e2_pic'
+            activeName: 'e2_1'
         }
     },
     mounted () {
@@ -31,9 +37,7 @@ export default {
     methods: {
     },
     components: {
-        imageManage,
-        fileManage,
-        mediaManage
+        imageManage
     }
 }
 </script>

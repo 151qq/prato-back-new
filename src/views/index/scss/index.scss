@@ -526,9 +526,17 @@
                 float: left;
                 width: 220px;
 
+                .el-select {
+                    width: 220px;
+                }
+
                 input {
                     height: 30px;
                 }
+            }
+
+            .el-textarea {
+              width: 220px;
             }
         }
 

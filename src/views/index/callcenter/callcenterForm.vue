@@ -1,11 +1,10 @@
 <template>
-    <div class="form-b callcenter">
+    <div class="form-discount callcenter">
         <el-collapse v-model="activeNames" @change="collChange">
           <!-- 基本信息 -->
-          <el-collapse-item class="formStylePro" title="客服基本配置" name="1">
-                <div class="form-box">
-                    <div class="clear"></div>
-                    <section class="baseInput bigB">
+          <el-collapse-item class="float-form-box" title="客服基本配置" name="1">
+                <div class="formDiscount">
+                    <section class="formBox bigF">
                         <span>客户接入欢迎词</span>
                         <el-input
                                 class="input-box"
@@ -16,7 +15,7 @@
                           *当客户通过微信小程序联系客服时，客户将收到的第一个欢迎消息，最长不超过15
                         </div>
                     </section>
-                    <section class="baseInput bigB">
+                    <section class="formBox bigF">
                         <span>等候致歉语</span>
                         <el-input
                                 class="input-box"
@@ -27,7 +26,7 @@
                           *当客户通过微信小程序联系客服后，客服人员未能在X秒内响应，客户将收到等候提醒消息
                         </div>
                     </section>
-                    <section class="baseInput bigB">
+                    <section class="formBox bigF">
                         <span>客服结束问候语</span>
                         <el-input
                                 class="input-box"
@@ -38,15 +37,37 @@
                           *当客户通过微信小程序内超过X秒没有输入消息，客户将受到结束问候
                         </div>
                     </section>
-                    <section class="baseInput bigB">
-                        <span>等候致歉时间(min)</span>
+                    <section class="formBox">
+                        <span>等候致歉时间(m)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
                                 v-model="callcenterData.inbandResonseTime">
                         </el-input>
                     </section>
-                    <div class="clear"></div>
+                    <section class="formBox">
+                        <span>客服电话</span>
+                        <el-input
+                                class="input-box"
+                                type="tel"
+                                v-model="callcenterData.inbandResonseTime">
+                        </el-input>
+                    </section>
+                    <section class="formBox">
+                        <span>客服分配模式</span>
+                        <el-select
+                          class="input-box"
+                          v-model="callcenterData.productType"
+                          filterable
+                          placeholder="请选择">
+                          <el-option
+                            v-for="(item, index) in customTypes"
+                            :key="index"
+                            :label="item.productTypeName"
+                            :value="item.productType">
+                          </el-option>
+                        </el-select>
+                    </section>
                 </div>
                 <el-button v-if="isOperate"
                             class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -70,7 +91,8 @@ export default {
               reponseDelayInfo: '',
               sessionCloseInfo: '',
               inbandResonseTime: ''
-            }
+            },
+            customTypes: []
         }
     },
     mounted () {
@@ -178,27 +200,32 @@ export default {
     color: #333333;
   }
 
-  .baseInput {
+  .formDiscount .formBox {
       &>span {
           width: 120px;
       }
 
       .input-box {
-          width: 180px;
+          float: left;
+          width: 200px;
+
+          .el-select {
+              width: 200px;
+          }
       }
   }
 
-  .bigB {
+  .formDiscount .bigF {
       .input-box {
-          width: 520px;
+          width: 880px;
 
           .el-select {
-              width: 520px;
+              width: 880px;
           }
       }
 
       .el-textarea {
-        width: 520px;
+        width: 880px;
       }
   }
 }
