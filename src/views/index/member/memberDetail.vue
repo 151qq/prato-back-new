@@ -229,8 +229,8 @@ export default {
           this.pageNumber = 1
           this.getLogList()
         },
-        pageChange () {
-          this.pageNumber++
+        pageChange (size) {
+          this.pageNumber = size
           this.getLogList()
         }
     }

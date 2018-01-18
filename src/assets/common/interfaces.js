@@ -102,6 +102,10 @@ export default {
         couponInfoChangeStatus: platform + 'coupon/couponInfoChangeStatus.json',
         getCouponType: platform + 'coupon/getCouponType.json',
 
+        manageCouponGroup: platform + 'couponGroup/manageCouponGroup.json',
+        deleteCouponGroup: platform + 'couponGroup/deleteCouponGroup.json',
+        couponGroupOfPage: platform + 'couponGroup/couponGroupOfPage.json',
+
 
 
         /**

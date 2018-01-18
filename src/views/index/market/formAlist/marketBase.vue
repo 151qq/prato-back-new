@@ -1,7 +1,7 @@
 <template>
     <section class="product-base-box">
       <div class="formDiscount">
-        <section class="formBox bigF">
+        <section class="formBox">
             <span>方案名称</span>
             <el-input
               class="input-box"
@@ -9,24 +9,24 @@
               v-model="base.eventPlanTitle">
             </el-input>
         </section>
-        <!-- <section class="formBox">
-            <span>方案状态</span>
-            <el-select class="input-box"
-                       v-model="base.eventPlanStatus"
-                       name="investor"
-                       placeholder="请选择">
-                <el-option
-                        :label="'无'"
-                        :value="''">
-                </el-option>
-                <el-option
-                        v-for="(item, index) in statusTypes"
-                        :key="index"
-                        :label="item.typeName"
-                        :value="item.id">
-                </el-option>
-            </el-select>
-        </section> -->
+        <section class="formBox">
+            <span>开始时间</span>
+            <el-date-picker
+              class="input-box"
+              type="date"
+              v-model="base.eventStartTime"
+              placeholder="选择">
+            </el-date-picker>
+        </section>
+        <section class="formBox">
+            <span>结束时间</span>
+            <el-date-picker
+              class="input-box"
+              type="date"
+              v-model="base.eventEndTime"
+              placeholder="选择">
+            </el-date-picker>
+        </section>
         <section class="formBox">
             <span>新增潜客</span>
             <el-input type="number" class="input-box" size="small" :min="0"
@@ -61,52 +61,6 @@
                     @changeImg="changeImg"></upload>
           </div>
         </section>
-        <!-- <section class="baseInput bigB">
-            <span>客户性别</span>
-            <div class="input-box">
-              <select-box :select-data="sexList" :check-list="base.sex"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>客户年龄</span>
-            <div class="input-box">
-              <select-box :select-data="ageList" :check-list="base.age"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>客户阶层</span>
-            <div class="input-box">
-              <select-box :select-data="levelList" :check-list="base.level"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>客户职业</span>
-            <div class="input-box">
-              <select-box :select-data="jobList" :check-list="base.job"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>消费习惯</span>
-            <div class="input-box">
-              <select-box :select-data="habitList" :check-list="base.habit"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>客户群体</span>
-            <div class="input-box">
-              <select-box :select-data="groupList" :check-list="base.group"></select-box>
-            </div>
-        </section>
-        <section class="baseInput bigB">
-            <span>活动方案</span>
-            <el-input
-              type="textarea"
-              :rows="4"
-              :maxlength="70"
-              placeholder="请输入内容"
-              v-model="base.case">
-            </el-input>
-        </section> -->
       </div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
           @click="saveBase()">保存</el-button>
@@ -122,6 +76,8 @@ export default {
         return {
             base: {
               eventPlanTitle: '',
+              eventStartTime: '',
+              eventEndTime: '',
               eventPlanStatus: '',
               eventLeads: '',
               eventHotLeads: '',
@@ -156,6 +112,15 @@ export default {
         changeImg (data) {
           this.base.eventPlanCover = data.url
         },
+        formDataDate (str) {
+            var dateStr = new Date(str)
+            var year = dateStr.getFullYear()
+            var monthStr = dateStr.getMonth() + 1
+            var dayStr = dateStr.getDate()
+            var month = monthStr < 10 ? '0' + monthStr : monthStr
+            var day = dayStr < 10 ? '0' + dayStr : dayStr
+            return year + '-' + month + '-' + day
+        },
         saveBase () {
             if (!this.base.eventPlanTitle) {
                 this.$message({
@@ -164,6 +129,25 @@ export default {
                 })
                 return false
             }
+
+            if (!this.base.eventStartTime) {
+              this.$message({
+                    message: '请填写开始时间！',
+                    type: 'warning'
+                })
+                return false
+            }
+
+            if (!this.base.eventEndTime) {
+              this.$message({
+                    message: '请填写结束时间！',
+                    type: 'warning'
+                })
+                return false
+            }
+
+            this.base.eventStartTime = this.formDataDate(this.base.eventStartTime)
+            this.base.eventEndTime = this.formDataDate(this.base.eventEndTime)
             
             util.request({
                 method: 'post',
