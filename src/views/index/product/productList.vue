@@ -1,5 +1,20 @@
 <template>
     <div class="product-list-box">
+
+        <div class="input-box">
+            <el-input
+              placeholder="请输入需查询条件"
+              v-model="keyValue"
+              >
+            </el-input>
+            <el-button class="search-btn" type="primary" icon="search"
+                        @keyup.13="searchItem" @click="searchItem">
+              搜索
+            </el-button>
+
+            <el-button class="add-new-btn" type="primary" icon="arrow-left" @click="goToBack">返回</el-button>
+        </div>
+
         <!-- 右侧操作按钮 -->
         <section class="btns-op">
             <!-- 多选模式切换 -->
@@ -17,7 +32,7 @@
         </section>
 
         <!-- 目录路径 -->
-        <section class="dirSteps">
+        <!-- <section class="dirSteps">
             <template v-for="(item, index) in dirSteps">
                 <span v-if="index"
                       :class="floorNumber == index + 1 ? 'nowActive' : ''"> | </span>
@@ -28,29 +43,57 @@
                 </a>
             </template>
             
-        </section>
+        </section> -->
         
         <!-- 列表 -->
         <div class="clear"></div>
         <template v-if="sourceDatas.length">
-            <section class="check-box" v-for="(item, index) in sourceDatas">
+            <section class="check-box" v-for="(item, index) in sourceDatas" :key="index">
                 <!-- 选择框 -->
                 <section class="select-box"
-                         v-if="isCheck"
+                         v-if="isCheck && (item.catalogType == 'dir' || item.productStatus == 'draft')"
                          @click.stop="selectItem(item)"
                          :class="selectItemList.indexOf(item.catalogCode) > -1 ? 'active' : ''"></section>
                 
                 <!-- 产品和目录列表 -->
                 <section class="sou-box" :class="item.catalogType == 'dir' ? 'dir-box' : ''">
-                    <div class="cover-box" @click="showItems(item)" :key="index">
+                    <div class="cover-box"
+                         @click="showItems(item)"
+                         v-if="isCheck || item.catalogType == 'dir'">
                         <img :src="item.catalogImage">
                     </div>
+                    <!-- 详情页 -->
+                    <router-link class="cover-box"
+                                 target="_blank"
+                                 v-else
+                                 :to="{
+                                    name: 'product-detail',
+                                    query: {
+                                        enterpriseCode: item.enterpriseCode,
+                                        productCode: item.catalogCode
+                                    }
+                                 }">
+                        <img :src="item.catalogImage">
+                    </router-link>
                     <div class="title-box">
                         <div class="title" v-text="item.catalogCname"></div>
                         <div class="time">
-                            {{item.catalogCreateTime}}
-
-                            <span class="btn-box">
+                            <span v-if="item.catalogType == 'dir'">
+                                {{item.catalogCreateTime}}
+                            </span>
+                            <span v-else>
+                                <template v-if="item.productStatus == 'draft'">
+                                    草稿
+                                </template>
+                                <template v-if="item.productStatus == 'submitted'">
+                                    已发布
+                                </template>
+                                <template v-if="item.productStatus == 'closed'">
+                                    已下架
+                                </template>
+                            </span>
+                            <span class="btn-box"
+                                  v-if="item.catalogType == 'dir' || item.productStatus == 'draft' || item.productStatus == 'submitted'">
                                 <!-- draft，submitted，approved，frozen，closed -->
                                 <i @click.stop="editItem(item)" class="el-icon-document"></i>
                             </span>
@@ -76,7 +119,7 @@
         <!-- 添加弹窗 -->
         <el-dialog :title="operateText" :visible.sync="isAddItem">
           <el-form :label-position="'left'" :model="addItemForm" label-width="80px">
-            <el-form-item label="类型">
+            <el-form-item label="添加类型">
                 <el-select v-model="addItemForm.catalogType"
                             placeholder="请选择"
                             :disabled="!isChangeType">
@@ -97,6 +140,19 @@
             <el-form-item label="标题">
                 <el-input v-model="addItemForm.catalogCname" placeholder="请输入内容"></el-input>
             </el-form-item>
+            <template v-if="addItemForm.catalogType == 'pro'">
+                <el-form-item label="产品类型">
+                <el-select v-model="addItemForm.productTypes"
+                            placeholder="请选择">
+                    <el-option
+                      v-for="(item, index) in dicAdd"
+                      :key="index"
+                      :label="item.dictKeyValue"
+                      :value="item.dictKeyCode">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            </template>
             <el-form-item label="描述">
                 <el-input
                     type="textarea"
@@ -127,9 +183,10 @@ import popupLoad from '../../../components/common/popupLoad.vue'
 import util from '../../../assets/common/util'
 
 export default {
-    props: ['fileType'],
+    props: ['productType'],
     data() {
         return {
+            keyValue: '',
             // 获取
             sourceDatas: [],
             pageNumber: 1,
@@ -141,6 +198,7 @@ export default {
             operateText: '添加',
             isAddItem: false,
             addItemForm: {
+                productType: '',
                 enterpriseCode: '',
                 catalogCode: '',
                 catalogCname: '',
@@ -169,7 +227,8 @@ export default {
             isUpload: {
                 value: false
             },
-            isChangeType: true
+            isChangeType: true,
+            productTypes: []
         }
     },
     mounted () {
@@ -184,6 +243,12 @@ export default {
 
         this.dirSteps.push(stepOne)
         this.getItems(this.$route.query.catalogCode)
+
+        if (this.productType.indexOf('product') > -1) {
+          this.geProductTypes('product_type')
+        } else if (this.productType.indexOf('gift') > -1) {
+          this.geProductTypes('gift_type')
+        }
     },
     watch: {
         $route () {
@@ -193,30 +258,45 @@ export default {
         }
     },
     methods: {
+        searchItem () {
+            this.getItems(this.$route.query.catalogCode)
+        },
         // 增删改查
         getItems (parentCode) {
             // 记录当前parentCode
             this.currentParentCode = parentCode
 
+            var formData = {
+                enterpriseCode: this.$route.query.enterpriseCode,
+                catalogParentCode: parentCode,
+                pageNumber: this.pageNumber,
+                pageSize: this.pageSize
+            }
+
+            if (parentCode == 'e2') {
+                formData.catalogParentCode = parentCode + '_' + this.productType
+            }
+
+            if (this.keyValue) {
+                formData.keyValue = this.keyValue
+            }
+
             util.request({
                 method: 'get',
                 interface: 'pruductCatalogList',
-                data: {
-                    enterpriseCode: this.$route.query.enterpriseCode,
-                    catalogParentCode: parentCode,
-                    pageNumber: this.pageNumber,
-                    pageSize: this.pageSize
-                }
+                data: formData
             }).then(res => {
                 if (res.result.success == '1') {
                     this.total = Number(res.result.total)
 
                     // 格式化时间
-                    res.result.result.forEach((item) => {
-                        if (item.catalogCreateTime) {
-                            item.catalogCreateTime = item.catalogCreateTime.split(' ')[0]
-                        }
-                    })
+                    if (res.result.result.length) {
+                        res.result.result.forEach((item) => {
+                            if (item.catalogCreateTime) {
+                                item.catalogCreateTime = item.catalogCreateTime.split(' ')[0]
+                            }
+                        })
+                    }
 
                     this.sourceDatas = res.result.result
                 } else {
@@ -225,8 +305,16 @@ export default {
             })       
         },
         insterItem () {
-            this.addItemForm.catalogParentCode = this.currentParentCode
+            if (this.currentParentCode == 'e2') {
+                this.addItemForm.catalogParentCode = this.currentParentCode + '_' + this.productType
+            } else {
+                this.addItemForm.catalogParentCode = this.currentParentCode
+            }
 
+            if (this.addItemForm.catalogType != '1') {
+                this.addItemForm.productClass = this.productType
+            }
+            
             util.request({
                 method: 'post',
                 interface: 'saveProductCatalog',
@@ -243,6 +331,10 @@ export default {
             })       
         },
         updateItem () {
+            if (this.addItemForm.catalogType != '1') {
+                this.addItemForm.productClass = this.productType
+            }
+
             util.request({
                 method: 'post',
                 interface: 'saveProductCatalog',
@@ -290,6 +382,7 @@ export default {
             this.isChangeType = true
             this.addItemForm = {
                 enterpriseCode: this.$route.query.enterpriseCode,
+                productType: '',
                 catalogCode: '',
                 catalogCname: '',
                 catalogImage: '',
@@ -365,50 +458,52 @@ export default {
         // 单击card操作
         showItems (item) {
             // 多选模式下为多选
-            if (this.isCheck) {
+            if (this.isCheck && (item.catalogType == 'dir' || item.productStatus == 'draft')) {
                 this.selectItem(item)
                 return false
             }
 
             // 目录类型展开 产品类型跳到详情
-            if (item.catalogType == 'dir') {
-                // 跳到下一级目录 重置分页 设置跳转路径
-                this.pageNumber = 1
-                this.floorNumber++
-                this.dirSteps.push(item)
-
-                var pathData = {
-                    name: 'product-list',
-                    query: {
-                        enterpriseCode: item.enterpriseCode,
-                        catalogCode: item.catalogCode,
-                        catalogLevel: item.catalogLevel
-                    }
-                }
-
-                this.$router.push(pathData)
-            } else {
-                window.open('/#/productDetail?enterpriseCode=' + item.enterpriseCode + '&productCode=' + item.catalogCode, '_blank')
-            }
-        },
-        // 目录跳转
-        goToDir (item, index) {
-            // 当前目录 不请求
-            if (this.floorNumber == index + 1) {
-                return false
-            }
-
-            // 重置分页 重置目录路径 请求列表
+            // 跳到下一级目录 重置分页 设置跳转路径
             this.pageNumber = 1
-            this.floorNumber = index + 1
-            this.dirSteps.splice(this.floorNumber)
+            this.keyValue = ''
+            this.isCheck = false
+            this.floorNumber++
+            this.dirSteps.push(item)
 
             var pathData = {
-                name: 'product-list',
+                name: 'product',
                 query: {
                     enterpriseCode: item.enterpriseCode,
                     catalogCode: item.catalogCode,
                     catalogLevel: item.catalogLevel
+                }
+            }
+
+            this.$router.push(pathData)
+        },
+        // 目录跳转
+        goToBack () {
+            // 根目录 不请求
+            if (this.floorNumber == 1) {
+                return false
+            } else {
+                this.floorNumber--
+            }
+
+            // 重置分页 重置目录路径 请求列表
+            this.pageNumber = 1
+            this.keyValue = ''
+            this.isCheck = false
+            this.dirSteps.splice(this.floorNumber)
+            var data = this.dirSteps[this.floorNumber - 1]
+
+            var pathData = {
+                name: 'product',
+                query: {
+                    enterpriseCode: data.enterpriseCode,
+                    catalogCode: data.catalogCode,
+                    catalogLevel: data.catalogLevel
                 }
             }
 
@@ -432,6 +527,21 @@ export default {
                     message: '已取消删除'
                 })     
             })
+        },
+        geProductTypes (type) {
+          util.request({
+              method: 'get',
+              interface: 'findDictionaryByType',
+              data: {
+                typeCode: type
+              }
+          }).then(res => {
+              if (res.result.success = '1') {
+                this.productTypes = res.result.result
+              } else {
+                this.$message.error(res.result.message)
+              }
+          })
         }
     },
     components: {
@@ -442,9 +552,41 @@ export default {
 </script>
 <style lang="scss">
 .product-list-box {
-    width: 1020px;
-    margin: 80px auto 60px;
     position: relative;
+
+    .input-box {
+        display: block;
+        width: 800px;
+        height: 50px;
+        margin: 0 auto 30px;
+
+        .el-input {
+          float: left;
+          width: 600px;
+          height: 50px;
+
+          input {
+            font-size: 14px;
+            height: 50px;
+          }
+        }
+
+        .search-btn {
+          position: relative;
+          float: left;
+          margin-left: -10px;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          height: 50px;
+          font-size: 16px;
+          padding: 0 23px;
+        }
+
+        .add-new-btn {
+            float: right;
+            height: 50px;
+        }
+    }
 
     .dirSteps {
         border-left: 3px solid #20a0ff;

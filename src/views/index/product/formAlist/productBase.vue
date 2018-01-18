@@ -27,10 +27,66 @@
               <el-option
                 v-for="(item, index) in productTypes"
                 :key="index"
-                :label="item.productTypeName"
-                :value="item.productType">
+                :label="item.dictKeyValue"
+                :value="item.dictKeyCode">
               </el-option>
             </el-select>
+        </section>
+        <section class="formBox">
+            <span>价格类型</span>
+            <el-select
+              class="input-box"
+              v-model="base.priceType"
+              filterable
+              placeholder="请选择">
+              <el-option
+                v-for="(item, index) in priceTypes"
+                :key="index"
+                :label="item.typeName"
+                :value="item.typeCode">
+              </el-option>
+            </el-select>
+        </section>
+        <section class="formBox">
+            <span>产品价格</span>
+            <el-input
+              class="input-box"
+              type="number"
+              placeholder="请输入内容"
+              v-model="base.productPrice">
+            </el-input>
+        </section>
+        <section class="formBox">
+            <span>价格说明</span>
+            <el-input
+              class="input-box"
+              placeholder="请输入内容"
+              v-model="base.priceDesc">
+            </el-input>
+        </section>
+        <section class="formBox">
+            <span>官网链接</span>
+            <el-input
+              class="input-box"
+              placeholder="请输入内容"
+              v-model="base.productEcommerceLink">
+            </el-input>
+        </section>
+        <section class="formBox">
+            <span>天猫链接</span>
+            <el-input
+              class="input-box"
+              placeholder="请输入内容"
+              v-model="base.productTmallLink">
+            </el-input>
+        </section>
+        <section class="formBox">
+            <span>京东链接</span>
+            <el-input
+              class="input-box"
+              placeholder="请输入内容"
+              v-model="base.productJdLink">
+            </el-input>
         </section>
         <section class="formBox bigF">
           <span>标准图片</span>
@@ -69,9 +125,16 @@ export default {
               productStatus: '',
               productType: '',
               productCover: '',
-              productDesc: ''
+              productDesc: '',
+              priceType: '',
+              productPrice: '',
+              priceDesc: '',
+              productEcommerceLink: '',
+              productTmallLink: '',
+              productJdLink: ''
             },
-            productTypes: []
+            productTypes: [],
+            priceTypes: []
         }
     },
     mounted () {
@@ -89,6 +152,14 @@ export default {
           }).then(res => {
               if (res.result.success = '1') {
                 this.base = res.result.result.productInfo
+
+                if (this.base.productType.indexOf('product') > -1) {
+                  this.geProductTypes('product_type')
+                } else if (this.base.productType.indexOf('gift') > -1) {
+                  this.geProductTypes('gift_type')
+                }
+
+                this.$emit('change', res.result.result)
               } else {
                 this.$message.error(res.result.message)
               }
@@ -97,8 +168,23 @@ export default {
         getTypes () {
           util.request({
               method: 'get',
-              interface: 'getProductType',
+              interface: 'getPriceType',
               data: {}
+          }).then(res => {
+              if (res.result.success = '1') {
+                this.priceTypes = res.result.result
+              } else {
+                this.$message.error(res.result.message)
+              }
+          })
+        },
+        geProductTypes (type) {
+          util.request({
+              method: 'get',
+              interface: 'findDictionaryByType',
+              data: {
+                typeCode: type
+              }
           }).then(res => {
               if (res.result.success = '1') {
                 this.productTypes = res.result.result

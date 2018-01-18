@@ -516,7 +516,7 @@ export default {
                 } else {
                     this.$message.error(res.result.message)
                 }
-            })       
+            })
         },
         dirPageChange (size) {
             this.dirPageNumber = size

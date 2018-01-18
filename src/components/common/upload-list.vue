@@ -3,7 +3,8 @@
     <section class="img-box" v-for="(item, index) in imgLists" :key="index">
       <img class="img-big" :src="item" @click="showImg(index)">
       <div class="delete-box">
-        <i class="el-icon-close" @click="deleteImg(index)"></i>
+        <i class="el-icon-setting" @click="setImg(item)"></i>
+        <i class="el-icon-delete2" @click="deleteImg(index)"></i>
       </div>
     </section>
     <label class="img-box" :for="idName">
@@ -45,18 +46,19 @@ export default {
         }
 
         util.uploadFile(opotion).then(res => {
-
-          this.imgLists.push(res.result.result.filePath)
-          this.$emit('saveImgs', this.imgLists)
+          this.$emit('changeImg', res.result.result.filePath)
         })
       },
       showImg (index) {
         this.nowIndex = index
         this.isShow.value = true
       },
+      setImg (url) {
+        this.$emit('setImg', url)
+      },
       deleteImg (index) {
         this.imgLists.splice(index, 1)
-        this.$emit('saveImgs', this.imgLists)
+        this.$emit('deleteImg', index)
       }
     },
     components: {
@@ -70,9 +72,14 @@ export default {
   width: 110%;
   overflow: hidden;
 
+  .img-input {
+    display: none;
+  }
+
   .img-box {
     float: left;
     margin-right: 20px;
+    margin-bottom: 20px;
     position: relative;
     cursor: pointer;
 
@@ -83,20 +90,17 @@ export default {
     }
 
     .delete-box {
-      display: none;
-      position: absolute;
-      right: 10px;
-      top: 10px;
+      display: block;
+      padding-right: 5px;
+      text-align: right;
       font-size: 14px;
+      line-height: 30px;
       cursor: pointer;
+      background: #f1f1f1;
 
-      &:hover {
-        opacity: 0.8;
+      i {
+        margin-right: 3px;
       }
-    }
-
-    .img-input {
-      display: none;
     }
 
     &:hover {

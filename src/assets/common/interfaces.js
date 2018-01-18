@@ -24,7 +24,7 @@ export default {
         manageEnterpriseInfo: platform + 'enterprise/manageEnterpriseInfo.json',
         removeEnterpriseInfo: platform + 'enterprise/removeEnterpriseInfo.json',
         disOfEnterpriseInfo: platform + 'enterprise/disOfEnterpriseInfo.json',
-
+        findDictionaryByType: platform + 'enterprise/findDictionaryByType.json',
 
         /**
         * 客服 get
@@ -78,11 +78,10 @@ export default {
         deleteProductParameter: platform + 'product/deleteProductParameter.json',
         productParameterSave: platform + 'product/productParameterSave.json',
         productParameterDelete: platform + 'product/deleteProductParameter.json',
-        productAlbumList: platform + 'product/productAlbums.json',
-        deleteProductAlbum: platform + 'product/deleteProductAlbum.json',
-        productAlbumSave: platform + 'product/productAlbumSave.json',
         getProductType: platform + 'product/getProductType.json',
         productInfoList: platform + 'product/productInfoList.json',
+        getPriceType: platform + 'product/getPriceType.json',
+        saveProductCover: platform + 'product/saveProductCover.json',
 
         /**
         * 营销树 get
@@ -125,6 +124,14 @@ export default {
         insertTemplate: platform + 'htmlPageTemplate/save.json',
         deleteTemplate: platform + 'htmlPageTemplate/delete.json',
         updateTemplate: platform +'htmlPageTemplate/update.json',
+
+
+        /**
+        * 会员 get
+        */
+        memberList: platform + 'memberController/list.json',
+        memberDetail: platform + 'memberController/details.json',
+        selectLogList: platform + 'memberController/selectLogList.json',
 
         /**
         * 文章统计 get

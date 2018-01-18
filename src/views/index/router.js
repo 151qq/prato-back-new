@@ -31,11 +31,11 @@ const routers = [
       },
       {
         // 产品中心
-        path: 'productList',
-        name: 'product-list',
+        path: 'product',
+        name: 'product',
         component (resolve) {
-          require.ensure(['./product/productList.vue'], () => {
-            resolve(require('./product/productList.vue'))
+          require.ensure(['./product/product.vue'], () => {
+            resolve(require('./product/product.vue'))
           })
         }
       },
@@ -146,6 +146,26 @@ const routers = [
         component (resolve) {
           require.ensure(['./articleTemplate/articleTemplate.vue'], () => {
             resolve(require('./articleTemplate/articleTemplate.vue'))
+          })
+        }
+      },
+      {
+        // 会员搜索页
+        path: 'member',
+        name: 'member',
+        component (resolve) {
+          require.ensure(['./member/member.vue'], () => {
+            resolve(require('./member/member.vue'))
+          })
+        }
+      },
+      {
+        // 会员详情
+        path: 'memberDetail',
+        name: 'member-detail',
+        component (resolve) {
+          require.ensure(['./member/memberDetail.vue'], () => {
+            resolve(require('./member/memberDetail.vue'))
           })
         }
       }

@@ -43,7 +43,7 @@ export default {
           event: e,
           data: {
             enterpriseCode: this.$route.query.enterpriseCode,
-            fileType: 'pic',
+            fileType: '2',
             oldFilePath: this.curPath
           }
         }

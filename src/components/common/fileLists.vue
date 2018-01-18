@@ -9,7 +9,7 @@
                       :class="curIndex === index ? 'active' : ''"
                       @click="selPic(item, index)">
                 <div class="cover-box">
-                    <img :src="docType == 'pic' ? item.fileCode : item.docCover">
+                    <img :src="docType == '2' ? item.fileCode : item.docCover">
                 </div>
                 <div class="title-box">
                     <div class="title" v-text="item.docTitle"></div>
@@ -68,11 +68,11 @@ export default{
     methods: {
         selPic(item, index){
           this.curIndex = index
-          if (this.docType == 'pic') {
+          if (this.docType == '2') {
             this.curFile = ''
             this.curPath = item.fileCode
             this.curCode = item.docCode
-          } else if (this.docType == 'media') {
+          } else if (this.docType == '3') {
             this.curPath = item.docCover
             this.curFile = item.fileCode
             this.curCode = item.docCode

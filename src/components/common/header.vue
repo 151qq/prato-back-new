@@ -11,6 +11,7 @@
       <router-link :to="{ name: 'enterprise-list'}">企业信息</router-link>
       <router-link :to="{ name: 'callcenter'}">客服配置</router-link>
       <router-link :to="{ name: 'source'}">素材库</router-link>
+      <router-link :to="{ name: 'member'}">会员管理</router-link>
     </div>
 
     <div class="member-box">
