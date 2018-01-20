@@ -81,7 +81,7 @@ export default {
                     console.log("进入状态" + status);
                     if (status == 203) { //无认证状态
                         console.log("进入203状态")
-                        window.location.href = "/#/login";
+                        window.location.href = "/login";
                         return;
                     }
 

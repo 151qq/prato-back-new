@@ -15,58 +15,21 @@
     </div>
 
     <div class="member-box">
-      <a class="img-box" @click="editImgUrl"><img :src="userInfo.iconUrl"></a>
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          您好
-          <span>{{userInfo.userCnName}}</span>
-          <i class="el-icon-caret-bottom el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            <div @click="editPassword">
-              <img src="../../assets/images/change-password.png">
-              修改密码
-            </div>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <div @click="logout">
-              <img src="../../assets/images/logout.png">
-              退出登录
-            </div>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <span class="member-show-message">
+        您好
+        <span>{{userInfo.userCnName}}</span>
+        <i class="el-icon-caret-bottom el-icon--right"></i>
+      </span>
     </div>
-
-    <div class="line-box"></div>
-
-    <div class="save-box" @click="saveAll"></div>
-    <upload-file :path="userInfo.iconUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
-    <password :dialog-form-visible="dialogFormVisible"></password>
   </section>
 </template>
 <script>
 import util from '../../assets/common/util'
-import uploadFile from './upload-file.vue'
-import password from './password.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
-    return {
-      noticeList: [],
-      dialogFormVisible: {
-        visibleF: false,
-        visibleP: false
-      },
-      page: {
-        total: 0,
-        pageSize: 2,
-        currentPage: 1
-      },
-      keyValue: ''
-    }
+    return {}
   },
   created () {
     this.getUserInfo()
@@ -101,70 +64,14 @@ export default {
         data: {}
       }).then(res => {
         if (res.result.success == '1') {
-          window.location.href = 'login.html'
+          this.$router.replace({name: 'login'})
         }
       })
-    },
-    changeImg (path) {
-      this.userInfo.iconUrl = path
-    },
-    editImgUrl () {
-      this.dialogFormVisible.visibleF = true
-    },
-    editPassword () {
-      this.dialogFormVisible.visibleP = true
-    },
-    saveAll () {
-      this.$emit('saveall')
     }
-  },
-  components: {
-    uploadFile,
-    password
   }
 }
 </script>
 <style lang="scss">
-  .el-dropdown-menu__item {
-    font-size: 14px;
-
-    img {
-      float: left;
-      width: 16px;
-      height: 16px;
-      margin: 10px 10px 0 2px;
-    }
-
-    div {
-      line-height: 36px;
-      overflow: hidden;
-    }
-  }
-
-  .el-dropdown-menu {
-    min-width: 120px;
-  }
-
-  .add-mess {
-    .a-box {
-      display: block;
-      width: 104px;
-      padding-left: 40px;
-      background: url(../../assets/images/wy-icon.png) left center no-repeat;
-      font-size: 16px;
-      line-height: 22px;
-      color: #475669;
-      margin: 20px auto;
-
-      &:hover {
-        color: #20A0FF;
-      }
-    }
-
-    .a-bg {
-      background: url(../../assets/images/bg-icon.png) left center no-repeat;
-    }
-  }
   .header-web {
     position: fixed;
     left: 0;
@@ -208,7 +115,7 @@ export default {
       float: right;
       margin-left: 20px;
 
-      .el-dropdown-link {
+      .member-show-message {
         font-size: 14px;
         line-height: 50px;
         color: #A4A4A4;
@@ -234,29 +141,6 @@ export default {
       }
     }
 
-    .mess-box {
-      position: relative;
-      float: right;
-      width: 16px;
-      height: 50px;
-      line-height: 50px;
-      cursor: pointer;
-
-      i {
-        color: #999999;
-      }
-      
-      .circle {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        overflow: hidden;
-        right: -4px;
-        top: 14px;
-        background: url(../../assets/images/mess-now.png) center no-repeat;
-      }
-    }
 
     .line-box {
       float: right;
@@ -264,120 +148,6 @@ export default {
       height: 20px;
       margin: 15px 0;
       background: #555555;
-    }
-
-    .add-box {
-      position: relative;
-      float: right;
-      width: 14px;
-      height: 50px;
-      line-height: 50px;
-      cursor: pointer;
-
-      i {
-        display: block;
-        width: 14px;
-        height: 50px;
-        background: url(../../assets/images/add-icon.png) center no-repeat;
-        background-size: 14px 14px;
-      }
-    }
-
-    .save-box {
-      float: right;
-      width: 16px;
-      height: 50px;
-      margin-right: 20px;
-      cursor: pointer;
-      background: url(../../assets/images/save-icon.png) center no-repeat;
-    }
-  }
-  
-  .el-popover {
-    padding: 0;
-  }  
-
-  .con-box {
-
-    .title {
-      font-size: 14px;
-      color: #000000;
-      line-height: 30px;
-      padding: 0 15px;
-      border-bottom: 1px solid #DCDCDC;
-    }
-  }
-  .mess-list {
-    max-height: 380px;
-    overflow: auto;
-
-    section {
-      border-bottom: 1px solid #DCDCDC;
-
-      &:last-child {
-        border: none;
-      }
-    }
-
-    .top {
-      padding: 15px 15px 0;
-
-      img {
-        float: left;
-        margin-right: 13px;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-      }
-
-      p {
-        width: 220px;
-
-        span {
-          display: block;
-          font-size: 12px;
-          color: #99A9BF;
-          line-height: 24px;
-        }
-
-        .people {
-          font-size: 16px;
-          color: #475669;
-          line-height: 26px;
-        }
-      }
-    }
-
-    .mid {
-      padding: 10px 15px 0;
-
-      p {
-        font-size: 14px;
-        color: #5E6D82;
-        line-height: 20px;
-        height: 40px;
-        overflow: hidden;
-      }
-
-      a {
-        display: block;
-        font-size: 14px;
-        color: #0053FF;
-        line-height: 20px;
-      }
-    }
-
-    .bottom {
-      padding: 8px 15px 20px;
-      overflow: hidden;
-
-      .edit {
-        float: right;
-
-        i {
-          color: #ffffff;
-        }
-      }
     }
   }
 </style>

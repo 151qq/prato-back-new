@@ -215,7 +215,7 @@
                 var data = {
                     userLoginAccount: this.userLoginAccount,
                     userPassword: this.userPassword,
-                    platform: true
+                    loginType: 'platform'
                 }
 
                 util.request({
@@ -224,9 +224,21 @@
                     data: data
                 }).then((res) => {
                     if (res.result.success != '0') {
-                        var pathUrl = {
-                            name: 'market'
+                        var pathUrl = {}
+
+                        if (res.result.enterpriseCode) {
+                            pathUrl = {
+                                name: 'market',
+                                query: {
+                                    enterpriseCode: res.result.enterpriseCode
+                                }
+                            }
+                        } else {
+                            pathUrl = {
+                                name: 'enterprise'
+                            }
                         }
+
                         this.$router.replace(pathUrl)
                     } else {
                         this.$message.error(res.result.message)
