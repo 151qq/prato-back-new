@@ -50,7 +50,7 @@ module.exports = {
         }
       },
       '/E2-Platform': {
-        target: 'http://192.168.2.107:8080/E2-Platform',
+        target: 'http://192.168.2.110:8080/E2-Platform',
         changeOrigin: true,
         pathRewrite: {
           '^/E2-Platform': ''

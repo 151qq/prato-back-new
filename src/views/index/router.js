@@ -2,7 +2,7 @@ const routers = [
   {
     path: '/',
     name: 'home',
-    redirect: '/marketList',
+    redirect: '/market',
     component (resolve) {
       require.ensure(['./main.vue'], () => {
         resolve(require('./main.vue'))
@@ -11,43 +11,65 @@ const routers = [
     children: [
       {
         // 推广文章
-        path: 'articleDetail',
-        name: 'article-detail',
+        path: 'article',
         component (resolve) {
-          require.ensure(['./article/articleDetail.vue'], () => {
-            resolve(require('./article/articleDetail.vue'))
+          require.ensure(['./article/main.vue'], () => {
+            resolve(require('./article/main.vue'))
           })
-        }
-      },
-      {
-        // 推广文章
-        path: 'articleList',
-        name: 'article-list',
-        component (resolve) {
-          require.ensure(['./article/article.vue'], () => {
-            resolve(require('./article/article.vue'))
-          })
-        }
+        },
+        children: [
+          {
+            // 推广文章
+            path: '',
+            name: 'article',
+            component (resolve) {
+              require.ensure(['./article/article.vue'], () => {
+                resolve(require('./article/article.vue'))
+              })
+            }
+          },
+          {
+            // 推广文章
+            path: 'articleDetail',
+            name: 'article-detail',
+            component (resolve) {
+              require.ensure(['./article/articleDetail.vue'], () => {
+                resolve(require('./article/articleDetail.vue'))
+              })
+            }
+          }
+        ]
       },
       {
         // 产品中心
         path: 'product',
-        name: 'product',
         component (resolve) {
-          require.ensure(['./product/product.vue'], () => {
-            resolve(require('./product/product.vue'))
+          require.ensure(['./product/main.vue'], () => {
+            resolve(require('./product/main.vue'))
           })
-        }
-      },
-      {
-        // 产品中心
-        path: 'productDetail',
-        name: 'product-detail',
-        component (resolve) {
-          require.ensure(['./product/productDetail.vue'], () => {
-            resolve(require('./product/productDetail.vue'))
-          })
-        }
+        },
+        children: [
+          {
+            // 产品中心
+            path: '',
+            name: 'product',
+            component (resolve) {
+              require.ensure(['./product/product.vue'], () => {
+                resolve(require('./product/product.vue'))
+              })
+            }
+          },
+          {
+            // 产品中心
+            path: 'productDetail',
+            name: 'product-detail',
+            component (resolve) {
+              require.ensure(['./product/productDetail.vue'], () => {
+                resolve(require('./product/productDetail.vue'))
+              })
+            }
+          }
+        ]
       },
       {
         // 素材库
@@ -61,24 +83,36 @@ const routers = [
       },
       {
         // 企业信息
-        path: 'enterpriseList',
-        name: 'enterprise-list',
+        path: 'enterprise',
         component (resolve) {
-          require.ensure(['./enterprise/enterpriseList.vue'], () => {
-            resolve(require('./enterprise/enterpriseList.vue'))
+          require.ensure(['./enterprise/main.vue'], () => {
+            resolve(require('./enterprise/main.vue'))
           })
-        }
+        },
+        children: [
+          {
+            // 企业信息
+            path: '',
+            name: 'enterprise',
+            component (resolve) {
+              require.ensure(['./enterprise/enterpriseList.vue'], () => {
+                resolve(require('./enterprise/enterpriseList.vue'))
+              })
+            }
+          },
+          {
+            // 企业信息详情
+            path: 'enterpriseDetail',
+            name: 'enterprise-detail',
+            component (resolve) {
+              require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
+                resolve(require('./enterprise/enterpriseDetail.vue'))
+              })
+            }
+          }
+        ]
       },
-      {
-        // 企业信息详情
-        path: 'enterpriseDetail',
-        name: 'enterprise-detail',
-        component (resolve) {
-          require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
-            resolve(require('./enterprise/enterpriseDetail.vue'))
-          })
-        }
-      },
+      
       {
         // 客服配置
         path: 'callcenter',
@@ -91,44 +125,67 @@ const routers = [
       },
       {
         // 调研
-        path: 'surveyList',
-        name: 'survey-list',
+        path: 'survey',
         component (resolve) {
-          require.ensure(['./survey/survey.vue'], () => {
-            resolve(require('./survey/survey.vue'))
+          require.ensure(['./survey/main.vue'], () => {
+            resolve(require('./survey/main.vue'))
           })
-        }
-      },
-      {
-        // 调研详情
-        path: 'surveyDetail',
-        name: 'survey-detail',
-        component (resolve) {
-          require.ensure(['./survey/surveyDetail.vue'], () => {
-            resolve(require('./survey/surveyDetail.vue'))
-          })
-        }
+        },
+        children: [
+          {
+            // 调研详情
+            path: '',
+            name: 'survey',
+            component (resolve) {
+              require.ensure(['./survey/survey.vue'], () => {
+                resolve(require('./survey/survey.vue'))
+              })
+            }
+          },
+          {
+            // 调研详情
+            path: 'surveyDetail',
+            name: 'survey-detail',
+            component (resolve) {
+              require.ensure(['./survey/surveyDetail.vue'], () => {
+                resolve(require('./survey/surveyDetail.vue'))
+              })
+            }
+          }
+        ]
       },
       {
         // 营销方案
-        path: 'marketList',
-        name: 'market-list',
+        path: 'market',
         component (resolve) {
-          require.ensure(['./market/marketList.vue'], () => {
-            resolve(require('./market/marketList.vue'))
+          require.ensure(['./market/main.vue'], () => {
+            resolve(require('./market/main.vue'))
           })
-        }
+        },
+        children: [
+          {
+            // 营销方案
+            path: '',
+            name: 'market',
+            component (resolve) {
+              require.ensure(['./market/marketList.vue'], () => {
+                resolve(require('./market/marketList.vue'))
+              })
+            }
+          },
+          {
+            // 营销方案详情
+            path: 'marketDetail',
+            name: 'market-detail',
+            component (resolve) {
+              require.ensure(['./market/marketDetail.vue'], () => {
+                resolve(require('./market/marketDetail.vue'))
+              })
+            }
+          }
+        ]
       },
-      {
-        // 营销方案详情
-        path: 'marketDetail',
-        name: 'market-detail',
-        component (resolve) {
-          require.ensure(['./market/marketDetail.vue'], () => {
-            resolve(require('./market/marketDetail.vue'))
-          })
-        }
-      },
+      
       {
         // 券
         path: 'coupon',
@@ -152,22 +209,33 @@ const routers = [
       {
         // 会员搜索页
         path: 'member',
-        name: 'member',
         component (resolve) {
-          require.ensure(['./member/member.vue'], () => {
-            resolve(require('./member/member.vue'))
+          require.ensure(['./member/main.vue'], () => {
+            resolve(require('./member/main.vue'))
           })
-        }
-      },
-      {
-        // 会员详情
-        path: 'memberDetail',
-        name: 'member-detail',
-        component (resolve) {
-          require.ensure(['./member/memberDetail.vue'], () => {
-            resolve(require('./member/memberDetail.vue'))
-          })
-        }
+        },
+        children: [
+          {
+            // 会员
+            path: '',
+            name: 'member',
+            component (resolve) {
+              require.ensure(['./member/member.vue'], () => {
+                resolve(require('./member/member.vue'))
+              })
+            }
+          },
+          {
+            // 会员详情
+            path: 'memberDetail',
+            name: 'member-detail',
+            component (resolve) {
+              require.ensure(['./member/memberDetail.vue'], () => {
+                resolve(require('./member/memberDetail.vue'))
+              })
+            }
+          }
+        ]
       }
     ]
   },

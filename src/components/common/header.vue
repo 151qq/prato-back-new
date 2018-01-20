@@ -3,12 +3,12 @@
     <router-link class="logo-box" :to="{name: 'market'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'market-list'}">营销方案</router-link>
-      <router-link :to="{ name: 'article-list'}">推广文章</router-link>
-      <router-link :to="{ name: 'survey-list'}">调研发布</router-link>
-      <router-link :to="{ name: 'product-list'}">产品中心</router-link>
+      <router-link :to="{ name: 'market'}">营销方案</router-link>
+      <router-link :to="{ name: 'article'}">推广文章</router-link>
+      <router-link :to="{ name: 'survey'}">调研发布</router-link>
+      <router-link :to="{ name: 'product'}">产品中心</router-link>
       <!-- <router-link :to="{ name: 'gift'}">礼品中心</router-link> -->
-      <router-link :to="{ name: 'enterprise-list'}">企业信息</router-link>
+      <router-link :to="{ name: 'enterprise'}">企业信息</router-link>
       <router-link :to="{ name: 'callcenter'}">客服配置</router-link>
       <router-link :to="{ name: 'source'}">素材库</router-link>
       <router-link :to="{ name: 'member'}">会员管理</router-link>
@@ -50,15 +50,11 @@
 import util from '../../assets/common/util'
 import uploadFile from './upload-file.vue'
 import password from './password.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
-      origin: window._SettingOrigin,
-      userInfo: {
-        name: '小样',
-        iconUrl: ''
-      },
       noticeList: [],
       dialogFormVisible: {
         visibleF: false,
@@ -75,14 +71,27 @@ export default {
   created () {
     this.getUserInfo()
   },
+  computed: {
+      ...mapGetters({
+          userInfo: 'getUserInfo'
+      })
+  },
   methods: {
+    ...mapActions([
+      'setUserInfo'
+    ]),
     getUserInfo () {
       util.request({
         method: 'get',
         interface: 'getUserInfo',
         data: {}
       }).then(res => {
-        this.userInfo = res.result.result
+        if (res.result.success == '1') {
+          this.setUserInfo(res.result.result)
+          this.$emit('loadPage')
+        } else {
+          this.$message.error(res.result.message)
+        }
       })
     },
     logout () {

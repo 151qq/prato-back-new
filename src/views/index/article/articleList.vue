@@ -274,18 +274,18 @@ export default {
 
     .input-box {
         display: block;
-        width: 660px;
-        height: 36px;
-        margin: 20px auto 30px;
+        width: 800px;
+        height: 50px;
+        margin: 0 auto 30px;
 
         .el-input {
           float: left;
-          width: 460px;
-          height: 36px;
+          width: 600px;
+          height: 50px;
 
           input {
             font-size: 14px;
-            height: 36px;
+            height: 50px;
           }
         }
 
@@ -295,14 +295,14 @@ export default {
           margin-left: -10px;
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
-          height: 36px;
+          height: 50px;
           font-size: 16px;
           padding: 0 23px;
         }
 
         .add-new-btn {
             float: right;
-            height: 36px;
+            height: 50px;
         }
     }
 

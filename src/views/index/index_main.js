@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import VueHtml5Editor from 'vue-html5-editor'
 import routes from './router'
 import Element from 'element-ui'
+import store from '../../vuex/store'
 import 'element-ui/lib/theme-default/index.css'
 import '../../assets/scss/common.scss'
 import './scss/index.scss'
@@ -41,7 +42,7 @@ Vue.use(Element)
 
 // 实例化VueRouter
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   routes
 })
 
@@ -54,5 +55,6 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
     el: '#app',
+    store,
     router
 })

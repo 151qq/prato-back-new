@@ -19,23 +19,12 @@
           <template>
             <div class="line-bold"></div>
 
-            <el-collapse-item class="float-form-box" title="文章统计" name="3">
-              <list-statistics></list-statistics>
-            </el-collapse-item>
-
-            <div class="line-bold"></div>
-
             <el-collapse-item class="float-form-box" title="传播路径" name="4">
               <section class="graph-box">
                 <echart-graph :id-name="'spreadGraph'"
                       :echarts-date="echartData.spreadGraph"
                       ref="spreadGraph"></echart-graph>
               </section>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-
-            <el-collapse-item class="float-form-box" title="文章评论" name="5">
-              <list-comment :comments="comments"></list-comment>
             </el-collapse-item>
           </template>
         </el-collapse>
@@ -46,9 +35,7 @@ import util from '../../../assets/common/util'
 import edit from '../../../components/common/edit'
 import formArticleBase from './formAlist/formArticleBase'
 import formArticle from './formAlist/formArticle'
-import listStatistics from './formAlist/listStatistics'
 import echartGraph from '../../../components/common/echart-graph'
-import listComment from './formAlist/listComment'
 
 export default {
     data () {
@@ -74,9 +61,7 @@ export default {
         edit,
         formArticleBase,
         formArticle,
-        listStatistics,
         echartGraph,
-        listComment
     }
 }
 </script>

@@ -487,27 +487,22 @@
     padding: 80px 0 30px;
 
     .float-form-box {
-        position: relative;
-        width: 1000px;
-        margin: auto;
-
-        .line-bold {
-            width: 200%;
-            height: 9px;
-            border-top: 1px solid #99A9BF;
-            background: #F9F9F9;
-            margin: 30px 0 30px -30%;
-        }
+      position: relative;
+      width: 1000px;
+      margin: auto;
     }
 
     .formDiscount {
-        position: relative;
-        width: 110%;
+        width: 1020px;
         overflow: hidden;
 
         .formBox {
             float: left;
             margin: 0 20px 20px 0;
+
+            .font-b {
+              font-weight: bold;
+            }
 
             &>span {
                 float: left;
@@ -518,8 +513,23 @@
                 height: 30px;
             }
 
-            .btn-a {
-              height: 30px;
+            .btn-right-box {
+              float: left;
+              width: 200px;
+
+              .el-tooltip {
+                float: left;
+                height: 30px;
+                line-height: 30px;
+                font-size: 14px;
+                padding: 0 10px;
+              }
+
+              .btn-right {
+                float: right;
+                height: 30px;
+                padding: 0 15px;
+              }
             }
 
             .input-box {
@@ -554,6 +564,41 @@
             }
         }
 
+        .btnB {
+          .input-box {
+              width: 800px;
+
+              .el-select {
+                  width: 800px;
+              }
+          }
+
+          .el-textarea {
+            width: 800px;
+          }
+
+          .btn-box {
+            float: left;
+            width: 80px;
+            height: 30px;
+            margin-left: 20px;
+            border-radius: 3px;
+            background: #20a0ff;
+            border: 1px solid #20a0ff;
+            text-align: center;
+            line-height: 30px;
+            color: #ffffff;
+            cursor: pointer;
+          }
+
+          .noClick {
+            background: #eef1f6;
+            border-color: #d1dbe5;
+            color: #bfcbd9;
+            cursor: not-allowed;
+          }
+        }
+
         .back-btn {
           float: right;
           margin-top: 10px;
@@ -575,7 +620,7 @@
 .save-btn {
   float: right;
   margin-top: 10px;
-  margin-left: 15px;
+  margin-right: 20px;
 }
 
 .abstract-num {

@@ -1,8 +1,8 @@
 <template>
     <section>
-        <web-header></web-header>
+        <web-header @loadPage="loadPage"></web-header>
         <section class="mid-body-box">
-            <router-view></router-view>
+            <router-view v-if="isPage"></router-view>
         </section>
         
         <web-footer></web-footer>
@@ -13,6 +13,16 @@ import webHeader from '../../components/common/header.vue'
 import webFooter from '../../components/common/footer.vue'
 
 export default {
+    data () {
+        return {
+            isPage: false
+        }
+    },
+    methods: {
+        loadPage () {
+            this.isPage = true
+        }
+    },
     components: {
         webHeader,
         webFooter

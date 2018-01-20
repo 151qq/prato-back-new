@@ -103,12 +103,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-.product-base-box {
-  overflow: hidden;
-
-  .form-box {
-    overflow: hidden;
-  }
-}
-</style>

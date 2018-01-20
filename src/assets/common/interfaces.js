@@ -7,10 +7,9 @@ export default {
         "authentication": platform + "authentication.json",
         "getUserInfo": platform + "getUserInfo.json",
         "changePassword": platform + "changePassword.json",
-        "getTelCode": "/static/api/common/telcode.json",
-        "forgetPassword": "/static/api/common/telcode.json",
         "headImage": platform + "headImage.json",
         "logout": platform + 'logout.json',
+        "sendSmsCode": platform + 'sendSmsCode.json',
         "changePassword": platform + "changePassword.json",
         "resetPassword": platform + "resetPassword.json",
 
@@ -19,12 +18,24 @@ export default {
         /**
         * 企业 get
         */
-        showAllEnt: platform + 'enterprise/showAllEnt.json',
+        showAllEnterprise: platform + 'enterprise/showAllEnterprise.json',
         showEnterpriseInfo: platform + 'enterprise/showEnterpriseInfo.json',
-        manageEnterpriseInfo: platform + 'enterprise/manageEnterpriseInfo.json',
-        removeEnterpriseInfo: platform + 'enterprise/removeEnterpriseInfo.json',
+        platformPubWechatInfo: platform + 'enterprise/platformPubWechatInfo.json',
+        platfromEnterpriseWechatInfo: platform + 'enterprise/platfromEnterpriseWechatInfo.json',
+        platfromWechatInfo: platform + 'enterprise/platfromWechatInfo.json',
+        enterpriseBaseInfoSave: platform + 'enterprise/enterpriseBaseInfoSave.json',
         disOfEnterpriseInfo: platform + 'enterprise/disOfEnterpriseInfo.json',
         findDictionaryByType: platform + 'enterprise/findDictionaryByType.json',
+        removeEnterpriseInfo: platform + 'enterprise/removeEnterpriseInfo.json',
+        checkName: platform + 'enterprise/checkName.json',
+        enterpriseQCCGet: platform + 'enterprise/enterpriseQCCGet.json',
+        getValidateCode: platform + 'enterprise/getValidateCode.json',
+        valiSmsPass: platform + 'enterprise/valiSmsPass.json',
+        enterpriseWechatInfoSave: platform + 'enterprise/enterpriseWechatInfoSave.json',
+
+        selectProductAndEvent: platform + 'productAndEvent/selectProductAndEvent.json',
+        enterpriseOrderStart: platform + 'platform/enterpriseOrderStart.json',
+        enterpriseOrderStop: platform + 'platform/enterpriseOrderStop.json',
 
         /**
         * 客服 get
