@@ -148,7 +148,7 @@
                     class="input-box"
                     placeholder="请输入内容"
                     @blur="checkTel"
-                    v-model="base.userMobile">
+                    v-model="base.userCname">
                   </el-input>
               </section>
 
@@ -229,7 +229,7 @@
             <div class="form-check-tel">
                 <section>
                     <span>手机</span>
-                    <el-input placeholder="请输入内容" :disabled="true" v-model="base.userMobile"></el-input>
+                    <el-input placeholder="请输入内容" @input="checkTel" v-model="base.userMobile"></el-input>
                 </section>
                 <section>
                     <span>验证码</span>
@@ -238,7 +238,7 @@
                             <span class="secondBox">剩余<i>{{seconds}}</i>秒</span>
                         </template>
                         <template v-else slot="append">
-                            <span class="codeBox clickBox" @click="getCode">获取验证码</span>
+                            <span class="codeBox clickBox" :class="{clickBox: isClick}" @click="getCode">获取验证码</span>
                         </template>
                     </el-input>
                 </section>
@@ -266,7 +266,7 @@ export default {
             enterpriseNameReg: '',
             isCheckReg: true,
             isCheckTel: true,
-            userMobile: '',
+            userCname: '',
             base: {
               enterpriseAddrCity: '',
               enterpriseAddrDetail: '',
@@ -288,6 +288,7 @@ export default {
               enterpriseZipCode: '',
               enterpriseType: 'enterprise_type_0',
               enterpriseWeb: '',
+              userCname: '',
               userMobile: '',
               userPosition: ''
             },
@@ -297,6 +298,7 @@ export default {
             cityData: [],
             postList: [],
             // 手机验证
+            isClick: false,
             dialogVisible: false,
             checkData: {
                 code: ''
@@ -416,17 +418,10 @@ export default {
           })
         },
         checkTel () {
-          if (this.base.userMobile === this.userMobile || this.base.userMobile === '') {
-            return false
-          }
-
           if (!(/^1[3|4|5|8][0-9]{9}$/).test(this.base.userMobile.trim())) {
-              this.$message({
-                message: '请输入正确手机号!',
-                type: 'warning'
-              })
+              this.isClick = false
           } else {
-              this.dialogVisible = true
+              this.isClick = true
           }
         },
         getCode () {
@@ -490,7 +485,7 @@ export default {
                   this.base = res.result.result
                   this.enterpriseCname = this.base.enterpriseCname
                   this.enterpriseNameReg = this.base.enterpriseCname
-                  this.userMobile = this.base.userMobile
+                  this.userCname = this.base.userCname
               } else {
                   this.$message.error(res.result.message)
               }
@@ -595,12 +590,17 @@ export default {
               return false
           }
 
-          if (!(/^1[3|4|5|8][0-9]{9}$/).test(this.base.userMobile.trim())) {
+          if (this.base.userCname == '') {
               this.$message({
-                message: '请填写正确格式超级管理员!',
+                message: '请填写超级管理员!',
                 type: 'warning'
               })
               return false
+          }
+
+          if (this.userCname != '' && this.base.userCname !== this.userCname && !isCheckTel) {
+            this.dialogVisible = true
+            return false
           }
 
           if (this.base.enterpriseWeb == '') {

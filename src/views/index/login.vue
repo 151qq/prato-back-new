@@ -137,7 +137,7 @@
 
                 util.request({
                     method: 'post',
-                    interface: 'sendSmsCode',
+                    interface: 'getValidateCode',
                     data: {
                         mobile: this.forgetData.tel
                     }
@@ -253,6 +253,10 @@
 .wrap {
     background: #383a4c;
     overflow: hidden;
+
+    .form-b {
+        margin-top: 0;
+    }
 
     .swiper-container .swiper-wrapper .swiper-slide img {
         display: block;
