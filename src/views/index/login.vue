@@ -235,7 +235,7 @@
                             }
                         } else {
                             pathUrl = {
-                                name: 'enterprise'
+                                name: 'platform-detail'
                             }
                         }
 

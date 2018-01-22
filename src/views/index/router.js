@@ -109,6 +109,16 @@ const routers = [
                 resolve(require('./enterprise/enterpriseDetail.vue'))
               })
             }
+          },
+          {
+            // 平台企业信息详情
+            path: 'platformDetail',
+            name: 'platform-detail',
+            component (resolve) {
+              require.ensure(['./enterprise/platformDetail.vue'], () => {
+                resolve(require('./enterprise/platformDetail.vue'))
+              })
+            }
           }
         ]
       },

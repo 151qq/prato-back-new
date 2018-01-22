@@ -605,6 +605,12 @@
           margin-left: 15px;
         }
 
+        .save-btn {
+          float: right;
+          margin-top: 10px;
+          margin-right: 20px;
+        }
+
         &:last-child {
             margin-bottom: 30px;
         }
@@ -620,7 +626,6 @@
 .save-btn {
   float: right;
   margin-top: 10px;
-  margin-right: 20px;
 }
 
 .abstract-num {

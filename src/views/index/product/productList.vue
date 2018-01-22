@@ -142,10 +142,10 @@
             </el-form-item>
             <template v-if="addItemForm.catalogType == 'pro'">
                 <el-form-item label="产品类型">
-                <el-select v-model="addItemForm.productTypes"
+                <el-select v-model="addItemForm.productType"
                             placeholder="请选择">
                     <el-option
-                      v-for="(item, index) in dicAdd"
+                      v-for="(item, index) in productTypes"
                       :key="index"
                       :label="item.dictKeyValue"
                       :value="item.dictKeyCode">

@@ -3,14 +3,18 @@
     <router-link class="logo-box" :to="{name: 'market'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'market'}">营销方案</router-link>
-      <router-link :to="{ name: 'article'}">推广文章</router-link>
-      <router-link :to="{ name: 'survey'}">调研发布</router-link>
-      <router-link :to="{ name: 'product'}">产品中心</router-link>
+      <router-link :to="{ name: 'market',query:{enterpriseCode: userInfo.enterpriseCode}}">营销方案</router-link>
+      <router-link :to="{ name: 'article',query:{enterpriseCode: userInfo.enterpriseCode}}">推广文章</router-link>
+      <router-link :to="{ name: 'survey',query:{enterpriseCode: userInfo.enterpriseCode}}">调研发布</router-link>
+      <router-link :to="{ name: 'product',query:{
+        enterpriseCode: userInfo.enterpriseCode,
+        catalogCode: 'e2',
+        catalogLevel: 1
+      }}">产品中心</router-link>
       <!-- <router-link :to="{ name: 'gift'}">礼品中心</router-link> -->
       <router-link :to="{ name: 'enterprise'}">企业信息</router-link>
-      <router-link :to="{ name: 'callcenter'}">客服配置</router-link>
-      <router-link :to="{ name: 'source'}">素材库</router-link>
+      <router-link :to="{ name: 'callcenter',query:{enterpriseCode: userInfo.enterpriseCode}}">营销配置</router-link>
+      <router-link :to="{ name: 'source',query:{enterpriseCode: userInfo.enterpriseCode}}">素材库</router-link>
       <router-link :to="{ name: 'member'}">会员管理</router-link>
     </div>
 
@@ -50,8 +54,12 @@ export default {
         data: {}
       }).then(res => {
         if (res.result.success == '1') {
-          this.setUserInfo(res.result.result)
-          this.$emit('loadPage')
+          if (res.result.result.enterpriseCode) {
+            this.setUserInfo(res.result.result)
+            this.$emit('loadPage', '1')
+          } else {
+            this.$emit('loadPage', '0')
+          }
         } else {
           this.$message.error(res.result.message)
         }

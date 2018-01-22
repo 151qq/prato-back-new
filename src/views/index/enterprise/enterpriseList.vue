@@ -22,7 +22,7 @@
                 <router-link class="cover-box"
                              target="_blank"
                              :to="{
-                                name: 'enterprise-detail',
+                                name: item.enterpriseType == 'enterprise_type_0' ? 'platform-detail' : 'enterprise-detail',
                                 query: {
                                     enterpriseCode: item.enterpriseCode
                                 }

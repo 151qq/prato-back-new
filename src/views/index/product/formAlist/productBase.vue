@@ -89,14 +89,6 @@
             </el-input>
         </section>
         <section class="formBox bigF">
-          <span>标准图片</span>
-          <div class="input-box">
-            <upload :path="base.productCover"
-                :bg-path="true"
-                @changeImg="changeImg"></upload>
-          </div>
-        </section>
-        <section class="formBox bigF">
             <span>产品摘要</span>
             <el-input
               type="textarea"
@@ -105,6 +97,14 @@
               placeholder="请输入内容"
               v-model="base.productDesc">
             </el-input>
+        </section>
+        <section class="formBox">
+          <span>标准图片</span>
+          <div class="input-box">
+            <upload :path="base.productCover"
+                :bg-path="true"
+                @changeImg="changeImg"></upload>
+          </div>
         </section>
         <div class="clear"></div>
       </div>
