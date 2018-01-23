@@ -437,6 +437,7 @@ export default {
                         this.seconds--
                         if (this.seconds === 0) {
                             clearInterval(this.timer)
+                            this.seconds = 90
                             this.timer = null
                         }
                     }, 1000)

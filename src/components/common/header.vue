@@ -90,6 +90,31 @@ export default {
 }
 </script>
 <style lang="scss">
+  .el-dropdown-menu__item {
+    font-size: 14px;
+
+    img {
+      float: left;
+      width: 16px;
+      height: 16px;
+      margin: 10px 10px 0 2px;
+    }
+
+    div {
+      line-height: 36px;
+      overflow: hidden;
+    }
+  }
+
+  .el-dropdown-menu {
+    min-width: 120px;
+  }
+
+  .el-dropdown-link {
+    color: #ffffff;
+    cursor: pointer;
+  }
+
   .header-web {
     position: fixed;
     left: 0;
@@ -102,26 +127,6 @@ export default {
     padding: 0 20px;
     z-index: 99999;
     box-sizing: border-box;
-
-    .el-dropdown-menu__item {
-      font-size: 14px;
-
-      img {
-        float: left;
-        width: 16px;
-        height: 16px;
-        margin: 10px 10px 0 2px;
-      }
-
-      div {
-        line-height: 36px;
-        overflow: hidden;
-      }
-    }
-
-    .el-dropdown-menu {
-      min-width: 120px;
-    }
 
     .logo-box {
       float: left;

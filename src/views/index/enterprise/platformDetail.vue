@@ -140,7 +140,7 @@
                   <el-input
                     class="input-box"
                     placeholder="请输入内容"
-                    v-model="base.userCname">
+                    v-model="base.userName">
                   </el-input>
               </section>
 
@@ -168,7 +168,7 @@
                   <div class="input-box">
                     <upload :path="base.enterpriseWechatQrcode"
                             :bg-path="true"
-                            :id-name="'qywxlogo'"
+                            :id-name="'qywxewm'"
                             :is-operate="isOperate"
                             @changeImg="changeImgQE"></upload>
                   </div>
@@ -184,17 +184,6 @@
             <div class="line-bold"></div>
             <el-collapse-item class="float-form-box" title="微信信息配置" name="2">
               <div class="formDiscount">
-                <!-- <div class="add-btn">
-                  <el-button type="primary"
-                            size="small"
-                            :icon="isPlatformPub ? 'check' : 'close'"
-                            @click="getPlatformPub">使用平台微信服务号</el-button>
-                  <el-button type="primary"
-                            size="small"
-                            :icon="isPlatformWechat ? 'check' : 'close'"
-                            @click="getPlatformWechat">使用平台企业微信</el-button>
-                </div> -->
-
                 <section class="formBox">
                     <span>企业微信ID</span>
                     <el-input
@@ -258,6 +247,33 @@
                       placeholder="请输入内容"
                       :disabled="isPlatformPub"
                       v-model="enterpriseWechat.pubWechatReceiverToken">
+                    </el-input>
+                </section>
+                <section class="formBox">
+                    <span>平台通讯录管理</span>
+                    <el-input
+                      class="input-box"
+                      placeholder="请输入内容"
+                      :disabled="isPlatformPub"
+                      v-model="enterpriseWechat.enterpriseWechatAgentCname">
+                    </el-input>
+                </section>
+                <section class="formBox">
+                    <span>Agent ID</span>
+                    <el-input
+                      class="input-box"
+                      placeholder="请输入内容"
+                      :disabled="isPlatformPub"
+                      v-model="enterpriseWechat.enterpriseWechatAgentid">
+                    </el-input>
+                </section>
+                <section class="formBox">
+                    <span>Secrete</span>
+                    <el-input
+                      class="input-box"
+                      placeholder="请输入内容"
+                      :disabled="isPlatformPub"
+                      v-model="enterpriseWechat.enterpriseWechatAgentSecret">
                     </el-input>
                 </section>
 
@@ -340,13 +356,29 @@
                   </section>
                 </template>
 
+                <section class="formBox">
+                    <span class="font-b">平台管理</span>
+                    <div class="input-box">
+                      <el-switch
+                        v-model="switchStatus"
+                        on-color="#13ce66"
+                        off-color="#ff4949"
+                        on-value="b"
+                        off-value="a"
+                        @change="changeStatus">
+                      </el-switch>
+                    </div>
+                </section>
+
                 <template v-if="!productEventList.length">
                   <div class="null-page-box">
                       请您先去
                       <router-link :to="{
                         name: 'product',
                         query:{
-                          enterpriseCode: $route.query.enterpriseCode
+                          enterpriseCode: $route.query.enterpriseCode,
+                          catalogCode: 'e2',
+                          catalogLevel: 1
                         }
                       }">
                           <el-button type="text">添加产品</el-button>
@@ -356,8 +388,6 @@
                 </template>
                 
                 <div class="clear"></div>
-                <!-- <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveBase">保存</el-button> -->
               </div>
             </el-collapse-item>
           </template>
@@ -407,8 +437,8 @@ export default {
             isCheckCname: true,
             enterpriseNameReg: '',
             isCheckReg: true,
-            isCheckTel: true,
-            userCname: '',
+            isCheckTel: false,
+            userName: '',
             base: {
               enterpriseAddrCity: '',
               enterpriseAddrDetail: '',
@@ -430,27 +460,13 @@ export default {
               enterpriseZipCode: '',
               enterpriseType: 'enterprise_type_0',
               enterpriseWeb: '',
-              userCname: '',
+              userName: '',
               userMobile: '',
               userPosition: '',
               enterpriseWechatQrcode: ''
             },
             isPlatformPub: false,
             isPlatformWechat: false,
-            platformWechat: {
-              enterpriseWechatCorpId: '',
-              enterpriseWechatLogo: ''
-            },
-            platformPub: {
-              pubWechatAccount: '',
-              pubWechatCname: '',
-              pubWechatAppId: '',
-              pubWechatSecret: '',
-              pubWechatReceiverSecret: '',
-              pubWechatReceiverToken: '',
-              pubWechatLogo: '',
-              pubWechatQrcode: ''
-            },
             enterpriseWechat: {
               enterpriseWechatCorpId: '',
               enterpriseWechatLogo: '',
@@ -461,7 +477,10 @@ export default {
               pubWechatReceiverSecret: '',
               pubWechatReceiverToken: '',
               pubWechatLogo: '',
-              pubWechatQrcode: ''
+              pubWechatQrcode: '',
+              enterpriseWechatAgentCname: '',
+              enterpriseWechatAgentid: '',
+              enterpriseWechatAgentSecret: ''
             },
             enterpriseTypes: [],
             cityData: [],
@@ -474,7 +493,8 @@ export default {
             },
             timer: null,
             seconds: 90,
-            productEventList: []
+            productEventList: [],
+            switchStatus: ''
         }
     },
     mounted () {
@@ -509,6 +529,7 @@ export default {
           }).then((res) => {
               if (res.result.success == '1') {
                   if (res.result.result == '1') {
+                    this.enterpriseCname = this.base.enterpriseCname
                     this.isCheckCname = true
                   } else {
                     this.isCheckCname = false
@@ -574,6 +595,7 @@ export default {
           }).then((res) => {
               if (res.result.success == '1') {
                   if (res.result.result == '1') {
+                    this.enterpriseNameReg = this.base.enterpriseNameReg
                     this.isCheckReg = true
                   } else {
                     this.isCheckReg = false
@@ -607,6 +629,7 @@ export default {
                         this.seconds--
                         if (this.seconds === 0) {
                             clearInterval(this.timer)
+                            this.seconds = 90
                             this.timer = null
                         }
                     }, 1000)
@@ -655,86 +678,8 @@ export default {
                   this.base = res.result.result
                   this.enterpriseCname = this.base.enterpriseCname
                   this.enterpriseNameReg = this.base.enterpriseCname
-                  this.userCname = this.base.userCname
-              } else {
-                  this.$message.error(res.result.message)
-              }
-          })
-        },
-        getPlatformWechat () {
-          if (this.platformWechat.id) {
-            if (this.isPlatformWechat) {
-              this.isPlatformWechat = false
-
-              var platformWechat = {
-                enterpriseWechatCorpId: '',
-                enterpriseWechatLogo: ''
-              }
-
-              this.enterpriseWechat = Object.assign(this.enterpriseWechat, platformWechat)
-            } else {
-              this.isPlatformWechat = true
-              this.enterpriseWechat = Object.assign(this.enterpriseWechat, this.platformWechat)
-            }
-            return
-          }
-
-          util.request({
-              method: 'get',
-              interface: 'platfromEnterpriseWechatInfo',
-              data: {}
-          }).then((res) => {
-              if (res.result.success == '1') {
-                  if (res.result.result) {
-                    this.platformWechat = res.result.result
-                    this.isPlatformWechat = true
-                    this.enterpriseWechat = Object.assign(this.enterpriseWechat, this.platformWechat)
-                  } else {
-                    this.$message.error('查询错误！')
-                  }
-              } else {
-                  this.$message.error(res.result.message)
-              }
-          })
-        },
-        getPlatformPub () {
-          if (this.platformPub.id) {
-            if (this.isPlatformPub) {
-              this.isPlatformPub = false
-
-              var platformPub = {
-                pubWechatAccount: '',
-                pubWechatCname: '',
-                pubWechatAppId: '',
-                pubWechatSecret: '',
-                pubWechatReceiverSecret: '',
-                pubWechatReceiverToken: '',
-                pubWechatLogo: '',
-                pubWechatQrcode: ''
-              }
-
-              this.enterpriseWechat = Object.assign(this.enterpriseWechat, platformPub)
-            } else {
-              this.isPlatformPub = true
-              this.enterpriseWechat = Object.assign(this.enterpriseWechat, this.platformPub)
-            }
-            
-            return
-          }
-
-          util.request({
-              method: 'get',
-              interface: 'platformPubWechatInfo',
-              data: {}
-          }).then((res) => {
-              if (res.result.success == '1') {
-                  if (res.result.result) {
-                    this.platformPub = res.result.result
-                    this.isPlatformPub = true
-                    this.enterpriseWechat = Object.assign(this.enterpriseWechat, this.platformPub)
-                  } else {
-                    this.$message.error('查询错误！')
-                  }
+                  this.userName = this.base.userName
+                  this.isCheckTel = true
               } else {
                   this.$message.error(res.result.message)
               }
@@ -827,7 +772,7 @@ export default {
           this.enterpriseWechat.enterpriseWechatLogo = data.url
         },
         changeImgQE (data) {
-          this.enterpriseWechat.enterpriseWechatQrcode = data.url
+          this.base.enterpriseWechatQrcode = data.url
         },
         changeImgFL (data) {
           this.enterpriseWechat.pubWechatLogo = data.url
@@ -868,7 +813,7 @@ export default {
               return false
           }
 
-          if (this.base.userCname == '') {
+          if (this.base.userName == '') {
               this.$message({
                 message: '请填写超级管理员!',
                 type: 'warning'
@@ -876,7 +821,7 @@ export default {
               return false
           }
 
-          if (this.userCname != '' && this.base.userCname !== this.userCname && !isCheckTel) {
+          if ((this.userName == '' || this.base.userName !== this.userName) && !this.isCheckTel) {
             this.dialogVisible = true
             return false
           }
@@ -899,7 +844,7 @@ export default {
 
           util.request({
               method: 'post',
-              interface: 'enterpriseBaseInfoSave',
+              interface: 'platformBaseInfoSave',
               data: this.base
           }).then((res) => {
               if (res.result.success == '1') {
@@ -971,6 +916,30 @@ export default {
           if (this.enterpriseWechat.pubWechatReceiverToken == '') {
               this.$message({
                 message: '请填写接收消息令牌!',
+                type: 'warning'
+              })
+              return false
+          }
+
+          if (this.enterpriseWechat.enterpriseWechatAgentCname == '') {
+              this.$message({
+                message: '请填写平台通讯录管理!',
+                type: 'warning'
+              })
+              return false
+          }
+
+          if (this.enterpriseWechat.enterpriseWechatAgentid == '') {
+              this.$message({
+                message: '请填写接Agent ID!',
+                type: 'warning'
+              })
+              return false
+          }
+
+          if (this.enterpriseWechat.enterpriseWechatAgentSecret == '') {
+              this.$message({
+                message: '请填写Secret!',
                 type: 'warning'
               })
               return false
@@ -1062,6 +1031,26 @@ export default {
                   })
 
                   this.getProductAndEvent()
+              } else {
+                  this.$message.error(res.result.message)
+              }
+          })
+        },
+        changeStatus (value) {
+          util.request({
+              method: 'get',
+              interface: 'changeStatus',
+              data: {
+                enterpriseCode: this.$route.query.enterpriseCode,
+                enterpriseStatus: value
+              }
+          }).then((res) => {
+              if (res.result.success == '1') {
+                  this.$message({
+                    message: '恭喜你，操作成功!',
+                    type: 'success'
+                  })
+
               } else {
                   this.$message.error(res.result.message)
               }

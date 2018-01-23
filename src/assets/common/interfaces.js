@@ -23,6 +23,7 @@ export default {
         platformPubWechatInfo: platform + 'enterprise/platformPubWechatInfo.json',
         platfromEnterpriseWechatInfo: platform + 'enterprise/platfromEnterpriseWechatInfo.json',
         platfromWechatInfo: platform + 'enterprise/platfromWechatInfo.json',
+        platformBaseInfoSave: platform + 'enterprise/platformBaseInfoSave.json',
         enterpriseBaseInfoSave: platform + 'enterprise/enterpriseBaseInfoSave.json',
         disOfEnterpriseInfo: platform + 'enterprise/disOfEnterpriseInfo.json',
         findDictionaryByType: platform + 'enterprise/findDictionaryByType.json',
@@ -32,6 +33,7 @@ export default {
         getValidateCode: platform + 'enterprise/getValidateCode.json',
         valiSmsPass: platform + 'enterprise/valiSmsPass.json',
         enterpriseWechatInfoSave: platform + 'enterprise/enterpriseWechatInfoSave.json',
+        changeStatus: platform + 'enterprise/changeStatus.json',
 
         selectProductAndEvent: platform + 'productAndEvent/selectProductAndEvent.json',
         enterpriseOrderStart: platform + 'platform/enterpriseOrderStart.json',

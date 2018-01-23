@@ -42,6 +42,9 @@
                 </section>
             </router-link>
         </section>
+        <section class="null-box" v-if="!marketList.length && isPage">
+          暂无内容！！！
+        </section>
         <div class="more-load"
                 v-if="total && marketList.length < total"
                 @click="loadMore">加载更多...</div>
@@ -88,6 +91,7 @@ import popupLoad from '../../../components/common/popupLoad.vue'
 export default {
     data () {
         return {
+            isPage: false,
             keyValue: '',
             marketList: [],
             pageSize: 20,
@@ -127,6 +131,7 @@ export default {
                 }
 
                 this.total = res.result.total
+                this.isPage = true
                 if (!type) {
                     this.marketList = res.result.result
                 } else {

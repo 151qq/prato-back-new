@@ -134,7 +134,7 @@
             <el-form-item label="封面">
                 <popup-img :path="addItemForm.catalogImage"
                             :is-operate="true"
-                            :bg-path="true"
+                            :bg-path="false"
                             @imgClick="imgClick"></popup-img>
             </el-form-item>
             <el-form-item label="标题">

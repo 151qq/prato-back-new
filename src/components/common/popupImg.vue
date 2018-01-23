@@ -6,7 +6,7 @@
             src="../../assets/images/img-default.jpg">
         <img v-if="!curPath && bgPath"
             src="../../assets/images/page-img.jpg">
-        <img v-else class="img-big" :src="curPath">
+        <img v-if="curPath" class="img-big" :src="curPath">
       </div>
     </section>
   </div>
