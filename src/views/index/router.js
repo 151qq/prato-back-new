@@ -23,6 +23,16 @@ const routers = [
             path: '',
             name: 'article',
             component (resolve) {
+              require.ensure(['./article/enterpriseList.vue'], () => {
+                resolve(require('./article/enterpriseList.vue'))
+              })
+            }
+          },
+          {
+            // 推广文章
+            path: 'articleList',
+            name: 'article-list',
+            component (resolve) {
               require.ensure(['./article/article.vue'], () => {
                 resolve(require('./article/article.vue'))
               })
@@ -54,8 +64,8 @@ const routers = [
             path: '',
             name: 'product',
             component (resolve) {
-              require.ensure(['./product/product.vue'], () => {
-                resolve(require('./product/product.vue'))
+              require.ensure(['./product/productList.vue'], () => {
+                resolve(require('./product/productList.vue'))
               })
             }
           },
@@ -66,6 +76,37 @@ const routers = [
             component (resolve) {
               require.ensure(['./product/productDetail.vue'], () => {
                 resolve(require('./product/productDetail.vue'))
+              })
+            }
+          }
+        ]
+      },
+      {
+        // 礼品中心
+        path: 'gift',
+        component (resolve) {
+          require.ensure(['./gift/main.vue'], () => {
+            resolve(require('./gift/main.vue'))
+          })
+        },
+        children: [
+          {
+            // 礼品中心
+            path: '',
+            name: 'gift',
+            component (resolve) {
+              require.ensure(['./gift/giftList.vue'], () => {
+                resolve(require('./gift/giftList.vue'))
+              })
+            }
+          },
+          {
+            // 礼品中心
+            path: 'giftDetail',
+            name: 'gift-detail',
+            component (resolve) {
+              require.ensure(['./gift/giftDetail.vue'], () => {
+                resolve(require('./gift/giftDetail.vue'))
               })
             }
           }

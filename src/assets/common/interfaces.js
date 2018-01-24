@@ -38,6 +38,9 @@ export default {
         selectProductAndEvent: platform + 'productAndEvent/selectProductAndEvent.json',
         enterpriseOrderStart: platform + 'platform/enterpriseOrderStart.json',
         enterpriseOrderStop: platform + 'platform/enterpriseOrderStop.json',
+        addUser: platform + 'enterprise/addUser.json',
+        deleteUser: platform + 'enterprise/deleteUser.json',
+        selectUserInfoOfPage: platform + 'enterprise/selectUserInfoOfPage.json',
 
         /**
         * 客服 get
@@ -46,6 +49,7 @@ export default {
         updateCallCenterConfig: platform + 'callCenterConfig/updateCallCenterConfig.json',
         findCallCenterConfig: platform + 'callCenterConfig/findCallCenterConfig.json',
         getEnterpriseConfigDic: platform + 'callCenterConfig/getEnterpriseConfigDic.json',
+        getPlatformConfig: platform + 'callCenterConfig/findPlatformEnterpriseConfig.json',
 
         /**
         * 调研 get
@@ -95,6 +99,7 @@ export default {
         productInfoList: platform + 'product/productInfoList.json',
         getPriceType: platform + 'product/getPriceType.json',
         saveProductCover: platform + 'product/saveProductCover.json',
+        savaProductPageCode: platform + 'product/savaProductPageCode.json',
 
         /**
         * 营销树 get
@@ -141,6 +146,9 @@ export default {
         insertTemplate: platform + 'htmlPageTemplate/save.json',
         deleteTemplate: platform + 'htmlPageTemplate/delete.json',
         updateTemplate: platform +'htmlPageTemplate/update.json',
+        insertHtmlPageLog: platform + 'htmlPageLog/insertHtmlPageLog.json',
+        pageInfoDetails: platform + 'htmlPageLog/pageInfoDetails.json',
+        pageLogList: platform + 'htmlPageLog/pageLogList.json',
 
 
         /**

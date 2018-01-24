@@ -4,13 +4,18 @@
 
     <div class="nav-box">
       <router-link :to="{ name: 'market',query:{enterpriseCode: userInfo.enterpriseCode}}">营销方案</router-link>
-      <router-link :to="{ name: 'article',query:{enterpriseCode: userInfo.enterpriseCode}}">推广文章</router-link>
+      <router-link :to="{ name: 'article'}">推广文章</router-link>
       <router-link :to="{ name: 'survey',query:{enterpriseCode: userInfo.enterpriseCode}}">调研发布</router-link>
       <router-link :to="{ name: 'product',query:{
         enterpriseCode: userInfo.enterpriseCode,
         catalogCode: 'e2',
         catalogLevel: 1
       }}">产品中心</router-link>
+      <router-link :to="{ name: 'gift',query:{
+        enterpriseCode: userInfo.enterpriseCode,
+        catalogCode: 'e2',
+        catalogLevel: 1
+      }}">礼品中心</router-link>
       <!-- <router-link :to="{ name: 'gift'}">礼品中心</router-link> -->
       <router-link :to="{ name: 'enterprise'}">企业信息</router-link>
       <router-link :to="{ name: 'callcenter',query:{enterpriseCode: userInfo.enterpriseCode}}">营销配置</router-link>

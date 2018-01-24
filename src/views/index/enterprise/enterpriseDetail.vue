@@ -167,9 +167,17 @@
                 <div class="input-box">
                   <upload :path="base.enterpriseLogo"
                           :bg-path="true"
-                          :is-operate="false"
-                          @changeImg="changeImg"></upload>
+                          :is-operate="false"></upload>
                 </div>
+              </section>
+
+              <section class="formBox">
+                  <span>企业微信二维码</span>
+                  <div class="input-box">
+                    <upload :path="base.enterpriseWechatQrcode"
+                            :bg-path="true"
+                            :is-operate="false"></upload>
+                  </div>
               </section>
               
               <div class="clear"></div>
@@ -184,33 +192,13 @@
               <template v-for="(item, index) in productEventList">
                 <section class="formBox">
                     <span class="font-b">{{item.productInfo.productCname}}</span>
-                </section>
-                <section class="formBox">
-                    <span>Agent ID</span>
-                    <el-input
-                      class="input-box"
-                      placeholder="请输入内容"
-                      :disabled="true"
-                      v-model="item.enterpriseWechatAgentid">
-                    </el-input>
-                </section>
-                <section class="formBox">
-                    <span>Secret</span>
-                    <el-input
-                      class="input-box"
-                      placeholder="请输入内容"
-                      :disabled="true"
-                      v-model="item.enterpriseWechatAgentSecret">
-                    </el-input>
-                </section>
-                <section class="formBox">
                     <div class="btn-right-box">
                       <el-tooltip class="item" effect="dark" :content="item.productPrice.priceDesc" placement="top">
                         <el-button>服务费用说明</el-button>
                       </el-tooltip>
                       
-                      <el-button class="btn-right" type="primary" size="small">
-                        {{item.productStatus1 == '1' ? '关闭' : '开通'}}
+                      <el-button :disabled="true" class="btn-right" type="primary" size="small">
+                        {{item.productStatus1 == '1' ? '已开通' : '未开通'}}
                       </el-button>
                     </div>
                 </section>
@@ -265,7 +253,7 @@ export default {
             isCheckCname: true,
             enterpriseNameReg: '',
             isCheckReg: true,
-            isCheckTel: true,
+            isCheckTel: false,
             userCname: '',
             base: {
               enterpriseAddrCity: '',
@@ -339,6 +327,7 @@ export default {
           }).then((res) => {
               if (res.result.success == '1') {
                   if (res.result.result == '1') {
+                    this.enterpriseCname = this.base.enterpriseCname
                     this.isCheckCname = true
                   } else {
                     this.isCheckCname = false
@@ -404,6 +393,7 @@ export default {
           }).then((res) => {
               if (res.result.success == '1') {
                   if (res.result.result == '1') {
+                    this.enterpriseNameReg = this.base.enterpriseNameReg
                     this.isCheckReg = true
                   } else {
                     this.isCheckReg = false
@@ -486,7 +476,9 @@ export default {
                   this.base = res.result.result
                   this.enterpriseCname = this.base.enterpriseCname
                   this.enterpriseNameReg = this.base.enterpriseCname
-                  this.userCname = this.base.userCname
+                  this.userName = this.base.userName
+                  this.isCheckTel = true
+                  this.switchStatus = this.base.enterpriseStatus
               } else {
                   this.$message.error(res.result.message)
               }
@@ -555,9 +547,6 @@ export default {
         collChange () {
             localStorage.setItem("enterpriseColl", this.activeNames)
         },
-        changeImg (data) {
-          this.base.enterpriseLogo = data.url
-        },
         saveBase () {
           if (this.base.enterpriseCname == '') {
               this.$message({
@@ -591,7 +580,7 @@ export default {
               return false
           }
 
-          if (this.base.userCname == '') {
+          if (this.base.userName == '') {
               this.$message({
                 message: '请填写超级管理员!',
                 type: 'warning'
@@ -599,7 +588,7 @@ export default {
               return false
           }
 
-          if (this.userCname != '' && this.base.userCname !== this.userCname && !isCheckTel) {
+          if ((this.userName == '' || this.base.userName !== this.userName) && !this.isCheckTel) {
             this.dialogVisible = true
             return false
           }
@@ -612,14 +601,17 @@ export default {
               return false
           }
 
-          if (!this.isCheckTel) {
-            this.dialogVisible = true
-            return false
+          if (this.base.enterpriseWechatQrcode == '') {
+              this.$message({
+                message: '请填加企业微信二维码!',
+                type: 'warning'
+              })
+              return false
           }
 
           util.request({
               method: 'post',
-              interface: 'enterpriseBaseInfoSave',
+              interface: 'platformBaseInfoSave',
               data: this.base
           }).then((res) => {
               if (res.result.success == '1') {

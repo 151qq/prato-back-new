@@ -1,44 +1,42 @@
 <template>
-    <section class="activity-box">
-        <el-button class="add-btn" type="primary" icon="plus" size="small"
-                  @click="addItem"
-                  v-if="isEdit">增加</el-button>
+    <section class="user-list-wx-box">
+        <el-button class="add-btn" type="primary" icon="plus" size="small" @click="addItem">增加</el-button>
         <el-table
           :data="itemList"
           border
           style="width: 100%">
           <el-table-column
-            prop="productParameterKey"
-            label="规格名称">
+            prop="userName"
+            label="用户名">
           </el-table-column>
           <el-table-column
-            prop="productParameterValue"
-            label="说明">
+            prop="userMobile"
+            label="手机号">
           </el-table-column>
           <el-table-column
-            v-if="isEdit"
             label="操作"
             width="70">
             <template scope="scope">
               <i class="el-icon-delete2" @click="deleteItem(scope.row)"></i>
-
-              <i class="el-icon-document" @click="editItem(scope.row)"></i>
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog :title="operateText" :visible.sync="isAddOEdit">
+
+        <div class="clear"></div>
+        <el-pagination
+            v-if="total"
+            class="page-box"
+            @current-change="pageChange"
+            layout="prev, pager, next"
+            :total="total">
+        </el-pagination>
+        <el-dialog class="user-add-box" title="添加员工" :visible.sync="isAddOEdit">
           <el-form :label-position="'left'" :model="itemData" label-width="80px">
-            <el-form-item label="规格名称">
-                <el-input v-model="itemData.productParameterKey" auto-complete="off"></el-input>
+            <el-form-item label="用户名">
+                <el-input v-model="itemData.userName"></el-input>
             </el-form-item>
-            <el-form-item label="规格说明">
-                <el-input
-                  type="textarea"
-                  :rows="4"
-                  :maxlength="140"
-                  placeholder="请输入内容"
-                  v-model="itemData.productParameterValue">
-                </el-input>
+            <el-form-item label="手机号">
+                <el-input type="number" v-model="itemData.userMobile"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -50,68 +48,72 @@
 </template>
 <script>
 import util from '../../../../assets/common/util'
-import { mapGetters } from 'vuex'
 
 export default {
     data () {
         return {
-          operateText: '添加',
           itemList: [],
           isAddOEdit: false,
           itemData: {
-            productParameterKey: '',
-            productParameterValue: ''
-          }
+            userName: '',
+            userMobile: ''
+          },
+          pageNumber: 1,
+          pageSize: 20,
+          total: 0
         }
     },
     mounted () {
       this.getItemList()
     },
-    computed: {
-        ...mapGetters({
-            userInfo: 'getUserInfo'
-        }),
-        isEdit () {
-          return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
-        }
+    watch: {
+      $route () {
+        this.getItemList()
+      }
     },
     methods: {
       getItemList () {
         util.request({
             method: 'get',
-            interface: 'productParameterList',
+            interface: 'selectUserInfoOfPage',
             data: {
-              productCode: this.$route.query.productCode
+              enterpriseCode: this.$route.query.enterpriseCode,
+              pageSize: this.pageSize,
+              pageNumber: this.pageNumber
             }
         }).then(res => {
-            this.itemList = res.result.result
+            if (res.result.success == '1') {
+              this.total = Number(res.result.total)
+              this.itemList = res.result.result
+            } else {
+              this.$message.error(res.result.message)
+            }
         })
+      },
+      pageChange (size) {
+        this.pageNumber = size
+        this.getItemList()
       },
       addItem () {
         this.itemData = {
           enterpriseCode: this.$route.query.enterpriseCode,
-          productCode: this.$route.query.productCode,
-          productParameterKey: '',
-          productParameterValue: ''
+          userName: '',
+          userName: ''
         }
-
-        this.operateText = '添加'
-
-        this.isAddOEdit = true
-      },
-      editItem (item) {
-        this.itemData = Object.assign({}, item)
-
-        this.operateText = '编辑'
 
         this.isAddOEdit = true
       },
       confirmItem () {
-        if (!this.itemData.productParameterKey) {
+        if (!this.itemData.userName) {
           this.$message({
-              message: '请填写规格名称！',
+              message: '请填写用户名称！',
               type: 'warning'
           })
+          return false
+        }
+
+        if (!(/^1[3|4|5|8][0-9]{9}$/).test(this.itemData.userMobile.trim())) {
+          this.$message.error('请输入11位用户手机号')
           return false
         }
 
@@ -120,7 +122,7 @@ export default {
       insertOrUpdateItem () {
         util.request({
             method: 'post',
-            interface: 'productParameterSave',
+            interface: 'addUser',
             data: this.itemData
         }).then((res) => {
             if (res.result.success == '1') {
@@ -134,9 +136,10 @@ export default {
       deleteItem (row) {
         util.request({
             method: 'post',
-            interface: 'productParameterDelete',
+            interface: 'deleteUser',
             data: {
-              parameterCode: row.productParemeterCode
+              enterpriseCode: this.$route.query.enterpriseCode,
+              userCode: row.userCode
             }
         }).then(res => {
           if (res.result.success == '1') {
@@ -154,3 +157,14 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+.user-list-wx-box {
+  .page-box {
+    margin-top: 15px;
+  }
+
+  .el-dialog--small {
+    width: 360px;
+  }
+}
+</style>

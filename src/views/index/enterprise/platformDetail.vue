@@ -250,30 +250,12 @@
                     </el-input>
                 </section>
                 <section class="formBox">
-                    <span>平台通讯录管理</span>
+                    <span>通讯录secret</span>
                     <el-input
                       class="input-box"
                       placeholder="请输入内容"
                       :disabled="isPlatformPub"
-                      v-model="enterpriseWechat.enterpriseWechatAgentCname">
-                    </el-input>
-                </section>
-                <section class="formBox">
-                    <span>Agent ID</span>
-                    <el-input
-                      class="input-box"
-                      placeholder="请输入内容"
-                      :disabled="isPlatformPub"
-                      v-model="enterpriseWechat.enterpriseWechatAgentid">
-                    </el-input>
-                </section>
-                <section class="formBox">
-                    <span>Secrete</span>
-                    <el-input
-                      class="input-box"
-                      placeholder="请输入内容"
-                      :disabled="isPlatformPub"
-                      v-model="enterpriseWechat.enterpriseWechatAgentSecret">
+                      v-model="enterpriseWechat.departmentSecret">
                     </el-input>
                 </section>
 
@@ -391,6 +373,12 @@
               </div>
             </el-collapse-item>
           </template>
+          <template v-if="enterpriseWechat.id">
+            <div class="line-bold"></div>
+            <el-collapse-item class="float-form-box" title="员工管理" name="4">
+              <user-list></user-list>
+            </el-collapse-item>
+          </template>
         </el-collapse>
 
         <el-dialog
@@ -427,6 +415,7 @@
 import util from '../../../assets/common/util'
 import $ from 'Jquery'
 import upload from '../../../components/common/upload'
+import userList from './formAlist/userList'
 
 export default {
     data () {
@@ -478,9 +467,7 @@ export default {
               pubWechatReceiverToken: '',
               pubWechatLogo: '',
               pubWechatQrcode: '',
-              enterpriseWechatAgentCname: '',
-              enterpriseWechatAgentid: '',
-              enterpriseWechatAgentSecret: ''
+              departmentSecret: ''
             },
             enterpriseTypes: [],
             cityData: [],
@@ -680,6 +667,7 @@ export default {
                   this.enterpriseNameReg = this.base.enterpriseCname
                   this.userName = this.base.userName
                   this.isCheckTel = true
+                  this.switchStatus = this.base.enterpriseStatus
               } else {
                   this.$message.error(res.result.message)
               }
@@ -921,25 +909,9 @@ export default {
               return false
           }
 
-          if (this.enterpriseWechat.enterpriseWechatAgentCname == '') {
+          if (this.enterpriseWechat.departmentSecret == '') {
               this.$message({
-                message: '请填写平台通讯录管理!',
-                type: 'warning'
-              })
-              return false
-          }
-
-          if (this.enterpriseWechat.enterpriseWechatAgentid == '') {
-              this.$message({
-                message: '请填写接Agent ID!',
-                type: 'warning'
-              })
-              return false
-          }
-
-          if (this.enterpriseWechat.enterpriseWechatAgentSecret == '') {
-              this.$message({
-                message: '请填写Secret!',
+                message: '请填写通讯录secret!',
                 type: 'warning'
               })
               return false
@@ -991,7 +963,7 @@ export default {
         },
         setOrder (item) {
           var formData = {
-            isPlatformPub: '1',
+            enterpriseType: this.base.enterpriseType,
             enterpriseCode: this.$route.query.enterpriseCode,
             platformProductCode: item.productInfo.productCode,
             orderQuotation: item.productPrice.productPrice,
@@ -1058,7 +1030,8 @@ export default {
         }
     },
     components: {
-      upload
+      upload,
+      userList
     }
 }
 </script>

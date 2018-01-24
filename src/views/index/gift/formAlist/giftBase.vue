@@ -2,7 +2,7 @@
     <section>
       <div class="formDiscount">
         <section class="formBox">
-            <span>产品名称</span>
+            <span>礼品名称</span>
             <el-input
               class="input-box"
               placeholder="请输入内容"
@@ -10,7 +10,7 @@
             </el-input>
         </section>
         <section class="formBox">
-            <span>产品编码</span>
+            <span>礼品编码</span>
             <el-input
               class="input-box"
               placeholder="请输入内容"
@@ -18,7 +18,7 @@
             </el-input>
         </section>
         <section class="formBox">
-            <span>产品类型</span>
+            <span>礼品类型</span>
             <el-select
               class="input-box"
               v-model="base.productType"
@@ -48,7 +48,7 @@
             </el-select>
         </section>
         <section class="formBox">
-            <span>产品价格</span>
+            <span>礼品价格</span>
             <el-input
               class="input-box"
               type="number"
@@ -89,7 +89,7 @@
             </el-input>
         </section>
         <section class="formBox bigF">
-            <span>产品摘要</span>
+            <span>礼品摘要</span>
             <el-input
               type="textarea"
               :rows="4"
@@ -154,7 +154,7 @@ export default {
           }).then(res => {
               if (res.result.success = '1') {
                 this.base = res.result.result.productInfo
-                this.geProductTypes('product_type')
+                this.geProductTypes('gift_type')
 
                 this.$emit('change', res.result.result)
               } else {
@@ -196,7 +196,7 @@ export default {
         saveBase () {
           if (!this.base.productCname) {
               this.$message({
-                  message: '请填写产品名称！',
+                  message: '请填写礼品名称！',
                   type: 'warning'
               })
               return false
@@ -204,7 +204,7 @@ export default {
 
           if (!this.base.productSku) {
             this.$message({
-                  message: '请填写产品编码！',
+                  message: '请填写礼品编码！',
                   type: 'warning'
               })
               return false
@@ -212,7 +212,7 @@ export default {
 
           if (!this.base.productType) {
             this.$message({
-                  message: '请填写产品类型！',
+                  message: '请填写礼品类型！',
                   type: 'warning'
               })
               return false

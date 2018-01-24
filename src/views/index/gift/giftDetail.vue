@@ -3,24 +3,24 @@
         <el-collapse v-model="activeNames" @change="collChange">
           <!-- 基本信息 -->
           <el-collapse-item class="float-form-box" title="基本信息" name="1">
-            <product-base ref="baseForm" @change="baseChange"></product-base>
+            <gift-base ref="baseForm" @change="baseChange"></gift-base>
           </el-collapse-item>
           <div class="line-bold"></div>
 
           <!-- 详细规格 -->
-          <el-collapse-item class="float-form-box" title="产品规格" name="2">
+          <el-collapse-item class="float-form-box" title="礼品规格" name="2">
             <spec-list ref="productSpec"></spec-list>
           </el-collapse-item>
           <div class="line-bold"></div>
 
-          <!-- 产品场景化推荐 -->
-          <el-collapse-item class="float-form-box" title="产品场景化推荐" name="3">
+          <!-- 礼品场景化推荐 -->
+          <el-collapse-item class="float-form-box" title="礼品场景化推荐" name="3">
             <user-scence></user-scence>
           </el-collapse-item>
           <div class="line-bold"></div>
 
-          <!-- 产品图片 -->
-          <el-collapse-item class="float-form-box" title="产品相册" name="4">
+          <!-- 礼品图片 -->
+          <el-collapse-item class="float-form-box" title="礼品相册" name="4">
             <upload-list :img-lists="imgList"
                           :id-name="'productAlbum'"
                           :is-edit="isEdit"
@@ -31,7 +31,7 @@
           <div class="line-bold"></div>
 
           <!-- 介绍文章 -->
-          <el-collapse-item class="float-form-box" title="产品介绍" name="5">
+          <el-collapse-item class="float-form-box" title="礼品介绍" name="5">
             <article-list :article-data="articleData"></article-list>
           </el-collapse-item>
           
@@ -40,7 +40,7 @@
 </template>
 <script>
 import util from '../../../assets/common/util'
-import productBase from './formAlist/productBase'
+import giftBase from './formAlist/giftBase'
 import specList from './formAlist/specList'
 import articleList from './formAlist/articleList'
 import userScence from './formAlist/userScence'
@@ -166,7 +166,7 @@ export default {
         }
     },
     components: {
-        productBase,
+        giftBase,
         specList,
         articleList,
         userScence,

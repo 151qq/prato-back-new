@@ -7,10 +7,10 @@
         <i class="el-icon-delete2" @click="deleteImg(index)"></i>
       </div>
     </section>
-    <label class="img-box" :for="idName">
+    <label v-if="isEdit" class="img-box" :for="idName">
       <img class="img-big" src="../../assets/images/add-img.jpg">
     </label>
-    <input :id="idName" type="file" class="img-input" @change="postImg($event)">
+    <input v-if="isEdit" :id="idName" type="file" class="img-input" @change="postImg($event)">
 
     <!-- 大图 -->
     <swiper-img :is-show="isShow" :index="nowIndex" :big-imgs="imgLists"></swiper-img>
@@ -21,7 +21,7 @@ import util from '../../assets/common/util'
 import swiperImg from './swiper-img.vue'
 
 export default {
-    props: ['imgLists', 'idName'],
+    props: ['imgLists', 'idName', 'isEdit'],
     data() {
       return {
         imgList: [],

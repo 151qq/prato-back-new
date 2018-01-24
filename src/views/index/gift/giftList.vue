@@ -73,7 +73,7 @@
                                         productCode: item.catalogCode
                                     }
                                  }">
-                        <img v-if="item.catalogImage" :src="item.catalogImage">
+                        <img :src="item.catalogImage">
                     </router-link>
                     <div class="title-box">
                         <div class="title" v-text="item.catalogCname"></div>
@@ -131,7 +131,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <template v-if="addItemForm.catalogType == 'dir'">
+            <template v-if="catalogType == 'dir'">
                 <el-form-item label="封面">
                     <popup-img :path="addItemForm.catalogImage"
                                 :is-operate="true"
@@ -175,7 +175,7 @@ import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
-            productType: 'product',
+            productType: 'gift',
             keyValue: '',
             // 获取
             sourceDatas: [],
@@ -233,7 +233,7 @@ export default {
         this.dirSteps.push(stepOne)
         this.getItems(this.$route.query.catalogCode)
 
-        this.geProductTypes('product_type')
+        this.geProductTypes('gift_type')
     },
     computed: {
         ...mapGetters({
@@ -728,8 +728,6 @@ export default {
         border-radius: 3px;
 
         .cover-box {
-            display: block;
-            width: 100%;
             height: 170px;
             overflow: hidden;
             cursor: pointer;
