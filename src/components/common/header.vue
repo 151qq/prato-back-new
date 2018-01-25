@@ -137,6 +137,10 @@ export default {
       float: left;
       margin-top: 10px;
       margin-right: 26px;
+
+      img {
+        height: 30px;
+      }
     }
 
     .nav-box {

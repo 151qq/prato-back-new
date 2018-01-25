@@ -14,6 +14,10 @@
             label="手机号">
           </el-table-column>
           <el-table-column
+            prop="roleName"
+            label="用户角色">
+          </el-table-column>
+          <el-table-column
             label="操作"
             width="70">
             <template scope="scope">
@@ -84,6 +88,18 @@ export default {
         }).then(res => {
             if (res.result.success == '1') {
               this.total = Number(res.result.total)
+
+              if (res.result.result) {
+                res.result.result.forEach((user) => {
+                  if (user.securityRoles.length) {
+                    var roleArr = []
+                    user.securityRoles.forEach((role) => {
+                      roleArr.push(role.roleName)
+                    })
+                    user.roleName = roleArr.join(',')
+                  }
+                })
+              }
               this.itemList = res.result.result
             } else {
               this.$message.error(res.result.message)
@@ -139,7 +155,8 @@ export default {
             interface: 'deleteUser',
             data: {
               enterpriseCode: this.$route.query.enterpriseCode,
-              userCode: row.userCode
+              userCode: row.userCode,
+              userMobile: row.userMobile
             }
         }).then(res => {
           if (res.result.success == '1') {

@@ -48,9 +48,12 @@ const router = new VueRouter({
 
 // 验证登录
 router.beforeEach((to, from, next) => {
-  // 滚动置顶
-  window.scrollTo && window.scrollTo(0, 0)
-  next()
+    // if (!e2Token && to.name !== 'login') {
+    //     window.location.href = '/login'
+    // }
+    // 滚动置顶
+    window.scrollTo && window.scrollTo(0, 0)
+    next()
 })
 
 new Vue({

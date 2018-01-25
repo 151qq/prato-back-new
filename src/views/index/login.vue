@@ -18,14 +18,14 @@
         <div class="message-box">
             <div class="mess-title">营销精英云服务平台管理</div>
             <div class="mess-content">
-                > 入驻企业管理<br>
-                > 平台产品管理<br>
-                > 营销配置参数管理<br>
-                > 平台自我宣传<br>
-                > 平台营销活动<br>
-                > 平台会员管理<br>
-                > 平台调研管理<br>
-                > 平台素材管理
+                <span>入驻企业管理</span>
+                <span>平台产品管理</span>
+                <span>营销配置参数管理</span>
+                <span>平台自我宣传</span>
+                <span>平台营销活动</span>
+                <span>平台会员管理</span>
+                <span>平台调研管理</span>
+                <span>平台素材管理</span>
             </div>
         </div>
         <el-dialog
@@ -251,7 +251,7 @@
         top: 50%;
         left: 10%;
         transform: translateY(-50%);
-        margin-top: -20px;
+        margin-top: -80px;
         width: 380px;
 
         .mess-title {
@@ -262,9 +262,15 @@
             font-weight: bold;
         },
         .mess-content {
+            padding-top: 10px;
+            box-sizing: border-box;
             font-size: 16px;
             color: #FFFFFF;
             line-height: 30px;
+
+            span {
+                margin-right: 15px;
+            }
         }
     }
     
@@ -282,6 +288,7 @@
             color: #373D41;
             line-height: 24px;
             width: 100px;
+            font-weight: bold;
         }
 
         .login-mess {

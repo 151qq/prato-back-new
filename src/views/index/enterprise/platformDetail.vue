@@ -137,11 +137,21 @@
 
               <section class="formBox">
                   <span>超级管理员</span>
-                  <el-input
-                    class="input-box"
-                    placeholder="请输入内容"
-                    v-model="base.userName">
-                  </el-input>
+                  <div class="input-btn-box">
+                    <el-input
+                      class="input-b"
+                      placeholder="请输入内容"
+                      @blur="checkUserName"
+                      v-model="base.userName">
+                    </el-input>
+
+                    <el-button class="input-btn"
+                              type="primary"
+                              size="small"
+                              :disabled="hasTel"
+                              @click="checkName">验证</el-button>
+                  </div>
+                  
               </section>
 
               <section class="formBox">
@@ -258,10 +268,18 @@
                       v-model="enterpriseWechat.departmentSecret">
                     </el-input>
                 </section>
-
+                <section class="formBox">
+                    <span>订阅模版编号</span>
+                    <el-input
+                      class="input-box"
+                      placeholder="请输入内容"
+                      :disabled="isPlatformPub"
+                      v-model="enterpriseWechat.pubWechatSubscribeTemplateId">
+                    </el-input>
+                </section>
                 <section class="clear"></section>
 
-                <section class="formBox">
+                <!-- <section class="formBox">
                     <span>企业微信LOGO</span>
                     <div class="input-box">
                       <upload :path="enterpriseWechat.enterpriseWechatLogo"
@@ -270,7 +288,7 @@
                               :is-operate="isOperate && !isPlatformWechat"
                               @changeImg="changeImgQL"></upload>
                     </div>
-                </section>
+                </section> -->
                 <section class="formBox">
                     <span>服务号LOGO</span>
                     <div class="input-box">
@@ -339,7 +357,7 @@
                 </template>
 
                 <section class="formBox">
-                    <span class="font-b">平台管理</span>
+                    <span class="font-b">开放企业注册</span>
                     <div class="input-box">
                       <el-switch
                         v-model="switchStatus"
@@ -414,19 +432,21 @@
 <script>
 import util from '../../../assets/common/util'
 import $ from 'Jquery'
-import upload from '../../../components/common/upload'
+import upload from '../../../components/common/uploadFile'
 import userList from './formAlist/userList'
+import { mapGetters } from 'vuex'
 
 export default {
     data () {
         return {
             isOperate: true,
-            activeNames: [],
+            activeNames: ['1'],
             enterpriseCname: '',
             isCheckCname: true,
             enterpriseNameReg: '',
             isCheckReg: true,
             isCheckTel: false,
+            hasTel: false,
             userName: '',
             base: {
               enterpriseAddrCity: '',
@@ -467,7 +487,8 @@ export default {
               pubWechatReceiverToken: '',
               pubWechatLogo: '',
               pubWechatQrcode: '',
-              departmentSecret: ''
+              departmentSecret: '',
+              pubWechatSubscribeTemplateId: ''
             },
             enterpriseTypes: [],
             cityData: [],
@@ -481,7 +502,8 @@ export default {
             timer: null,
             seconds: 90,
             productEventList: [],
-            switchStatus: ''
+            switchStatus: '',
+            isPost: false
         }
     },
     mounted () {
@@ -497,6 +519,14 @@ export default {
       
       this.getEnterpriseTypes()
       this.getCitys()
+    },
+    computed: {
+        ...mapGetters({
+            userInfo: 'getUserInfo'
+        }),
+        isEdit () {
+          return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
+        }
     },
     methods: {
         handleSelectionChange(val) {
@@ -596,6 +626,28 @@ export default {
               }
           })
         },
+        checkUserName () {
+          if (this.userName != '' && this.base.userName == this.userName) {
+            this.hasTel = true
+          } else {
+            this.hasTel = false
+          }
+        },
+        checkName () {
+          if (this.isCheckTel) {
+            return false
+          }
+
+          if (this.base.userName == '') {
+              this.$message({
+                message: '请先填写超级管理员!',
+                type: 'warning'
+              })
+              return false
+          }
+
+          this.dialogVisible = true
+        },
         checkTel () {
           if (!(/^1[3|4|5|8][0-9]{9}$/).test(this.base.userMobile.trim())) {
               this.isClick = false
@@ -636,7 +688,9 @@ export default {
             }).then((res) => {
                 if (res.result.success == '1') {
                     if (res.result.result == '1') {
+                      this.userName = this.base.userName
                       this.isCheckTel = true
+                      this.hasTel = true
                       this.dialogVisible = false
                       this.checkData.code = ''
                       clearInterval(this.timer)
@@ -667,6 +721,7 @@ export default {
                   this.enterpriseNameReg = this.base.enterpriseCname
                   this.userName = this.base.userName
                   this.isCheckTel = true
+                  this.hasTel = true
                   this.switchStatus = this.base.enterpriseStatus
               } else {
                   this.$message.error(res.result.message)
@@ -769,6 +824,10 @@ export default {
           this.enterpriseWechat.pubWechatQrcode = data.url
         },
         saveBase () {
+          if (this.isPost) {
+            return false
+          }
+
           if (this.base.enterpriseCname == '') {
               this.$message({
                 message: '请填写企业工商名称!',
@@ -793,7 +852,7 @@ export default {
             return false
           }
 
-          if (this.base.enterpriseCname == '') {
+          if (this.base.enterpriseNameReg == '') {
               this.$message({
                 message: '请填写企业简称!',
                 type: 'warning'
@@ -809,14 +868,33 @@ export default {
               return false
           }
 
+          if (/[^\u4e00-\u9fa5]/.test(this.base.userName)) {
+            this.$message({
+                message: '超级管理员请输入中文名字!',
+                type: 'warning'
+              })
+              return false
+          }
+
           if ((this.userName == '' || this.base.userName !== this.userName) && !this.isCheckTel) {
-            this.dialogVisible = true
+            this.$message({
+              message: '请验证手机号!',
+              type: 'warning'
+            })
             return false
           }
 
           if (this.base.enterpriseWeb == '') {
               this.$message({
                 message: '请填写公司网站!',
+                type: 'warning'
+              })
+              return false
+          }
+
+          if (this.base.enterpriseWeb.indexOf('http') > -1) {
+              this.$message({
+                message: '不需要填写http(s)://!',
                 type: 'warning'
               })
               return false
@@ -830,11 +908,14 @@ export default {
               return false
           }
 
+          this.isPost = true
+
           util.request({
               method: 'post',
               interface: 'platformBaseInfoSave',
               data: this.base
           }).then((res) => {
+              this.isPost = false
               if (res.result.success == '1') {
                   this.$message({
                     message: '恭喜你，保存成功!',
@@ -845,7 +926,7 @@ export default {
                     this.getBase()
                   } else {
 
-                    window.location.replace('/enterprise/enterpriseDetail?enterpriseCode=' + res.result.result)
+                    window.location.replace('/enterprise/platformDetail?enterpriseCode=' + res.result.result)
                   }
               } else {
                   this.$message.error(res.result.message)
@@ -861,13 +942,17 @@ export default {
               return false
           }
 
-          if (this.enterpriseWechat.enterpriseWechatCorpId == '') {
+          this.enterpriseWechat.enterpriseWechatCorpId = this.enterpriseWechat.enterpriseWechatCorpId.trim()
+
+          if (this.enterpriseWechat.pubWechatAccount == '') {
               this.$message({
                 message: '请填写微信服务号!',
                 type: 'warning'
               })
               return false
           }
+
+          this.enterpriseWechat.pubWechatAccount = this.enterpriseWechat.pubWechatAccount.trim()
 
           if (this.enterpriseWechat.pubWechatCname == '') {
               this.$message({
@@ -877,6 +962,8 @@ export default {
               return false
           }
 
+          this.enterpriseWechat.pubWechatCname = this.enterpriseWechat.pubWechatCname.trim()
+
           if (this.enterpriseWechat.pubWechatAppId == '') {
               this.$message({
                 message: '请填写服务号APPID!',
@@ -884,6 +971,8 @@ export default {
               })
               return false
           }
+
+          this.enterpriseWechat.pubWechatAppId = this.enterpriseWechat.pubWechatAppId.trim()
 
           if (this.enterpriseWechat.pubWechatSecret == '') {
               this.$message({
@@ -893,6 +982,8 @@ export default {
               return false
           }
 
+          this.enterpriseWechat.pubWechatSecret = this.enterpriseWechat.pubWechatSecret.trim()
+
           if (this.enterpriseWechat.pubWechatReceiverSecret == '') {
               this.$message({
                 message: '请填写接收消息密钥!',
@@ -900,6 +991,8 @@ export default {
               })
               return false
           }
+
+          this.enterpriseWechat.pubWechatReceiverSecret = this.enterpriseWechat.pubWechatReceiverSecret.trim()
 
           if (this.enterpriseWechat.pubWechatReceiverToken == '') {
               this.$message({
@@ -909,6 +1002,8 @@ export default {
               return false
           }
 
+          this.enterpriseWechat.pubWechatReceiverToken = this.enterpriseWechat.pubWechatReceiverToken.trim()
+
           if (this.enterpriseWechat.departmentSecret == '') {
               this.$message({
                 message: '请填写通讯录secret!',
@@ -917,13 +1012,17 @@ export default {
               return false
           }
 
-          if (this.enterpriseWechat.enterpriseWechatLogo == '') {
-              this.$message({
-                message: '请填加企业微信LOGO!',
+          this.enterpriseWechat.departmentSecret = this.enterpriseWechat.departmentSecret.trim()
+
+          if (this.enterpriseWechat.pubWechatSubscribeTemplateId == '') {
+            this.$message({
+                message: '请填写订阅模版编号!',
                 type: 'warning'
               })
               return false
           }
+
+          this.enterpriseWechat.pubWechatSubscribeTemplateId = this.enterpriseWechat.pubWechatSubscribeTemplateId.trim()
 
           if (this.enterpriseWechat.pubWechatLogo == '') {
               this.$message({

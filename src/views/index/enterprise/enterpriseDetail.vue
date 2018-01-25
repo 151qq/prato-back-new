@@ -242,7 +242,7 @@
 <script>
 import util from '../../../assets/common/util'
 import $ from 'Jquery'
-import upload from '../../../components/common/upload'
+import upload from '../../../components/common/uploadFile'
 
 export default {
     data () {
