@@ -188,8 +188,8 @@ const routers = [
             path: '',
             name: 'survey',
             component (resolve) {
-              require.ensure(['./survey/survey.vue'], () => {
-                resolve(require('./survey/survey.vue'))
+              require.ensure(['./survey/surveyList.vue'], () => {
+                resolve(require('./survey/surveyList.vue'))
               })
             }
           },
@@ -200,6 +200,37 @@ const routers = [
             component (resolve) {
               require.ensure(['./survey/surveyDetail.vue'], () => {
                 resolve(require('./survey/surveyDetail.vue'))
+              })
+            }
+          }
+        ]
+      },
+      {
+        // 调研
+        path: 'cultivate',
+        component (resolve) {
+          require.ensure(['./cultivate/main.vue'], () => {
+            resolve(require('./cultivate/main.vue'))
+          })
+        },
+        children: [
+          {
+            // 调研详情
+            path: '',
+            name: 'cultivate',
+            component (resolve) {
+              require.ensure(['./cultivate/cultivateList.vue'], () => {
+                resolve(require('./cultivate/cultivateList.vue'))
+              })
+            }
+          },
+          {
+            // 调研详情
+            path: 'cultivateDetail',
+            name: 'cultivate-detail',
+            component (resolve) {
+              require.ensure(['./cultivate/cultivateDetail.vue'], () => {
+                resolve(require('./cultivate/cultivateDetail.vue'))
               })
             }
           }

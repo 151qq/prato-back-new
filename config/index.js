@@ -49,11 +49,11 @@ module.exports = {
           '^/esocial': ''
         }
       },
-      '/E2-Platform': {
-        target: 'http://192.168.2.106:8080/E2-Platform',
+      '/e2-platform-api': {
+        target: 'http://192.168.2.100:8080/E2-Platform',
         changeOrigin: true,
         pathRewrite: {
-          '^/E2-Platform': ''
+          '^/e2-platform-api': ''
         }
       }
     },

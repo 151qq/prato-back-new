@@ -560,12 +560,22 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     this.articleList[index].pageAreaCode = res.result.result
+
+                    this.saveNum++
+                    if (this.saveNum == this.articleList.length) {
+                        this.$message({
+                            message: '恭喜你，保存成功！',
+                            type: 'success'
+                        })
+                    }
                 } else {
                     this.$message.error(res.result.message)
                 }
             })
         },
         saveAll () {
+            this.saveNum = 0
+
             this.articleList.forEach((item, index) => {
                 this.saveData(item, index)
             })

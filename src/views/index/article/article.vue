@@ -45,5 +45,9 @@ export default {
 .article-list-big-box {
   width: 1000px;
   margin: 80px auto 30px;
+
+  .el-tabs__content {
+    overflow: visible;
+  }
 }
 </style>

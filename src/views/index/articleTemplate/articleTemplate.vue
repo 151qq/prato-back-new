@@ -654,6 +654,10 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     this.getBase()
+                    this.$message({
+                        message: '保存模版成功！',
+                        type: 'success'
+                    })
                 } else {
                     this.$message.error(res.result.message)
                 }

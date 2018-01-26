@@ -2,13 +2,12 @@
     <div class="product-list-box">
 
         <div class="input-box">
-            <el-input
-              placeholder="请输入需查询条件"
-              v-model="keyValue"
-              >
-            </el-input>
-            <el-button class="search-btn" type="primary" icon="search"
-                        @keyup.13="searchItem" @click="searchItem">
+            <input
+                placeholder="请输入需查询条件"
+                v-model="keyValue"
+                @keyup.13="searchItem"
+                class="input-search">
+            <el-button class="search-btn" type="primary" icon="search" @click="searchItem">
               搜索
             </el-button>
 
@@ -554,15 +553,22 @@ export default {
         height: 50px;
         margin: 0 auto 30px;
 
-        .el-input {
+        .input-search {
           float: left;
           width: 600px;
           height: 50px;
-
-          input {
-            font-size: 14px;
-            height: 50px;
-          }
+          appearance: none;
+          font-size: 14px;
+          background-color: #fff;
+          background-image: none;
+          border-radius: 4px;
+          border: 1px solid #bfcbd9;
+          box-sizing: border-box;
+          color: #1f2d3d;
+          font-size: inherit;
+          line-height: 1;
+          outline: 0;
+          padding: 3px 10px;
         }
 
         .search-btn {

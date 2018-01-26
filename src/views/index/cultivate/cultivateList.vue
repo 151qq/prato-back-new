@@ -16,7 +16,7 @@
             <router-link class="card-box"
                          target="_blank"
                          v-for="(item, index) in marketList"
-                         :to="{name: 'survey-detail', query: {enterpriseCode: item.enterpriseCode, surveyCode: item.surveyCode, surveyType: item.surveyType}}">
+                         :to="{name: 'cultivate-detail', query: {enterpriseCode: item.enterpriseCode, surveyCode: item.surveyCode, surveyType: item.surveyType}}">
                 <div class="card-img">
                     <img v-if="item.surveyCover" :src="item.surveyCover">
                 </div>
@@ -91,7 +91,7 @@ export default {
     data () {
         return {
             isPage: false,
-            surveyType: 'survey_type_1',
+            surveyType: 'survey_type_2',
             keyValue: '',
             marketList: [],
             pageSize: 20,
