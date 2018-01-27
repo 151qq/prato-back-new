@@ -1,5 +1,7 @@
 <template>
   <section class="member-list-box" @click.stop="hideMess">
+      <img class="bg-img-box" v-if="bgPath" :src="bgPath">
+
       <div class="member-list-input" >
         <div class="input-box">
               <input
@@ -39,21 +41,18 @@ import $ from 'Jquery'
 import util from '../../../assets/common/util'
 
 export default {
-  props: {
-    isPage: {
-      type: Boolean,
-      default: false
-    }
-  },
   data () {
     return {
       isShow: false,
       keyValue: '',
       messDate: [],
-      count: 0
+      count: 0,
+      bgPath: ''
     }
   },
   mounted () {
+    this.bgPath = '/static/images/PB' + Math.ceil(Math.random() * 13) + '.jpg'
+
     var _self = this
     $('body').click(function () {
       _self.messDate = []
@@ -95,12 +94,23 @@ export default {
 </script>
 <style lang="scss">
 .member-list-box {
+  position: relative;
+  
+  .bg-img-box {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: auto;
+  }
 
   .member-list-input {
     display: block;
     width: 696px;
-    position: relative;
+    position: absolute;
     top: 220px;
+    left: 50%;
+    transform: translateX(-50%);
     margin: auto;
 
     .mess-box {

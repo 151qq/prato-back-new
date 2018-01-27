@@ -145,6 +145,11 @@ export default {
                 pageNumber: this.pageNumber
             }
 
+            // 非root只能操作自己的
+            if (this.userInfo.roleCodes.indexOf('platform_root') < 0) {
+              formData.pageEditor = this.userInfo.userCode
+            }
+
             if (this.keyValue) {
                 formData.keyValue = this.keyValue
             }
@@ -239,7 +244,8 @@ export default {
                 pageType: this.articleType,
                 pageTitle: this.addItemForm.pageTitle,
                 pageCover: this.addItemForm.pageCover,
-                pageAbstract: this.addItemForm.pageAbstract
+                pageAbstract: this.addItemForm.pageAbstract,
+                pageEditor: this.userInfo.userCode
             }
 
             util.request({

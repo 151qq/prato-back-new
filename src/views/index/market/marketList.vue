@@ -1,6 +1,6 @@
 <template>
     <div class="market-list-box">
-        <div class="input-box" :class="isEdit ? '' : 'no-add'">
+        <div class="input-box">
             <input
                 placeholder="请输入需查询条件"
                 v-model="keyValue"
@@ -10,10 +10,11 @@
               搜索
             </el-button>
 
-            <el-button v-if="isEdit" class="add-new-btn" type="primary" icon="plus" @click="addItem">增加</el-button>
+            <el-button class="add-new-btn" type="primary" icon="plus" @click="addItem">增加</el-button>
         </div>
         <section class="big-cards-box">
             <router-link class="card-box"
+                         target="_blank"
                          v-for="(item, index) in marketList"
                          :to="{name: 'market-detail', query: {eventCode: item.eventCode, enterpriseCode: item.enterpriseCode}}">
                 <div class="card-img">
@@ -25,18 +26,15 @@
                     <div class="card-desc">{{item.eventPlanDesc}}</div>
                     <div class="card-tag">
                         <!-- draft，submitted，approved，frozen，closed -->
-                        <el-tag v-if="item.eventPlanStatus == 'draft'" type="gray">草稿</el-tag>
-                        <el-tag v-if="item.eventPlanStatus == 'submitted'" type="success">已发布</el-tag>
-                        <el-tag v-if="item.eventPlanStatus == 'end'">正常结束</el-tag>
-                        <el-tag v-if="item.eventPlanStatus == 'closed'">提前终止</el-tag>
+                        <el-tag v-if="item.eventStatus == 'draft'" type="gray">草稿</el-tag>
+                        <el-tag v-if="item.eventStatus == 'submitted'" type="success">已发布</el-tag>
+                        <el-tag v-if="item.eventStatus == 'end'">正常结束</el-tag>
+                        <el-tag v-if="item.eventStatus == 'closed'">提前终止</el-tag>
                     </div>
                 </div>
-                <section class="card-btns" v-if="isEdit">
-                    <!-- <i class="el-icon-upload2"
-                        v-if="item.eventPlanStatus == 'draft'"
-                        @click.stop="changeStatus(item, 'submitted')"></i> -->
+                <section class="card-btns">
                     <i class="el-icon-delete2"
-                        v-if="item.eventPlanStatus == 'draft'"
+                        v-if="item.eventStatus == 'draft'"
                         @click.stop="deleteItem(item)"></i>
                 </section>
             </router-link>
@@ -101,7 +99,8 @@ export default {
             addItemForm: {
                 eventPlanTitle: '',
                 eventPlanCover: '',
-                eventPlanDesc: ''
+                eventPlanDesc: '',
+                eventDesigner: ''
             },
             isUpload: {
                 value: false
@@ -114,10 +113,7 @@ export default {
     computed: {
         ...mapGetters({
             userInfo: 'getUserInfo'
-        }),
-        isEdit () {
-          return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
-        }
+        })
     },
     methods: {
         searchItem () {
@@ -129,6 +125,12 @@ export default {
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber
             }
+            // 非root只能操作自己的
+            if (this.userInfo.roleCodes.indexOf('platform_root') < 0) {
+              formData.eventDesigner = this.userInfo.userCode
+            }
+
+            formData.eventDesigner = this.userInfo.userCode
 
             if (this.keyValue) {
                 formData.keyValue = this.keyValue
@@ -217,7 +219,8 @@ export default {
                 enterpriseCode: this.$route.query.enterpriseCode,
                 eventPlanTitle: this.addItemForm.eventPlanTitle,
                 eventPlanCover: this.addItemForm.eventPlanCover,
-                eventPlanDesc: this.addItemForm.eventPlanDesc
+                eventPlanDesc: this.addItemForm.eventPlanDesc,
+                eventDesigner: this.userInfo.userCode
             }
 
             util.request({
@@ -229,8 +232,6 @@ export default {
                   this.pageNumber = 1
                   this.getList()
                   this.isAddItem = false
-
-                  window.open('/#/marketDetail?enterpriseCode=' + this.$route.query.enterpriseCode + '&eventCode=' + res.result.result, '_blank')
                 } else {
                   this.$message.error(res.result.message)
                 }

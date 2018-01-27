@@ -2,7 +2,6 @@ const routers = [
   {
     path: '/',
     name: 'home',
-    redirect: '/market',
     component (resolve) {
       require.ensure(['./main.vue'], () => {
         resolve(require('./main.vue'))
@@ -26,6 +25,9 @@ const routers = [
               require.ensure(['./article/enterpriseList.vue'], () => {
                 resolve(require('./article/enterpriseList.vue'))
               })
+            },
+            meta: {
+              title: '推广文章'
             }
           },
           {
@@ -36,6 +38,9 @@ const routers = [
               require.ensure(['./article/article.vue'], () => {
                 resolve(require('./article/article.vue'))
               })
+            },
+            meta: {
+              title: '推广文章'
             }
           },
           {
@@ -46,6 +51,9 @@ const routers = [
               require.ensure(['./article/articleDetail.vue'], () => {
                 resolve(require('./article/articleDetail.vue'))
               })
+            },
+            meta: {
+              title: '推广文章'
             }
           }
         ]
@@ -67,6 +75,9 @@ const routers = [
               require.ensure(['./product/productList.vue'], () => {
                 resolve(require('./product/productList.vue'))
               })
+            },
+            meta: {
+              title: '产品中心'
             }
           },
           {
@@ -77,6 +88,9 @@ const routers = [
               require.ensure(['./product/productDetail.vue'], () => {
                 resolve(require('./product/productDetail.vue'))
               })
+            },
+            meta: {
+              title: '产品中心'
             }
           }
         ]
@@ -98,6 +112,9 @@ const routers = [
               require.ensure(['./gift/giftList.vue'], () => {
                 resolve(require('./gift/giftList.vue'))
               })
+            },
+            meta: {
+              title: '礼品中心'
             }
           },
           {
@@ -108,6 +125,9 @@ const routers = [
               require.ensure(['./gift/giftDetail.vue'], () => {
                 resolve(require('./gift/giftDetail.vue'))
               })
+            },
+            meta: {
+              title: '礼品中心'
             }
           }
         ]
@@ -120,6 +140,9 @@ const routers = [
           require.ensure(['./source/source.vue'], () => {
             resolve(require('./source/source.vue'))
           })
+        },
+        meta: {
+          title: '素材库'
         }
       },
       {
@@ -139,6 +162,9 @@ const routers = [
               require.ensure(['./enterprise/enterpriseList.vue'], () => {
                 resolve(require('./enterprise/enterpriseList.vue'))
               })
+            },
+            meta: {
+              title: '企业信息'
             }
           },
           {
@@ -149,6 +175,9 @@ const routers = [
               require.ensure(['./enterprise/enterpriseDetail.vue'], () => {
                 resolve(require('./enterprise/enterpriseDetail.vue'))
               })
+            },
+            meta: {
+              title: '企业信息'
             }
           },
           {
@@ -159,6 +188,9 @@ const routers = [
               require.ensure(['./enterprise/platformDetail.vue'], () => {
                 resolve(require('./enterprise/platformDetail.vue'))
               })
+            },
+            meta: {
+              title: '企业信息'
             }
           }
         ]
@@ -172,6 +204,9 @@ const routers = [
           require.ensure(['./callcenter/callcenter.vue'], () => {
             resolve(require('./callcenter/callcenter.vue'))
           })
+        },
+        meta: {
+          title: '营销配置'
         }
       },
       {
@@ -191,6 +226,9 @@ const routers = [
               require.ensure(['./survey/surveyList.vue'], () => {
                 resolve(require('./survey/surveyList.vue'))
               })
+            },
+            meta: {
+              title: '调研发布'
             }
           },
           {
@@ -201,6 +239,9 @@ const routers = [
               require.ensure(['./survey/surveyDetail.vue'], () => {
                 resolve(require('./survey/surveyDetail.vue'))
               })
+            },
+            meta: {
+              title: '调研发布'
             }
           }
         ]
@@ -222,6 +263,9 @@ const routers = [
               require.ensure(['./cultivate/cultivateList.vue'], () => {
                 resolve(require('./cultivate/cultivateList.vue'))
               })
+            },
+            meta: {
+              title: '营销培训'
             }
           },
           {
@@ -232,6 +276,9 @@ const routers = [
               require.ensure(['./cultivate/cultivateDetail.vue'], () => {
                 resolve(require('./cultivate/cultivateDetail.vue'))
               })
+            },
+            meta: {
+              title: '营销培训'
             }
           }
         ]
@@ -253,6 +300,9 @@ const routers = [
               require.ensure(['./market/marketList.vue'], () => {
                 resolve(require('./market/marketList.vue'))
               })
+            },
+            meta: {
+              title: '营销方案'
             }
           },
           {
@@ -263,6 +313,9 @@ const routers = [
               require.ensure(['./market/marketDetail.vue'], () => {
                 resolve(require('./market/marketDetail.vue'))
               })
+            },
+            meta: {
+              title: '营销方案'
             }
           }
         ]
@@ -276,6 +329,9 @@ const routers = [
           require.ensure(['./coupon/coupon.vue'], () => {
             resolve(require('./coupon/coupon.vue'))
           })
+        },
+        meta: {
+          title: '券详情'
         }
       },
       {
@@ -286,6 +342,9 @@ const routers = [
           require.ensure(['./articleTemplate/articleTemplate.vue'], () => {
             resolve(require('./articleTemplate/articleTemplate.vue'))
           })
+        },
+        meta: {
+          title: '文章模版'
         }
       },
       {
@@ -305,6 +364,9 @@ const routers = [
               require.ensure(['./member/member.vue'], () => {
                 resolve(require('./member/member.vue'))
               })
+            },
+            meta: {
+              title: '会员信息'
             }
           },
           {
@@ -315,6 +377,9 @@ const routers = [
               require.ensure(['./member/memberDetail.vue'], () => {
                 resolve(require('./member/memberDetail.vue'))
               })
+            },
+            meta: {
+              title: '会员信息'
             }
           }
         ]
@@ -329,6 +394,9 @@ const routers = [
       require.ensure(['./login.vue'], () => {
         resolve(require('./login.vue'))
       })
+    },
+    meta: {
+      title: '登录页'
     }
   }
 ]

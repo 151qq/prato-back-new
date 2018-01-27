@@ -12,7 +12,7 @@
             <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/delete-icon-n.png"
                     @click="deleteOpt">
             <span></span>
-            <div v-if="showType == '1' && fileType != 'e2_2'" class="up-box">
+            <div v-if="showType == '1'" class="up-box">
                 <img @click="addDir" src="../../../assets/images/adds-icon.png">
             </div>
             <div v-if="showType == '2'" class="up-box">
@@ -27,7 +27,8 @@
                         v-if="dirDatas.length"
                         class="check-box">
 
-                <section v-if="isCheck && isEdit" @click.stop="selectDir(item)"
+                <section v-if="isCheck && item.docFolder != 'e2_2' &&  item.docFolder != 'e2_4'"
+                        @click.stop="selectDir(item)"
                         class="select-box"
                         :class="selectDirList.indexOf(item.docCode) > -1 ? 'active' : ''"></section>
                 <section class="sou-box">
@@ -300,7 +301,7 @@ export default {
             userInfo: 'getUserInfo'
         }),
         isEdit () {
-          return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
+          return this.userInfo.roleCodes.indexOf('platform_root') > -1 || this.userInfo.roleCodes.indexOf('platform_material_admin') > -1
         }
     },
     methods: {
@@ -436,7 +437,9 @@ export default {
         },
         showItems (item) {
             if (this.isCheck) {
-                this.selectDir(item)
+                if (item.docFolder != 'e2_2' &&  item.docFolder != 'e2_4') {
+                    this.selectDir(item)
+                }
                 return false
             }
 
