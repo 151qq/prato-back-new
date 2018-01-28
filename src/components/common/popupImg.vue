@@ -42,6 +42,7 @@ export default {
 
 <style lang="scss">
 .upload-box-img {
+  width: 240px;
   overflow: hidden;
   position: relative;
   cursor: pointer;

@@ -66,7 +66,7 @@
                                  target="_blank"
                                  v-else
                                  :to="{
-                                    name: 'product-detail',
+                                    name: 'gift-detail',
                                     query: {
                                         enterpriseCode: item.enterpriseCode,
                                         productCode: item.catalogCode
@@ -130,7 +130,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <template v-if="catalogType == 'dir'">
+            <template v-if="addItemForm.catalogType == 'dir'">
                 <el-form-item label="封面">
                     <popup-img :path="addItemForm.catalogImage"
                                 :is-operate="true"
@@ -306,6 +306,8 @@ export default {
             if (this.addItemForm.catalogType != '1') {
                 this.addItemForm.productClass = this.productType
             }
+
+            this.addItemForm.catalogCreator = this.userInfo.userCode
             
             util.request({
                 method: 'post',
@@ -463,7 +465,7 @@ export default {
             this.dirSteps.push(item)
 
             var pathData = {
-                name: 'product',
+                name: 'gift',
                 query: {
                     enterpriseCode: item.enterpriseCode,
                     catalogCode: item.catalogCode,
@@ -490,7 +492,7 @@ export default {
             var data = this.dirSteps[this.floorNumber - 1]
 
             var pathData = {
-                name: 'product',
+                name: 'gift',
                 query: {
                     enterpriseCode: data.enterpriseCode,
                     catalogCode: data.catalogCode,

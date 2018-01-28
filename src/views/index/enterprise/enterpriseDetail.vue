@@ -9,6 +9,7 @@
                   <el-input
                     class="input-box"
                     placeholder="请输入标题，最多25个字"
+                    :disabled="true"
                     @blur="checkCname"
                     v-model="base.enterpriseCname">
                   </el-input>
@@ -293,7 +294,8 @@ export default {
             },
             timer: null,
             seconds: 90,
-            productEventList: []
+            productEventList: [],
+            isPost: false
         }
     },
     mounted () {
@@ -548,15 +550,11 @@ export default {
             localStorage.setItem("enterpriseColl", this.activeNames)
         },
         saveBase () {
-          if (this.base.enterpriseCname == '') {
-              this.$message({
-                message: '请填写企业工商名称!',
-                type: 'warning'
-              })
-              return false
+          if (this.isPost) {
+            return false
           }
 
-          if (!this.isCheckCname) {
+          if (this.base.enterpriseCname && !this.isCheckCname) {
             this.$message({
               message: '该企业已被注册过，不能重复注册!',
               type: 'warning'
@@ -609,11 +607,14 @@ export default {
               return false
           }
 
+          this.isPost = true
+
           util.request({
               method: 'post',
               interface: 'platformBaseInfoSave',
               data: this.base
           }).then((res) => {
+              this.isPost = false
               if (res.result.success == '1') {
                   this.$message({
                     message: '恭喜你，保存成功!',

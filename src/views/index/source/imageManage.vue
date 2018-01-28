@@ -158,7 +158,7 @@
             <template v-if="!isNotImg && addItemForm.docType == '2'">
                 <el-form-item v-if="!isNotImg" label="图片">
                     <upload-file :path="addItemForm.fileCode"
-                            :is-operate="true"
+                            :is-operate="isEdit"
                             :bg-path="false"
                             :id-name="'itemCover' + fileType"
                             @changeImg="changeItem"></upload-file>
@@ -771,11 +771,14 @@ export default {
         .title-box {
             padding: 5px 10px;
             border-top: 1px solid #D3DCE6;
+            height: 50px;
+            box-sizing: border-box;
             
             .title {
                 display: block;
                 font-size: 14px;
                 line-height: 20px;
+                height: 20px;
                 border: none;
                 color: #000000;
             }

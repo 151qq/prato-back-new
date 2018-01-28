@@ -828,15 +828,7 @@ export default {
             return false
           }
 
-          if (this.base.enterpriseCname == '') {
-              this.$message({
-                message: '请填写企业工商名称!',
-                type: 'warning'
-              })
-              return false
-          }
-
-          if (!this.isCheckCname) {
+          if (this.base.enterpriseCname && !this.isCheckCname) {
             this.$message({
               message: '该企业已被注册过，不能重复注册!',
               type: 'warning'
