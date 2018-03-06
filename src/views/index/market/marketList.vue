@@ -25,11 +25,10 @@
                     <div class="card-title">{{item.eventPlanTitle}}</div>
                     <div class="card-desc">{{item.eventPlanDesc}}</div>
                     <div class="card-tag">
-                        <!-- draft，submitted，approved，frozen，closed -->
-                        <el-tag v-if="item.eventStatus == 'draft'" type="gray">草稿</el-tag>
-                        <el-tag v-if="item.eventStatus == 'submitted'" type="success">已发布</el-tag>
-                        <el-tag v-if="item.eventStatus == 'end'">正常结束</el-tag>
-                        <el-tag v-if="item.eventStatus == 'closed'">提前终止</el-tag>
+                        <el-tag v-if="item.eventStatus == '1' || item.eventStatus == '2'" type="gray">草稿</el-tag>
+                        <el-tag v-if="item.eventStatus == '3'" type="success">已发布</el-tag>
+                        <el-tag v-if="item.eventStatus == '5'">正常结束</el-tag>
+                        <el-tag v-if="item.eventStatus == '4'">提前终止</el-tag>
                     </div>
                 </div>
                 <section class="card-btns">
@@ -216,25 +215,26 @@ export default {
 
         .card-img {
           float: left;
-          width: 200px;
-          height: 120px;
+          width: 160px;
+          height: 100px;
           background: #cfcfd0;
 
           img {
             display: block;
-            width: 200px;
-            height: 120px;
+            width: 160px;
+            height: 100px;
           }
         }
 
         .card-content {
           float: right;
-          width: 780px;
+          width: 820px;
 
           .card-title {
-            font-size: 18px;
-            line-height: 30px;
+            font-size: 16px;
+            line-height: 24px;
             color: #000000;
+            margin-bottom: 3px;
           }
 
           .card-desc {
@@ -242,7 +242,6 @@ export default {
             line-height: 24px;
             color: #475669;
             height: 48px;
-            margin-top: 10px;
             overflow: hidden;
           }
         }

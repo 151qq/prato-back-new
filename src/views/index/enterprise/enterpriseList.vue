@@ -30,14 +30,14 @@
                 </router-link>
                 <div class="title-box">
                     <div class="title" v-text="item.enterpriseNameReg"></div>
-                    <div class="time">
+                    <!-- <div class="time">
                         <span>
                             {{item.enterpriseRegDate}}
                         </span>
-                        <!-- <span class="btn-box">
+                        <span class="btn-box">
                             <i @click.stop="deleteOpt(item)" class="el-icon-delete2"></i>
-                        </span> -->
-                    </div>
+                        </span>
+                    </div> -->
                 </div>
             </section>
             
@@ -227,21 +227,21 @@ export default {
 
     .sou-box {
         float: left;
-        width: 170px;
+        width: 105px;
         margin-right: 20px;
         margin-bottom: 20px;
         border: 1px solid #D3DCE6;
         border-radius: 3px;
 
         .cover-box {
-            height: 170px;
+            height: 105px;
             overflow: hidden;
             cursor: pointer;
             
             img {
                 display: block;
                 width: 100%;
-                min-height: 170px;
+                min-height: 105px;
             }
         }
 
@@ -253,8 +253,10 @@ export default {
                 display: block;
                 font-size: 14px;
                 line-height: 20px;
+                height: 20px;
                 border: none;
                 color: #000000;
+                overflow: hidden;
             }
 
             .time {

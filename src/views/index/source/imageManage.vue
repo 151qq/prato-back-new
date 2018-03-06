@@ -734,14 +734,14 @@ export default {
         border-radius: 3px;
 
         .cover-box {
-            height: 170px;
+            height: 130px;
             overflow: hidden;
             cursor: pointer;
             
             .cover-img {
                 display: block;
                 width: 100%;
-                min-height: 170px;
+                min-height: 130px;
             }
         }
 
@@ -753,7 +753,7 @@ export default {
                 left: 0;
                 top: 0;
                 width: 100%;
-                height: 170px;
+                height: 130px;
                 background: #000000;
                 opacity: 0.5;
             }
