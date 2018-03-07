@@ -8,10 +8,10 @@
           <div class="line-bold"></div>
 
           <!-- 详细规格 -->
-          <el-collapse-item class="float-form-box" title="产品规格" name="2">
+          <!-- <el-collapse-item class="float-form-box" title="产品规格" name="2">
             <spec-list ref="productSpec"></spec-list>
           </el-collapse-item>
-          <div class="line-bold"></div>
+          <div class="line-bold"></div> -->
 
           <!-- 产品场景化推荐 -->
           <el-collapse-item class="float-form-box" title="产品场景化推荐" name="3">

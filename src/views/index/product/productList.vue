@@ -744,7 +744,7 @@ export default {
             img {
                 display: block;
                 width: 100%;
-                min-height: 130px;
+                height: 130px;
             }
         }
 

@@ -166,21 +166,25 @@
               <section class="formBox">
                 <span>企业LOGO</span>
                 <div class="input-box">
-                  <upload :path="base.enterpriseLogo"
-                          :bg-path="true"
-                          :is-operate="isOperate"
-                          @changeImg="changeImg"></upload>
+                  <div class="logo-upload">
+                    <upload :path="base.enterpriseLogo"
+                            :bg-path="true"
+                            :is-operate="isOperate"
+                            @changeImg="changeImg"></upload>
+                  </div>
                 </div>
               </section>
 
               <section class="formBox">
                   <span>企业微信二维码</span>
                   <div class="input-box">
-                    <upload :path="base.enterpriseWechatQrcode"
-                            :bg-path="true"
-                            :id-name="'qywxewm'"
-                            :is-operate="isOperate"
-                            @changeImg="changeImgQE"></upload>
+                    <div class="logo-upload">
+                      <upload :path="base.enterpriseWechatQrcode"
+                              :bg-path="true"
+                              :id-name="'qywxewm'"
+                              :is-operate="isOperate"
+                              @changeImg="changeImgQE"></upload>
+                    </div>
                   </div>
               </section>
               
@@ -292,21 +296,25 @@
                 <section class="formBox">
                     <span>服务号LOGO</span>
                     <div class="input-box">
-                      <upload :path="enterpriseWechat.pubWechatLogo"
-                              :bg-path="true"
-                              :id-name="'fwhlogo'"
-                              :is-operate="isOperate && !isPlatformPub"
-                              @changeImg="changeImgFL"></upload>
+                      <div class="logo-upload">
+                        <upload :path="enterpriseWechat.pubWechatLogo"
+                                :bg-path="true"
+                                :id-name="'fwhlogo'"
+                                :is-operate="isOperate && !isPlatformPub"
+                                @changeImg="changeImgFL"></upload>
+                      </div>
                     </div>
                 </section>
                 <section class="formBox">
                     <span>服务号二维码</span>
                     <div class="input-box">
-                      <upload :path="enterpriseWechat.pubWechatQrcode"
-                              :bg-path="true"
-                              :id-name="'fuhewm'"
-                              :is-operate="isOperate && !isPlatformPub"
-                              @changeImg="changeImgFE"></upload>
+                      <div class="logo-upload">
+                        <upload :path="enterpriseWechat.pubWechatQrcode"
+                                :bg-path="true"
+                                :id-name="'fuhewm'"
+                                :is-operate="isOperate && !isPlatformPub"
+                                @changeImg="changeImgFE"></upload>
+                      </div>
                     </div>
                 </section>
 
