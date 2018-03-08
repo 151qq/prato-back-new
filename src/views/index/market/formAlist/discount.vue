@@ -454,11 +454,11 @@ export default {
   }
 
   .el-table__expanded-cell {
-    padding: 10px 50px;
+    padding: 10px 0 10px 47px;
   }
 
   .big-coupon-box {
-    width: 850px;
+    width: 924px;
 
     .null-box {
         height: 60px;
@@ -485,7 +485,7 @@ export default {
         }
 
         .card-type {
-            width: 120px;
+            width: 215px;
             font-size: 14px;
             line-height: 36px;
             color: #000000; 
@@ -503,7 +503,7 @@ export default {
         }
 
         .card-desc {
-            width: 400px;
+            width: 425px;
             font-size: 14px;
             line-height: 36px;
             color: #000000;

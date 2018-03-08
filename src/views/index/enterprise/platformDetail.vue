@@ -362,21 +362,21 @@
                         </el-button>
                       </div>
                   </section>
-                </template>
 
-                <section class="formBox">
-                    <span class="font-b">开放企业注册</span>
-                    <div class="input-box">
-                      <el-switch
-                        v-model="switchStatus"
-                        on-color="#13ce66"
-                        off-color="#ff4949"
-                        on-value="b"
-                        off-value="a"
-                        @change="changeStatus">
-                      </el-switch>
-                    </div>
-                </section>
+                  <section class="formBox">
+                      <span class="font-b">开放企业注册</span>
+                      <div class="input-box">
+                        <el-switch
+                          v-model="switchStatus"
+                          on-color="#13ce66"
+                          off-color="#ff4949"
+                          on-value="b"
+                          off-value="a"
+                          @change="changeStatus">
+                        </el-switch>
+                      </div>
+                  </section>
+                </template>
 
                 <template v-if="!productEventList.length">
                   <div class="null-page-box">
@@ -435,6 +435,23 @@
                 <el-button type="primary" @click="checkTelphone">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 
+        E2PlatformIniter
+        E2Passw0rd
+        
+        上海竣钧信息科技有限公司
+        竣钧科技
+        www.socialmarketingcloud.com
+
+        wwaf014f3e3a01ac54
+        SocialMarketingElite
+        营销精英E2
+        wx8b8c3ab0670be56f
+        b26cf62d647c60629006dc655e68a5e2
+        ppIddfHx0FXXdVbNGHYBq1MQxbpsHHT5wv3TbJ4wJIN
+        e2wechatcouponmsg
+        TT6ayaKdnEGuipWF-VeSdZFdwOlTT2spN_FAGR_GHrU
+        d9vTNQsM5XWT6Kt2z46aLd9OriurVe5r61wSHn2ss2Y -->
     </div>
 </template>
 <script>
@@ -1140,7 +1157,6 @@ export default {
     font-size: 14px;
     line-height: 80px;
     color: #999999;
-    padding-top: 20px;
 }
 
 .form-check-tel {

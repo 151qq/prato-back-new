@@ -24,6 +24,7 @@
             <upload-list :img-lists="imgList"
                           :id-name="'productAlbum'"
                           :is-edit="isEdit"
+                          :pro-cover="baseData.productCover"
                           @changeImg="changeImg"
                           @setImg="setImg"
                           @deleteImg="deleteImg"></upload-list>
@@ -155,6 +156,7 @@ export default {
               }
           }).then(res => {
               if (res.result.success == '1') {
+                  this.baseData.productCover = url
                   this.$refs.baseForm.base.productCover = url
               } else {
                   this.$message.error(res.result.message)

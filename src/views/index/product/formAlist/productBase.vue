@@ -154,7 +154,7 @@ export default {
           }).then(res => {
               if (res.result.success = '1') {
                 this.base = res.result.result.productInfo
-                this.geProductTypes('product_type')
+                this.geProductTypes('platform_product_type')
 
                 this.$emit('change', res.result.result)
               } else {
