@@ -14,10 +14,10 @@
           <div class="line-bold"></div>
 
           <!-- 礼品场景化推荐 -->
-          <el-collapse-item class="float-form-box" title="礼品场景化推荐" name="3">
+          <!-- <el-collapse-item class="float-form-box" title="礼品场景化推荐" name="3">
             <user-scence></user-scence>
           </el-collapse-item>
-          <div class="line-bold"></div>
+          <div class="line-bold"></div> -->
 
           <!-- 礼品图片 -->
           <el-collapse-item class="float-form-box" title="礼品相册" name="4">

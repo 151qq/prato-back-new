@@ -50,7 +50,7 @@
             <section class="check-box" v-for="(item, index) in sourceDatas" :key="index">
                 <!-- 选择框 -->
                 <section class="select-box"
-                         v-if="isCheck && (item.catalogType == 'dir' || item.productStatus == '2') && isEdit"
+                         v-if="isCheck && (item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit"
                          @click.stop="selectItem(item)"
                          :class="selectItemList.indexOf(item.catalogCode) > -1 ? 'active' : ''"></section>
                 
@@ -58,9 +58,9 @@
                 <section class="sou-box">
                     <div class="cover-box"
                          @click="showItems(item)"
-                         v-if="isCheck || item.catalogType == 'dir'">
+                         v-if="isCheck || item.catalogType.indexOf('dir') > -1">
 
-                        <img v-if="item.catalogType == 'dir'" src="/static/images/folder.jpg">
+                        <img v-if="item.catalogType.indexOf('dir') > -1" src="/static/images/folder.jpg">
 
                         <img v-if="item.catalogImage && item.catalogType == 'pro'" :src="item.catalogImage">
                     </div>
@@ -80,10 +80,10 @@
                     <div class="title-box">
                         <div class="title" v-text="item.catalogCname"></div>
                         <div class="time">
-                            <span v-if="item.catalogType == 'dir'">
+                            <span>
                                 {{item.catalogCreateTime}}
                             </span>
-                            <span v-else>
+                            <!-- <span v-else>
                                 <template v-if="item.productStatus == '2'">
                                     未开通
                                 </template>
@@ -93,9 +93,9 @@
                                 <template v-if="item.productStatus == '3'">
                                     已下架
                                 </template>
-                            </span>
+                            </span> -->
                             <span class="btn-box"
-                                  v-if="(item.catalogType == 'dir' || item.productStatus == '2') && isEdit">
+                                  v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
 
                                 <i @click.stop="editItem(item)" class="el-icon-document"></i>
                             </span>
@@ -462,7 +462,7 @@ export default {
         // 单击card操作
         showItems (item) {
             // 多选模式下为多选
-            if (this.isCheck && (item.catalogType == 'dir' || item.productStatus == '2')) {
+            if (this.isCheck && (item.catalogType.indexOf('dir') > -1 || item.productStatus == '2')) {
                 this.selectItem(item)
                 return false
             }

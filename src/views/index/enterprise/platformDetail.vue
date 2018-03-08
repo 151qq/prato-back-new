@@ -362,21 +362,21 @@
                         </el-button>
                       </div>
                   </section>
-
-                  <section class="formBox">
-                      <span class="font-b">开放企业注册</span>
-                      <div class="input-box">
-                        <el-switch
-                          v-model="switchStatus"
-                          on-color="#13ce66"
-                          off-color="#ff4949"
-                          on-value="b"
-                          off-value="a"
-                          @change="changeStatus">
-                        </el-switch>
-                      </div>
-                  </section>
                 </template>
+
+                <section class="formBox" v-if="productEventList.length">
+                    <span class="font-b">开放企业注册</span>
+                    <div class="input-box">
+                      <el-switch
+                        v-model="switchStatus"
+                        on-color="#13ce66"
+                        off-color="#ff4949"
+                        on-value="b"
+                        off-value="a"
+                        @change="changeStatus">
+                      </el-switch>
+                    </div>
+                </section>
 
                 <template v-if="!productEventList.length">
                   <div class="null-page-box">

@@ -55,6 +55,14 @@ export default {
         width: 490px;
     }
 
+    .el-dialog__body {
+        padding: 20px 20px 0 20px;
+
+        .el-form-item {
+            margin-bottom: 10px;
+        }
+    }
+
     .set-btn {
         position: absolute;
         right: 8px;

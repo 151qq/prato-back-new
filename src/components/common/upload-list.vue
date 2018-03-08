@@ -10,7 +10,7 @@
     <label v-if="isEdit" class="img-box" :for="idName">
       <img class="img-big" src="../../assets/images/add-img.jpg">
     </label>
-    <input v-if="isEdit" :id="idName" type="file" class="img-input" @change="postImg($event)">
+    <input v-if="isEdit" :id="idName" type="file" accept="image/*" class="img-input" @change="postImg($event)">
 
     <!-- 大图 -->
     <swiper-img :is-show="isShow" :index="nowIndex" :big-imgs="imgLists"></swiper-img>
