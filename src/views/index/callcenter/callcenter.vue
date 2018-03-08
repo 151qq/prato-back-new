@@ -136,7 +136,7 @@
                 <div class="clear"></div>
             </el-collapse-item>
           <div class="line-bold"></div>
-          <el-collapse-item class="float-form-box" title="商机新建外呼规则" name="4">
+          <el-collapse-item class="float-form-box" title="商机新建规则" name="4">
                 <div class="formDiscount">
                     <section class="formBox">
                         <span>阅读权重</span>
@@ -233,7 +233,7 @@
                 <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
-          <el-collapse-item class="float-form-box" title="商机推进外呼规则" name="5">
+          <el-collapse-item class="float-form-box" title="商机推进规则" name="5">
                 <div class="formDiscount">
                     <section class="formBox">
                         <span>接触期外呼限制</span>
@@ -259,6 +259,14 @@
                                 v-model="callcenterData.outbandTrailLimit">
                         </el-input>
                     </section>
+                    <section class="formBox">
+                        <span>体验期体验限制</span>
+                        <el-input
+                                class="input-box"
+                                type="number"
+                                v-model="callcenterData.trailLimit">
+                        </el-input>
+                    </section>
                 </div>
                 <el-button v-if="isEdit"
                             class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -269,7 +277,7 @@
           <el-collapse-item class="float-form-box" title="商机客户差异度计算规则" name="6">
                 <div class="formDiscount">
                     <section class="formBox">
-                        <span>接触失败</span>
+                        <span>接触失败(减分)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -277,7 +285,7 @@
                         </el-input>
                     </section>
                     <section class="formBox">
-                        <span>预约失败</span>
+                        <span>预约失败(减分)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -285,7 +293,7 @@
                         </el-input>
                     </section>
                     <section class="formBox">
-                        <span>体验失败</span>
+                        <span>体验失败(减分)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -293,7 +301,7 @@
                         </el-input>
                     </section>
                     <section class="formBox">
-                        <span>销售成功</span>
+                        <span>销售成功(加分)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -556,6 +564,7 @@ export default {
                 outbandEngagementLimit: '',
                 outbandReserveLimit: '',
                 outbandTrailLimit: '',
+                trailLimit: '',
                 // 商机客户差异度计算规则
                 pipelineEngagementFailRate: '',
                 pipelineReserveFailRate: '',
