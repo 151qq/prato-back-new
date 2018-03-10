@@ -48,6 +48,7 @@
                 class="page-box"
                 @current-change="pageChange"
                 layout="prev, pager, next"
+                :page-size="pageSize"
                 :total="total">
             </el-pagination>
         </template>
@@ -70,7 +71,7 @@ export default {
             // 获取
             sourceDatas: [],
             pageNumber: 1,
-            pageSize: 20,
+            pageSize: 24,
             total: 0
         }
     },

@@ -8,7 +8,8 @@
                   <span>企业工商名称</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入标题，最多25个字"
+                    placeholder="请输入标题，最多40个字"
+                    :maxlength="40"
                     @blur="checkCname"
                     v-model="base.enterpriseCname">
                   </el-input>
@@ -21,7 +22,8 @@
                   <span>企业简称</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入内容"
+                    placeholder="请输入简称，最多12个字"
+                    :maxlength="12"
                     @blur="checkReg"
                     v-model="base.enterpriseNameReg">
                   </el-input>
@@ -82,7 +84,8 @@
                   <span>公司网站</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入内容"
+                    placeholder="请输入内容,最多40个字"
+                    :maxlength="40"
                     v-model="base.enterpriseWeb">
                   </el-input>
               </section>
@@ -120,7 +123,8 @@
                   <span>具体地址</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入内容"
+                    placeholder="请输入内容,最多140个字"
+                    :maxlength="140"
                     v-model="base.enterpriseAddrDetail">
                   </el-input>
               </section>
@@ -158,7 +162,8 @@
                   <span>企业职务</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入内容"
+                    placeholder="请输入内容,最多40个字"
+                    :maxlength="40"
                     v-model="base.userPosition">
                   </el-input>
               </section>

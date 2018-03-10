@@ -1,17 +1,27 @@
 <template>
     <div class="image-su-box">
-        <section class="btns-op" v-if="isEdit && fileType == 'e2_1'">
-            <img v-show="!isCheck" src="../../../assets/images/select-icon.png" @click="setCheck">
-            <img v-show="isCheck" src="../../../assets/images/select-now.png" @click="setCheck">
-            <span v-if="showType != '1'"></span>
-            <img :class="isCheck ? '' : 'disable'"
-                    src="../../../assets/images/import-icon.png"
-                    v-if="showType != '1'"
-                    @click="setImport">
-            <span></span>
-            <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/delete-icon-n.png"
+        <!-- 控制操作 -->
+        <section class="btns-op" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
+            <!-- 控制删除 -->
+            <template v-if="fileType == 'e2_1' || (fileType == 'e2_4' && showType == '2')">
+                <img v-show="!isCheck" src="../../../assets/images/select-icon.png" @click="setCheck">
+                <img v-show="isCheck" src="../../../assets/images/select-now.png" @click="setCheck">
+            </template>
+            <!-- 控制导出 -->
+            <template v-if="showType != '1'">
+                <span></span>
+                <img :class="isCheck ? '' : 'disable'"
+                        src="../../../assets/images/import-icon.png"
+                        @click="setImport">
+            </template>
+            <!-- 控制删除 -->
+            <template v-if="fileType == 'e2_1' || (fileType == 'e2_4' && showType == '2')">
+                <span></span>
+                <img :class="isCheck ? '' : 'disable'" src="../../../assets/images/delete-icon-n.png"
                     @click="deleteOpt">
-            <span></span>
+                <span></span>
+            </template>
+            <!-- 控制增加 -->
             <div v-if="showType == '1'" class="up-box">
                 <img @click="addDir" src="../../../assets/images/adds-icon.png">
             </div>
@@ -38,10 +48,14 @@
                     <div class="title-box">
                         <div class="title" v-text="item.docTitle"></div>
                         <div class="time">
-                            {{item.docCreateTime}}
+                            <!-- {{item.docCreateTime}} -->
                             
-                            <span class="btn-box" v-if="isEdit && fileType == 'e2_1'">
+                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
                                 <i @click.stop="editDir(item)" class="el-icon-document"></i>
+                            </span>
+
+                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
+                                <i @click.stop="deleteDir(item.docCode)" class="el-icon-delete2"></i>
                             </span>
                         </div>
                     </div>
@@ -56,6 +70,7 @@
                 class="page-box"
                 @current-change="dirPageChange"
                 layout="prev, pager, next"
+                :page-size="dirPageSize"
                 :total="dirTotal">
             </el-pagination>
         </template>
@@ -88,10 +103,14 @@
                     <div class="title-box">
                         <div class="title" v-text="item.docTitle"></div>
                         <span class="time">
-                            {{item.docCreateTime}}
+                            <!-- {{item.docCreateTime}} -->
 
-                            <span class="btn-box" v-if="isEdit && fileType == 'e2_1'">
+                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
                                 <i @click="editItem(item)" class="el-icon-document"></i>
+                            </span>
+
+                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
+                                <i @click.stop="deleteItem(item.docCode)" class="el-icon-delete2"></i>
                             </span>
                         </span>
                     </div>
@@ -107,6 +126,7 @@
                 class="page-box"
                 @current-change="itemPageChange"
                 layout="prev, pager, next"
+                :page-size="itemPageSize"
                 :total="itemTotal">
             </el-pagination>
         </template>
@@ -122,13 +142,16 @@
                         @changeImg="changeDirImg"></upload-file>
             </el-form-item> -->
             <el-form-item label="目录名称">
-                <el-input v-model="addDirForm.docTitle" placeholder="请输入内容"></el-input>
+                <el-input v-model="addDirForm.docTitle"
+                          placeholder="请输入内容,最多12个字"
+                          :maxlength="12"></el-input>
             </el-form-item>
             <el-form-item label="目录描述">
                 <el-input
                     type="textarea"
                     :rows="3"
-                    placeholder="请输入内容"
+                    placeholder="请输入内容,最多140个字"
+                    :maxlength="140"
                     v-model="addDirForm.docDesc">
                 </el-input>
             </el-form-item>
@@ -182,13 +205,16 @@
             </template>
             
             <el-form-item label="素材标题">
-                <el-input v-model="addItemForm.docTitle" placeholder="请输入内容"></el-input>
+                <el-input v-model="addItemForm.docTitle"
+                          placeholder="请输入内容,最多20个字"
+                          :maxlength="20"></el-input>
             </el-form-item>
             <el-form-item label="素材描述">
                 <el-input
                     type="textarea"
                     :rows="3"
-                    placeholder="请输入内容"
+                    placeholder="请输入内容,最多140个字"
+                    :maxlength="140"
                     v-model="addItemForm.docDesc">
                 </el-input>
             </el-form-item>
@@ -278,10 +304,10 @@ export default {
             selectItemList: [],
             bigImgs: [],
             dirPageNumber: 1,
-            dirPageSize: 12,
+            dirPageSize: 15,
             dirTotal: 0,
             itemPageNumber: 1,
-            itemPageSize: 12,
+            itemPageSize: 15,
             itemTotal: 0,
             isShow: {
               value: false
@@ -528,6 +554,23 @@ export default {
                 }
             })
         },
+        deleteItem (code) {
+            util.request({
+                method: 'post',
+                interface: 'materialFolderDelete',
+                data: {
+                    docType: '2',
+                    docCodes: [code]
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    this.getItems()
+                    this.isCheck = false
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
+        },
         dirPageChange (size) {
             this.dirPageNumber = size
             this.getDirs()
@@ -544,7 +587,7 @@ export default {
                 }
             }).then(res => {
                 if (res.result.success == '1') {
-                    this.dirTotal = Number(res.result.totalPages)
+                    this.dirTotal = Number(res.result.total)
 
                     res.result.result.forEach((item) => {
                         item.docCreateTime = item.docCreateTime.split(' ')[0]
@@ -598,6 +641,29 @@ export default {
                     if (res.result.result.length) {
                         this.$message({
                             message: '部分目录下有文件存在，未能删除！',
+                            type: 'warning'
+                        })
+                    }
+                    this.getDirs()
+                    this.isCheck = false
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
+        },
+        deleteDir (code) {
+            util.request({
+                method: 'post',
+                interface: 'materialFolderDelete',
+                data: {
+                    docType: '1',
+                    docCodes: [code]
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    if (res.result.result.length) {
+                        this.$message({
+                            message: '该目录下有文件存在，未能删除！',
                             type: 'warning'
                         })
                     }
@@ -792,6 +858,7 @@ export default {
                float: right;
                font-size: 14px;
                color: #333333;
+               margin-left: 5px;
 
                i, label {
                     cursor: pointer;

@@ -8,7 +8,8 @@
                         <span>客户接入欢迎词</span>
                         <el-input
                                 class="input-box"
-                                placeholder="请输入"
+                                placeholder="请输入内容,最多15个字"
+                                :maxlength="15"
                                 v-model="callcenterData.sessionOpenInfo">
                         </el-input>
                         <div class="mess-box">
@@ -19,37 +20,40 @@
                         <span>等候致歉语</span>
                         <el-input
                                 class="input-box"
-                                placeholder="请输入"
+                                placeholder="请输入内容,最多40个字"
+                                :maxlength="40"
                                 v-model="callcenterData.reponseDelayInfo">
                         </el-input>
                         <div class="mess-box">
-                          *当客户通过微信小程序联系客服后，客服人员未能在X秒内响应，客户将收到等候提醒消息
+                          *当客户通过微信小程序联系客服后，客服人员未能在45秒内响应，客户将收到等候提醒消息
                         </div>
                     </section>
                     <section class="formBox bigF">
                         <span>客服结束问候语</span>
                         <el-input
                                 class="input-box"
-                                placeholder="请输入"
+                                placeholder="请输入内容,最多40个字"
+                                :maxlength="40"
                                 v-model="callcenterData.sessionCloseInfo">
                         </el-input>
                         <div class="mess-box">
-                          *当客户通过微信小程序内超过X秒没有输入消息，客户将受到结束问候
+                          *当客户通过微信小程序内超过30秒没有输入消息，客户将受到结束问候
                         </div>
                     </section>
-                    <section class="formBox">
+                    <!-- <section class="formBox">
                         <span>等候致歉时间(m)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
                                 v-model="callcenterData.inbandResonseTime">
                         </el-input>
-                    </section>
+                    </section> -->
                     <section class="formBox">
                         <span>客服电话</span>
                         <el-input
                                 class="input-box"
-                                type="tel"
+                                :maxlength="15"
+                                @change="telChange('servicePhone')"
                                 v-model="callcenterData.servicePhone">
                         </el-input>
                     </section>
@@ -114,7 +118,7 @@
           <el-collapse-item class="float-form-box" title="外呼规则" name="3">
                 <div class="formDiscount">
                     <section class="formBox">
-                        <span>外呼间隔期</span>
+                        <span>外呼间隔期(天)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -122,7 +126,7 @@
                         </el-input>
                     </section>
                     <section class="formBox">
-                        <span>外呼冷却期</span>
+                        <span>外呼冷却期(天)</span>
                         <el-input
                                 class="input-box"
                                 type="number"
@@ -442,6 +446,8 @@
                         <span>微信券按钮标题</span>
                         <el-input
                                 class="input-box"
+                                placeholder="请输入内容,最多6个字"
+                                :maxlength="6"
                                 v-model="callcenterData.couponCenterTitle">
                         </el-input>
                     </section>
@@ -449,6 +455,8 @@
                         <span>微信券核销提示</span>
                         <el-input
                                 class="input-box"
+                                placeholder="请输入内容,最多15个字"
+                                :maxlength="15"
                                 v-model="callcenterData.couponNotice">
                         </el-input>
                     </section>
@@ -464,6 +472,8 @@
                         <span>企业品牌</span>
                         <el-input
                                 class="input-box"
+                                placeholder="请输入内容,最多12个字"
+                                :maxlength="12"
                                 v-model="callcenterData.couponBrandName">
                         </el-input>
                     </section>
@@ -485,6 +495,8 @@
                         <span>券详情提示</span>
                         <el-input
                                 class="input-box"
+                                placeholder="请输入内容,最多8个字"
+                                :maxlength="8"
                                 v-model="callcenterData.couponAbstract">
                         </el-input>
                     </section>
@@ -537,7 +549,7 @@ export default {
                 servicePhone: '',
                 callcenterDispatchRule: '',
                 // 软文推广规则
-                pagePromotionOpt: '',
+                pagePromotionOpt: '1',
                 commentReplayRule: '',
                 // 外呼规则
                 outbandMinPeriod: '',
@@ -681,6 +693,9 @@ export default {
       }
     },
     methods: {
+        telChange (key) {
+            this.callcenterData[key] = this.callcenterData[key].replace(/[^/d]/g, '')
+        },
         collChange () {
             localStorage.setItem("callCenterColl", this.activeNames)
         },

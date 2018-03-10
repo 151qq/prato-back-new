@@ -47,7 +47,10 @@
         <el-dialog :title="operateText" :visible.sync="isAddOEdit">
           <el-form :label-position="'left'" :model="itemData" label-width="80px">
             <el-form-item label="模板名称">
-                <el-input v-model="itemData.templateTitle" auto-complete="off"></el-input>
+                <el-input v-model="itemData.templateTitle"
+                          placeholder="请输入内容"
+                          :maxlength="40"
+                          auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="模板类型">
                 <el-select class="input-box"

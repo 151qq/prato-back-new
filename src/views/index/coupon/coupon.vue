@@ -7,7 +7,8 @@
                 <span>券标题</span>
                 <el-input
                   class="input-box"
-                  placeholder="请输入"
+                  placeholder="请输入内容,最多8个字"
+                  :maxlength="8"
                   v-model="quanData.couponTitle">
                 </el-input>
             </section>

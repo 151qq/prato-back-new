@@ -80,9 +80,9 @@
                     <div class="title-box">
                         <div class="title" v-text="item.catalogCname"></div>
                         <div class="time">
-                            <span>
+                            <!-- <span>
                                 {{item.catalogCreateTime}}
-                            </span>
+                            </span> -->
                             <!-- <span v-else>
                                 <template v-if="item.productStatus == '2'">
                                     未开通
@@ -99,6 +99,12 @@
 
                                 <i @click.stop="editItem(item)" class="el-icon-document"></i>
                             </span>
+
+                            <span class="btn-box"
+                                  v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
+
+                                <i @click.stop="deleteItem(item.catalogCode)" class="el-icon-delete2"></i>
+                            </span>
                         </div>
                     </div>
                 </section>
@@ -110,6 +116,7 @@
                 class="page-box"
                 @current-change="pageChange"
                 layout="prev, pager, next"
+                :page-size="pageSize"
                 :total="total">
             </el-pagination>
         </template>
@@ -133,17 +140,44 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="标题">
-                <el-input v-model="addItemForm.catalogCname" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="描述">
-                <el-input
-                    type="textarea"
-                    :rows="3"
-                    placeholder="请输入内容"
-                    v-model="addItemForm.catalogDesc">
-                </el-input>
-            </el-form-item>
+            <template v-if="addItemForm.catalogType == 'pro'">
+                <el-form-item label="标题">
+                    <el-input v-model="addItemForm.catalogCname"
+                                :maxlength="20"
+                                placeholder="请输入内容，最多12个字"></el-input>
+                </el-form-item>
+            </template>
+            <template v-if="addItemForm.catalogType == 'dir'">
+                <el-form-item label="标题">
+                    <el-input v-model="addItemForm.catalogCname"
+                                :maxlength="12"
+                                placeholder="请输入内容，最多12个字"></el-input>
+                </el-form-item>
+            </template>
+            
+            <template v-if="addItemForm.catalogType == 'pro'">
+                <el-form-item label="描述">
+                    <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="请输入内容"
+                        :maxlength="40"
+                        v-model="addItemForm.catalogDesc">
+                    </el-input>
+                    <div class="limit-box">剩余<a>{{catalogDescNum}}</a>字</div>
+                </el-form-item>
+            </template>
+            <template v-if="addItemForm.catalogType == 'dir'">
+                <el-form-item label="描述">
+                    <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="请输入内容，最多140个字"
+                        :maxlength="140"
+                        v-model="addItemForm.catalogDesc">
+                    </el-input>
+                </el-form-item>
+            </template>
             <template v-if="addItemForm.catalogType == 'pro'">
                 <el-form-item label="封面">
                     <popup-img :path="addItemForm.catalogImage"
@@ -181,7 +215,7 @@ export default {
             // 获取
             sourceDatas: [],
             pageNumber: 1,
-            pageSize: 20,
+            pageSize: 15,
             total: 0,
             // 当前parentCode
             currentParentCode: 'e2',
@@ -242,6 +276,9 @@ export default {
         }),
         isEdit () {
           return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
+        },
+        catalogDescNum () {
+            return 40 - this.addItemForm.catalogDesc.length
         }
     },
     watch: {
@@ -361,6 +398,29 @@ export default {
                 }
             })       
         },
+        deleteItem (code) {
+            util.request({
+                method: 'post',
+                interface: 'deleteProductCatalog',
+                data: {
+                    catalogCodes: [code]
+                }
+            }).then(res => {
+                if (res.result.success == '1') {
+                    if (res.result.result.length) {
+                        this.$message({
+                            message: '该目录下有产品存在，未能删除！',
+                            type: 'warning'
+                        })
+                    }
+                    // 刷新列表 关闭多选模式
+                    this.isCheck = false
+                    this.getItems(this.currentParentCode)
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })       
+        },
         pageChange (size) {
             this.itemPageNumber = size
             this.getItems(this.currentParentCode)
@@ -375,7 +435,7 @@ export default {
                 catalogCname: '',
                 catalogImage: '',
                 catalogParentCode: '',
-                catalogType: '',
+                catalogType: 'pro',
                 catalogDesc: '',
                 catalogLevel: Number(this.$route.query.catalogLevel) + 1
             }
@@ -424,9 +484,9 @@ export default {
                 return false
             }
 
-            if (this.addItemForm.catalogDesc.length > 140) {
+            if (this.addItemForm.catalogType == 'pro' && (this.addItemForm.catalogDesc.length < 6 || this.addItemForm.catalogDesc.length > 40)) {
                 this.$message({
-                    message: '描述最多140个字！',
+                    message: '描述最少6个字，最多40个字！',
                     type: 'warning'
                 })
                 return false
@@ -499,7 +559,7 @@ export default {
             this.pageNumber = 1
             this.keyValue = ''
             this.isCheck = false
-            this.dirSteps.splice(this.floorNumber)
+            this.dirSteps.splice(this.floorNumber, 1)
             var data = this.dirSteps[this.floorNumber - 1]
 
             var pathData = {
@@ -784,6 +844,7 @@ export default {
                float: right;
                font-size: 14px;
                color: #333333;
+               margin-left: 5px;
 
                i, label {
                     cursor: pointer;

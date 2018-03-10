@@ -5,7 +5,8 @@
             <span>方案名称</span>
             <el-input
               class="input-box"
-              placeholder="请输入内容"
+              placeholder="请输入内容,最多16个字"
+              :maxlength="16"
               v-model="base.eventPlanTitle">
             </el-input>
         </section>

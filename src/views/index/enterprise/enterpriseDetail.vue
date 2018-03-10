@@ -22,7 +22,8 @@
                   <span>企业简称</span>
                   <el-input
                     class="input-box"
-                    placeholder="请输入内容"
+                    placeholder="请输入简称，最多12个字"
+                    :maxlength="12"
                     @blur="checkReg"
                     v-model="base.enterpriseNameReg">
                   </el-input>
