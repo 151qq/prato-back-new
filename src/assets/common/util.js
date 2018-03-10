@@ -119,7 +119,7 @@ export default {
 
             var fileSize = file.size / 1024 / 1024
             if (fileSize > 10) {
-                alert(文件大小不能超过10MB!)
+                alert('文件大小不能超过10MB!')
                 return false
             }
 
@@ -161,7 +161,7 @@ export default {
 
             var fileSize = file.size / 1024 / 1024
             if (fileSize > 10) {
-                alert(文件大小不能超过10MB!)
+                alert('文件大小不能超过10MB!')
                 return false
             }
             
