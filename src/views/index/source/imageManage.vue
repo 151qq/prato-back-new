@@ -49,14 +49,16 @@
                         <div class="title" v-text="item.docTitle"></div>
                         <div class="time">
                             <!-- {{item.docCreateTime}} -->
-                            
-                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
-                                <i @click.stop="editDir(item)" class="el-icon-document"></i>
-                            </span>
 
-                            <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
-                                <i @click.stop="deleteDir(item.docCode)" class="el-icon-delete2"></i>
-                            </span>
+                            <template v-if="item.remark != 'loginBackground' &&  item.remark != 'wechatMessageCover'">
+                                <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
+                                    <i @click.stop="editDir(item)" class="el-icon-document"></i>
+                                </span>
+
+                                <span class="btn-box" v-if="isEdit && (fileType == 'e2_1' || fileType == 'e2_4')">
+                                    <i @click.stop="deleteDir(item.docCode)" class="el-icon-delete2"></i>
+                                </span>
+                            </template>
                         </div>
                     </div>
                 </section>
@@ -395,6 +397,9 @@ export default {
             //     })
             //     return false
             // }
+            if (this.fileType == 'e2_4') {
+                this.addDirForm.remark = '1'
+            }
 
             this.addDirForm.enterpriseCode = this.$route.query.enterpriseCode
 
@@ -419,6 +424,10 @@ export default {
                     type: 'warning'
                 })
                 return false
+            }
+
+            if (this.fileType == 'e2_4') {
+                this.addItemForm.remark = '1'
             }
 
             this.addItemForm.enterpriseCode = this.$route.query.enterpriseCode

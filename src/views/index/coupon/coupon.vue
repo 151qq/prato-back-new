@@ -197,7 +197,7 @@ export default {
         this.quanData.couponTransferOpt = '1'
       }
       
-      this.getProducts()
+      // this.getProducts()
       this.getTypes()
       this.getGifts()
     },

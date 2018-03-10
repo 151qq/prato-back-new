@@ -50,7 +50,7 @@
                 v-if="total && marketList.length < total"
                 @click="loadMore">加载更多...</div>
 
-        <el-dialog title="添加方案" :visible.sync="isAddItem">
+        <el-dialog title="添加文章" :visible.sync="isAddItem">
           <el-form :label-position="'left'" :model="addItemForm" label-width="80px">
             <el-form-item label="文章标题">
                 <el-input v-model="addItemForm.pageTitle"
@@ -131,7 +131,7 @@ export default {
           }
         },
         pageAbstractNum () {
-          return 140 - this.addItemForm.pageAbstract
+          return 140 - this.addItemForm.pageAbstract.length
         }
     },
     watch: {

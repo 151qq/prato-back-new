@@ -94,17 +94,19 @@
                                     已下架
                                 </template>
                             </span> -->
-                            <span class="btn-box"
-                                  v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
+                            <template v-if="item.catalogType != 'platform_gift_dir'">
+                                <span class="btn-box"
+                                      v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
 
-                                <i @click.stop="editItem(item)" class="el-icon-document"></i>
-                            </span>
+                                    <i @click.stop="editItem(item)" class="el-icon-document"></i>
+                                </span>
 
-                            <span class="btn-box"
-                                  v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
+                                <span class="btn-box"
+                                      v-if="(item.catalogType.indexOf('dir') > -1 || item.productStatus == '2') && isEdit">
 
-                                <i @click.stop="deleteItem(item.catalogCode)" class="el-icon-delete2"></i>
-                            </span>
+                                    <i @click.stop="deleteItem(item.catalogCode)" class="el-icon-delete2"></i>
+                                </span>
+                            </template>
                         </div>
                     </div>
                 </section>
@@ -236,7 +238,7 @@ export default {
                     value: 'dir'
                 },
                 {
-                    label: '产品',
+                    label: '礼品',
                     value: 'pro'
                 }
             ],
@@ -251,7 +253,9 @@ export default {
                 value: false
             },
             isChangeType: true,
-            productTypes: []
+            productTypes: [],
+            // 是否和平台共享
+            isRemark: ''
         }
     },
     mounted () {
@@ -275,6 +279,9 @@ export default {
         }),
         isEdit () {
           return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
+        },
+        catalogDescNum () {
+            return 140 - this.addItemForm.catalogDesc.length
         }
     },
     watch: {
@@ -340,6 +347,10 @@ export default {
 
             this.addItemForm.productClass = this.productType
             this.addItemForm.catalogCreator = this.userInfo.userCode
+
+            if (this.isRemark) {
+                this.addItemForm.remark = this.isRemark
+            }
             
             util.request({
                 method: 'post',
@@ -521,6 +532,12 @@ export default {
             if (this.isCheck && (item.catalogType.indexOf('dir') > -1 || item.productStatus == '2')) {
                 this.selectItem(item)
                 return false
+            }
+
+            if (item.catalogType == 'platform_gift_dir') {
+                this.isRemark = '1'
+            } else {
+                this.isRemark = '0'
             }
 
             // 目录类型展开 产品类型跳到详情

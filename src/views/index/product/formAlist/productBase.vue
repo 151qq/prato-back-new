@@ -146,7 +146,7 @@ export default {
           return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
         },
         productDescNum () {
-          return 40 - this.base.productDesc
+          return 40 - this.base.productDesc.length
         }
     },
     methods: {

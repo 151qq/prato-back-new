@@ -101,6 +101,7 @@ export default {
         saveProductCover: platform + 'product/saveProductCover.json',
         savaProductPageCode: platform + 'product/savaProductPageCode.json',
         gifProductList: platform + 'product/gifProductList.json',
+        savaProductStatus: platform + 'product/savaProductStatus.json',
 
         /**
         * 营销树 get

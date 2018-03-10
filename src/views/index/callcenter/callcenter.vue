@@ -50,12 +50,18 @@
                     </section> -->
                     <section class="formBox">
                         <span>客服电话</span>
-                        <el-input
+                        <div class="input-box">
+                            <input class="input-box el-input__inner"
+                                    maxlength="15" 
+                                    @input="telChange"
+                                    v-model="callcenterData.servicePhone">
+                        </div>
+                        <!-- <el-input
                                 class="input-box"
                                 :maxlength="15"
                                 @change="telChange('servicePhone')"
                                 v-model="callcenterData.servicePhone">
-                        </el-input>
+                        </el-input> -->
                     </section>
                     <section class="formBox">
                         <span>客服分配模式</span>
@@ -693,8 +699,8 @@ export default {
       }
     },
     methods: {
-        telChange (key) {
-            this.callcenterData[key] = this.callcenterData[key].replace(/[^/d]/g, '')
+        telChange () {
+            this.callcenterData.servicePhone = this.callcenterData.servicePhone.replace(/[^\d]/g, '')
         },
         collChange () {
             localStorage.setItem("callCenterColl", this.activeNames)

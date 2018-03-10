@@ -105,8 +105,16 @@
         <div class="clear"></div>
       </div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-            v-if="isEdit"
+            v-if="isEdit && base.productStatus == '2'"
             @click="saveBase">保存</el-button>
+
+      <el-button class="save-btn" type="info" :plain="true" size="small" icon="check"
+            v-if="isEdit && base.productStatus == '2'"
+            @click="savaProductStatus('1')">发布</el-button>
+
+      <el-button class="save-btn" type="info" :plain="true" size="small" icon="close"
+            v-if="isEdit && base.productStatus == '1'"
+            @click="savaProductStatus('0')">下架</el-button>
       <div class="clear"></div>
     </section>
 </template>
@@ -147,7 +155,7 @@ export default {
           return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
         },
         productDescNum () {
-          return 600 - this.base.productDesc
+          return 600 - this.base.productDesc.length
         }
     },
     methods: {
@@ -229,6 +237,23 @@ export default {
               method: 'post',
               interface: 'productInfoSave',
               data: this.base
+          }).then(res => {
+              if (res.result.success = '1') {
+                this.getBase()
+              } else {
+                this.$message.error(res.result.message)
+              }
+          })
+        },
+        savaProductStatus (type) {
+          util.request({
+              method: 'post',
+              interface: 'savaProductStatus',
+              data: {
+                enterpriseCode: this.$route.query.enterpriseCode,
+                productCode: this.$route.query.productCode,
+                productStatus: type
+              }
           }).then(res => {
               if (res.result.success = '1') {
                 this.getBase()
