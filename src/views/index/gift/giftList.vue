@@ -613,7 +613,7 @@ export default {
                 typeCode: type
               }
           }).then(res => {
-              if (res.result.success = '1') {
+              if (res.result.success == '1') {
                 this.productTypes = res.result.result
               } else {
                 this.$message.error(res.result.message)

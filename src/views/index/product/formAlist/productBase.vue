@@ -158,7 +158,7 @@ export default {
                 productCode: this.$route.query.productCode
               }
           }).then(res => {
-              if (res.result.success = '1') {
+              if (res.result.success == '1') {
                 this.base = res.result.result.productInfo
                 this.geProductTypes('platform_product_type')
 
@@ -174,7 +174,7 @@ export default {
               interface: 'getPriceType',
               data: {}
           }).then(res => {
-              if (res.result.success = '1') {
+              if (res.result.success == '1') {
                 this.priceTypes = res.result.result
               } else {
                 this.$message.error(res.result.message)
@@ -189,7 +189,7 @@ export default {
                 typeCode: type
               }
           }).then(res => {
-              if (res.result.success = '1') {
+              if (res.result.success == '1') {
                 this.productTypes = res.result.result
               } else {
                 this.$message.error(res.result.message)
@@ -229,7 +229,7 @@ export default {
               interface: 'productInfoSave',
               data: this.base
           }).then(res => {
-              if (res.result.success = '1') {
+              if (res.result.success == '1') {
                 this.getBase()
               } else {
                 this.$message.error(res.result.message)
