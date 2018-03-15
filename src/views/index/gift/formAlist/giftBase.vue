@@ -34,7 +34,7 @@
               </el-option>
             </el-select>
         </section>
-        <section class="formBox">
+        <!-- <section class="formBox">
             <span>价格类型</span>
             <el-select
               class="input-box"
@@ -48,7 +48,7 @@
                 :value="item.typeCode">
               </el-option>
             </el-select>
-        </section>
+        </section> -->
         <section class="formBox">
             <span>礼品价格</span>
             <el-input
@@ -58,7 +58,7 @@
               v-model="base.productPrice">
             </el-input>
         </section>
-        <section class="formBox">
+        <!-- <section class="formBox">
             <span>价格说明</span>
             <el-input
               class="input-box"
@@ -66,7 +66,7 @@
               :maxlength="140"
               v-model="base.priceDesc">
             </el-input>
-        </section>
+        </section> -->
         <section class="formBox">
             <span>官网链接</span>
             <el-input
@@ -75,7 +75,7 @@
               v-model="base.productEcommerceLink">
             </el-input>
         </section>
-        <section class="formBox">
+        <!-- <section class="formBox">
             <span>天猫链接</span>
             <el-input
               class="input-box"
@@ -90,7 +90,7 @@
               placeholder="请输入内容"
               v-model="base.productJdLink">
             </el-input>
-        </section>
+        </section> -->
         <section class="formBox bigF">
             <span>礼品摘要</span>
             <el-input
@@ -146,7 +146,7 @@ export default {
     },
     mounted () {
       this.getBase()
-      this.getTypes()
+      // this.getTypes()
     },
     computed: {
         ...mapGetters({

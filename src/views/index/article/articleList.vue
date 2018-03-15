@@ -10,8 +10,9 @@
         <section class="big-cards-box">
             <router-link class="card-box"
                          v-for="(item, index) in marketList"
+                         target="_blank"
                          :to="{
-                                name: 'article-detail',
+                                name: item.pageStatus == '2' ? 'article-detail' : 'article-info',
                                 query: {
                                   enterpriseCode: item.enterpriseCode,
                                   pageCode: item.pageCode,
@@ -63,7 +64,7 @@
                     type="textarea"
                     :rows="3"
                     placeholder="请输入内容"
-                    :maxlength="140"
+                    :maxlength="70"
                     v-model="addItemForm.pageAbstract">
                 </el-input>
                 <div class="limit-box">剩余<a>{{pageAbstractNum}}</a>字</div>
@@ -131,7 +132,7 @@ export default {
           }
         },
         pageAbstractNum () {
-          return 140 - this.addItemForm.pageAbstract.length
+          return 70 - this.addItemForm.pageAbstract.length
         }
     },
     watch: {
@@ -239,6 +240,11 @@ export default {
         confirmItem () {
             if (!this.addItemForm.pageTitle) {
               this.$message.error('文章标题不能为空！')
+              return
+            }
+
+            if (this.addItemForm.pageAbstract.length < 40) {
+              this.$message.error('文章摘要最少40个字！')
               return
             }
 

@@ -169,7 +169,7 @@ export default {
               couponTitle: '',
               couponCode: '',
               couponType: '',
-              couponStatus: '',
+              couponStatus: '1',
               couponDescription: '',
               couponCover: '',
               couponQuantity: '',
