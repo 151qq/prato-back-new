@@ -104,7 +104,7 @@
         <div class="clear"></div>
       </div>
       <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-            v-if="isEdit"
+            v-if="isEdit && base.productStatus == '2'"
             @click="saveBase">保存</el-button>
       <div class="clear"></div>
     </section>
