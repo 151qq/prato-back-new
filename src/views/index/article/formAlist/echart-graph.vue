@@ -8,7 +8,6 @@ export default {
   data () {
     return {
       idName: 'spreadPath',
-      isNoFirst: false,
       option: {
         tooltip: {
             trigger: 'item',
@@ -23,7 +22,6 @@ export default {
           nodePadding: 20, //智能定义全局最小节点间距，不能定义层级节点间距，有点搓。
           symbol: 'circle',
           symbolSize: [60, 60],
-          roam: true,
           data: [{
             name: '手机',
             value: 6,
@@ -65,15 +63,14 @@ export default {
   methods: {
     // 获取echarts数据
     getData (param) {
+      // console.log(param)
+      // console.log(this.myChart.getOption())
       if(!(param.data.children && param.data.children.length > 0)) {
           // 没有数据获取数据
-          
           setTimeout(() => {
             param.data.children = []
             param.data.children.push(this.mockData)
-            console.log(param)
-            console.log(this.option)
-            this.myChart.refresh()
+            this.myChart.setOption(this.myChart.getOption())
           }, 300)
       }
     },
