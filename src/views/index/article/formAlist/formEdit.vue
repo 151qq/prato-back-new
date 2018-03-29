@@ -1,6 +1,6 @@
 <template>
     <section class="edit-box">
-        <section class='bodyMain' :style="arTextBody">
+        <section class='bodyMain' :class="isLook ? '' : 'backgroundF1'" :style="arTextBody">
             <!-- 预览 -->
             <template v-if="isLook || !isEdit">
                 <div class="ar-title" :style="arTitle">{{articleData.pageTitle}}</div>
@@ -657,6 +657,9 @@ export default {
 
     .bodyMain {
         min-height: 500px;
+    }
+
+    .backgroundF1 {
         background: #f1f1f1;
     }
 
