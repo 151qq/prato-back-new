@@ -163,7 +163,7 @@ export default {
 
               window.open('/#/articleTemplate?enterpriseCode=' + this.$route.query.enterpriseCode + '&templateCode=' + res.result.result, '_blank')
             } else {
-              this.$message.error(res.result.msg)
+              this.$message.error(res.result.message)
             }
         })
       },
@@ -180,7 +180,7 @@ export default {
               this.getItemList()
               this.isAddOEdit = false
             } else {
-              this.$message.error(res.result.msg)
+              this.$message.error(res.result.message)
             }
         })
       },

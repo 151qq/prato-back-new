@@ -238,7 +238,7 @@ export default {
                 // this.productList = res.result.result.couponProductArray
                 this.quanData = result
               } else {
-                this.$message.error(res.result.msg)
+                this.$message.error(res.result.message)
               }
           })
         },
@@ -429,7 +429,7 @@ export default {
 
                 this.$router.push(pathObj)
               } else {
-                this.$message.error(res.result.msg)
+                this.$message.error(res.result.message)
               }
           })
         }

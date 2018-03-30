@@ -176,7 +176,7 @@ export default {
               this.getItemList()
               this.isAddOEdit = false
             } else {
-              this.$message.error(res.result.msg)
+              this.$message.error(res.result.message)
             }
         })
       },
@@ -193,7 +193,7 @@ export default {
             if (res.result.success == '1') {
               this.getItemList()
             } else {
-              this.$message.error(res.result.msg)
+              this.$message.error(res.result.message)
             }
         })
       },
@@ -209,7 +209,7 @@ export default {
             if (res.result.success == '1') {
               this.getItemList()
             } else {
-              this.$message.error(res.result.msg)
+              this.$message.error(res.result.message)
             }
         })
       },
