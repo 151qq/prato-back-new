@@ -352,6 +352,10 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     // 重置分页 刷新列表 关闭弹窗
+                    this.$message({
+                        message: '恭喜你，保存成功！',
+                        type: 'success'
+                    })
                     this.itemPageNumber = 1
                     this.isAddItem = false
                     this.getItems(this.currentParentCode)
@@ -368,6 +372,10 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     // 刷新列表 关闭弹窗
+                    this.$message({
+                        message: '恭喜你，保存成功！',
+                        type: 'success'
+                    })
                     this.isAddItem = false
                     this.getItems(this.currentParentCode)
                 } else {

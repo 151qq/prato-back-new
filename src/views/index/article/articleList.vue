@@ -150,13 +150,9 @@ export default {
             var formData = {
                 enterpriseCode: this.$route.query.enterpriseCode,
                 pageType: this.articleType,
+                pageEditor: this.userInfo.userCode,
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber
-            }
-
-            // 非root只能操作自己的
-            if (this.userInfo.roleCodes.indexOf('platform_root') < 0) {
-              formData.pageEditor = this.userInfo.userCode
             }
 
             if (this.keyValue) {

@@ -245,6 +245,10 @@ export default {
               data: this.base
           }).then(res => {
               if (res.result.success == '1') {
+                this.$message({
+                    message: '恭喜你，保存成功！',
+                    type: 'success'
+                })
                 this.getBase()
               } else {
                 this.$message.error(res.result.message)
@@ -262,6 +266,17 @@ export default {
               }
           }).then(res => {
               if (res.result.success == '1') {
+                if (type == '1') {
+                  this.$message({
+                      message: '恭喜你，发布成功！',
+                      type: 'success'
+                  })
+                } else if (type == '0') {
+                  this.$message({
+                      message: '恭喜你，下架成功！',
+                      type: 'success'
+                  })
+                }
                 this.getBase()
               } else {
                 this.$message.error(res.result.message)

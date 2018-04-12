@@ -76,12 +76,9 @@ export default {
         getList (type) {
             var formData = {
                 enterpriseCode: this.$route.query.enterpriseCode,
+                eventDesigner: this.userInfo.userCode,
                 pageSize: this.pageSize,
                 pageNumber: this.pageNumber
-            }
-            // 非root只能操作自己的
-            if (this.userInfo.roleCodes.indexOf('platform_root') < 0) {
-              formData.eventDesigner = this.userInfo.userCode
             }
 
             if (this.keyValue) {

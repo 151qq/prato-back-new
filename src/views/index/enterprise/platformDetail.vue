@@ -767,7 +767,7 @@ export default {
               }
           }).then((res) => {
               if (res.result.success == '1') {
-                  if (res.result.result) {
+                  if (res.result.result && res.result.result.enterpriseWechatCorpId) {
                     this.enterpriseWechat = res.result.result
                   }
               } else {
@@ -956,6 +956,8 @@ export default {
           })
         },
         saveWechat () {
+          this.enterpriseWechat.enterpriseWechatCorpId = this.enterpriseWechat.enterpriseWechatCorpId.trim()
+          
           if (this.enterpriseWechat.enterpriseWechatCorpId == '') {
               this.$message({
                 message: '请填写企业微信ID!',
@@ -964,7 +966,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.enterpriseWechatCorpId = this.enterpriseWechat.enterpriseWechatCorpId.trim()
+          this.enterpriseWechat.pubWechatAccount = this.enterpriseWechat.pubWechatAccount.trim()
 
           if (this.enterpriseWechat.pubWechatAccount == '') {
               this.$message({
@@ -974,7 +976,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatAccount = this.enterpriseWechat.pubWechatAccount.trim()
+          this.enterpriseWechat.pubWechatCname = this.enterpriseWechat.pubWechatCname.trim()
 
           if (this.enterpriseWechat.pubWechatCname == '') {
               this.$message({
@@ -984,7 +986,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatCname = this.enterpriseWechat.pubWechatCname.trim()
+          this.enterpriseWechat.pubWechatAppId = this.enterpriseWechat.pubWechatAppId.trim()
 
           if (this.enterpriseWechat.pubWechatAppId == '') {
               this.$message({
@@ -994,7 +996,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatAppId = this.enterpriseWechat.pubWechatAppId.trim()
+          this.enterpriseWechat.pubWechatSecret = this.enterpriseWechat.pubWechatSecret.trim()
 
           if (this.enterpriseWechat.pubWechatSecret == '') {
               this.$message({
@@ -1004,7 +1006,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatSecret = this.enterpriseWechat.pubWechatSecret.trim()
+          this.enterpriseWechat.pubWechatReceiverSecret = this.enterpriseWechat.pubWechatReceiverSecret.trim()
 
           if (this.enterpriseWechat.pubWechatReceiverSecret == '') {
               this.$message({
@@ -1014,7 +1016,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatReceiverSecret = this.enterpriseWechat.pubWechatReceiverSecret.trim()
+          this.enterpriseWechat.pubWechatReceiverToken = this.enterpriseWechat.pubWechatReceiverToken.trim()
 
           if (this.enterpriseWechat.pubWechatReceiverToken == '') {
               this.$message({
@@ -1024,7 +1026,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.pubWechatReceiverToken = this.enterpriseWechat.pubWechatReceiverToken.trim()
+          this.enterpriseWechat.departmentSecret = this.enterpriseWechat.departmentSecret.trim()
 
           if (this.enterpriseWechat.departmentSecret == '') {
               this.$message({
@@ -1034,7 +1036,7 @@ export default {
               return false
           }
 
-          this.enterpriseWechat.departmentSecret = this.enterpriseWechat.departmentSecret.trim()
+          this.enterpriseWechat.pubWechatSubscribeTemplateId = this.enterpriseWechat.pubWechatSubscribeTemplateId.trim()
 
           if (this.enterpriseWechat.pubWechatSubscribeTemplateId == '') {
             this.$message({
@@ -1043,8 +1045,6 @@ export default {
               })
               return false
           }
-
-          this.enterpriseWechat.pubWechatSubscribeTemplateId = this.enterpriseWechat.pubWechatSubscribeTemplateId.trim()
 
           if (this.enterpriseWechat.pubWechatLogo == '') {
               this.$message({

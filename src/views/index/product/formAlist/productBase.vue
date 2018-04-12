@@ -224,12 +224,24 @@ export default {
               return false
           }
 
+          if (!this.base.productEcommerceLink) {
+            this.$message({
+                  message: '请填写产品官网链接！',
+                  type: 'warning'
+              })
+              return false
+          }
+
           util.request({
               method: 'post',
               interface: 'productInfoSave',
               data: this.base
           }).then(res => {
               if (res.result.success == '1') {
+                this.$message({
+                    message: '恭喜你，保存成功！',
+                    type: 'success'
+                })
                 this.getBase()
               } else {
                 this.$message.error(res.result.message)

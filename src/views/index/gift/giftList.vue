@@ -157,6 +157,19 @@
                 </el-form-item>
             </template>
             <template v-if="addItemForm.catalogType.indexOf('pro') > -1">
+                <el-form-item label="礼品类型">
+                    <el-select v-model="addItemForm.productType"
+                                placeholder="请选择">
+                        <el-option
+                            v-for="(item, index) in productTypes"
+                            :key="index"
+                            :label="item.dictKeyValue"
+                            :value="item.dictKeyCode">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <template v-if="addItemForm.catalogType.indexOf('pro') > -1">
                 <el-form-item label="描述">
                     <el-input
                         type="textarea"
@@ -230,7 +243,8 @@ export default {
                 catalogImage: '',
                 catalogParentCode: '',
                 catalogType: '',
-                catalogDesc: ''
+                catalogDesc: '',
+                productType: ''
             },
             dicAdd: [
                 {
@@ -281,7 +295,7 @@ export default {
           return this.$route.query.enterpriseCode == this.userInfo.enterpriseCode
         },
         catalogDescNum () {
-            return 140 - this.addItemForm.catalogDesc.length
+            return 600 - this.addItemForm.catalogDesc.length
         }
     },
     watch: {
@@ -359,6 +373,10 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     // 重置分页 刷新列表 关闭弹窗
+                    this.$message({
+                        message: '恭喜你，保存成功！',
+                        type: 'success'
+                    })
                     this.itemPageNumber = 1
                     this.isAddItem = false
                     this.getItems(this.currentParentCode)
@@ -375,6 +393,10 @@ export default {
             }).then(res => {
                 if (res.result.success == '1') {
                     // 刷新列表 关闭弹窗
+                    this.$message({
+                        message: '恭喜你，保存成功！',
+                        type: 'success'
+                    })
                     this.isAddItem = false
                     this.getItems(this.currentParentCode)
                 } else {
@@ -444,6 +466,7 @@ export default {
                 catalogParentCode: '',
                 catalogType: 'pro',
                 catalogDesc: '',
+                productType: '',
                 catalogLevel: Number(this.$route.query.catalogLevel) + 1
             }
 
@@ -502,6 +525,14 @@ export default {
             if (!this.addItemForm.catalogImage && this.addItemForm.catalogType == 'pro') {
                 this.$message({
                     message: '请添加封面！',
+                    type: 'warning'
+                })
+                return false
+            }
+
+            if (!this.addItemForm.productType && this.addItemForm.catalogType == 'pro') {
+                this.$message({
+                    message: '请选择礼品类型！',
                     type: 'warning'
                 })
                 return false
